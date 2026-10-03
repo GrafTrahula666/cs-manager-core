@@ -12,6 +12,7 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `src/csmcore/economy.py` – club money flows, contracts, sponsors, tournaments, stickers, transfers
 - `src/csmcore/decisions.py` – personality-driven decisions (contract acceptance, transfer request, conflict)
 - `src/csmcore/world.py` – weekly world tick with emergent events and their causes
+- `src/csmcore/storylets.py` + `data/events.json` – Crusader-Kings-style life events: conditions, weights, choices, chains
 - `src/csmcore/season.py` – season loop: weeks, ranking-based invites, tournaments
 - `src/csmcore/engine.py` – seeded duel -> round -> map engine (pistol/eco, pressure, chemistry)
 - `scripts/demo_season.py` – one season of an 8-club world, prints money, results, events

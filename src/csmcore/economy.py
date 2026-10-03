@@ -89,6 +89,8 @@ class Club:
     investor_share: float = 0.0
     ledger: list[LedgerLine] = field(default_factory=list)
     weeks_negative: int = 0
+    flags: set[str] = field(default_factory=set)
+    former: list[Player] = field(default_factory=list)  # released/sold players chains can still reach
 
     def book(self, week: int, item: str, amount: float, why: str = "") -> None:
         self.cash += amount
@@ -99,6 +101,14 @@ class Club:
         for line in self.ledger:
             if line.week >= since_week:
                 out[line.item] = out.get(line.item, 0.0) + line.amount
+        return out
+
+    def lineup(self, size: int = 5) -> list[Player]:
+        """Players who can play: benched players sit out, missing slots get a stand-in."""
+        from .player import STATS
+        out = [p for p in self.roster if "benched" not in p.flags][:size]
+        while len(out) < size:
+            out.append(Player(f"{self.name}-standin{len(out)}", {s: 55.0 for s in STATS}))
         return out
 
     @property

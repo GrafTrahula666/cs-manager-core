@@ -9,32 +9,35 @@ from . import economy, world
 from .economy import Club, Tournament
 from .engine import play_map
 from .relations import RelationGraph
+from .storylets import Fired, StoryEngine
 
 
 @dataclass
 class SeasonLog:
     events: list[world.Event] = field(default_factory=list)
     results: list[str] = field(default_factory=list)
+    stories: list[Fired] = field(default_factory=list)
 
 
 def play_series(a: Club, b: Club, graph: RelationGraph, seed: int, ctx: dict, maps: int = 3) -> tuple[Club, Club, str]:
     """Bo3 by default. Underdog flag from ranking; chemistry from the relation graph."""
     wins = [0, 0]
-    chem = (graph.chemistry(a.roster), graph.chemistry(b.roster))
+    la, lb = a.lineup(), b.lineup()
+    chem = (graph.chemistry(la), graph.chemistry(lb))
     lost_prev = [False, False]
     for m in range(maps):
         if max(wins) > maps // 2:
             break
         ca = {**ctx, "underdog": a.rank > b.rank, "after_map_loss": lost_prev[0], "late_series": m >= 1}
         cb = {**ctx, "underdog": b.rank > a.rank, "after_map_loss": lost_prev[1], "late_series": m >= 1}
-        r = play_map(a.roster, b.roster, seed=seed * 10 + m, ctx_a=ca, ctx_b=cb, chemistry=chem)
+        r = play_map(la, lb, seed=seed * 10 + m, ctx_a=ca, ctx_b=cb, chemistry=chem)
         w = 0 if r.score[0] > r.score[1] else 1
         wins[w] += 1
         lost_prev = [w == 1, w == 0]
     winner, loser = (a, b) if wins[0] > wins[1] else (b, a)
-    for p in winner.roster:
+    for p in (la if winner is a else lb):
         world.after_match(p, True, False, ctx)
-    for p in loser.roster:
+    for p in (lb if winner is a else la):
         world.after_match(p, False, False, ctx)
     return winner, loser, f"{a.name} {wins[0]}:{wins[1]} {b.name}"
 
@@ -75,8 +78,12 @@ def rerank(clubs: list[Club]) -> None:
 
 
 def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tournament], seed: int,
-               weeks: int = economy.WEEKS_PER_YEAR, plans: dict | None = None) -> SeasonLog:
+               weeks: int = economy.WEEKS_PER_YEAR, plans: dict | None = None,
+               stories: StoryEngine | None = None, manager_club: str | None = None) -> SeasonLog:
+    """Pass a StoryEngine to switch on life events; the manager's club gets them in
+    stories.pending instead of having the AI choose."""
     rng = random.Random(seed)
+    story_rng = random.Random(seed + 1)  # separate stream: adding events does not reshuffle matches
     log = SeasonLog()
     for week in range(1, weeks + 1):
         week_plans = dict(plans or {})
@@ -85,6 +92,8 @@ def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tour
                 if calendar[week].invited(c):
                     week_plans.setdefault(c.name, world.WeekPlan(travel=calendar[week].lan))
         log.events += world.world_week(clubs, graph, week, rng, week_plans)
+        if stories is not None:
+            log.stories += stories.week(clubs, graph, week, story_rng, manager_club)
         if week in calendar:
             run_tournament(calendar[week], clubs, graph, week, rng, log)
             rerank(clubs)

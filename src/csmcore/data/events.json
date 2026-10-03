@@ -1,0 +1,279 @@
+{
+  "_doc": "Storylets. who: player|pair|club. base: weekly chance before multipliers. when: all must hold. weight: [{if, mul}]. options: manager/AI choices with ai base weight and ai_weight multipliers. effects: state/stat/personality/rel/team_morale/cash/fans_pct/brand/sponsor_leaves/flag/unflag/club_flag/add_trait/bench/release/follow/follow_random/history, each may have chance. chain_only events fire only as follow-ups. Text uses {a} {b} {club}. All numbers are placeholders.",
+  "events": [
+    {"id": "new_relationship", "who": "player", "base": 0.004, "cooldown": 30,
+     "when": [{"age": "", "gt": 17}, {"no_flag": "has_partner"}],
+     "weight": [{"if": {"personality": "social_need", "gt": 65}, "mul": 2}, {"if": {"personality": "media", "gt": 70}, "mul": 1.5}],
+     "title": "{a} в отношениях", "text": "{a} начал встречаться и выглядит счастливым.",
+     "effects": [{"flag": "has_partner"}, {"state": "morale", "add": 8}, {"history": "начал отношения"}]},
+
+    {"id": "quiet_breakup", "who": "player", "base": 0.003, "cooldown": 30,
+     "when": [{"flag": "has_partner"}, {"no_flag": "partner_scandal"}],
+     "weight": [{"if": {"state": "fatigue", "gt": 60}, "mul": 2}, {"if": {"personality": "home_attachment", "lt": 30}, "mul": 1.5}],
+     "title": "{a} расстался", "text": "У {a} закончились отношения. Он замкнулся и плохо спит.",
+     "effects": [{"unflag": "has_partner"}, {"state": "morale", "add": -10}, {"state": "sleep", "add": -12}, {"state": "stress", "add": 10}]},
+
+    {"id": "wedding", "who": "player", "base": 0.004, "cooldown": 52, "once": true,
+     "when": [{"flag": "has_partner"}, {"age": "", "gt": 22}, {"no_flag": "married"}],
+     "weight": [{"if": {"personality": "loyalty", "gt": 65}, "mul": 2}],
+     "title": "Свадьба {a}", "text": "{a} женится и просит две недели без буткемпов.",
+     "options": [
+       {"label": "Отпустить", "ai": 3, "effects": [{"state": "morale", "add": 15}, {"state": "coach_trust", "add": 8}, {"team_morale": 2}]},
+       {"label": "Только один день, у нас турнир", "ai": 1, "ai_weight": [{"if": {"club": "rank", "lt": 6}, "mul": 3}],
+        "effects": [{"state": "morale", "add": -5}, {"state": "coach_trust", "add": -15}]}],
+     "effects": [{"flag": "married"}, {"personality": "home_attachment", "add": 10}, {"history": "женился"},
+                 {"follow": "child_born", "in_weeks": 40, "chance": 0.4}]},
+
+    {"id": "child_born", "who": "player", "chain_only": true, "base": 0,
+     "title": "У {a} родился ребёнок", "text": "{a} стал отцом. Он счастлив, но не высыпается, а переезды даются тяжелее.",
+     "effects": [{"state": "morale", "add": 12}, {"state": "sleep", "add": -15}, {"personality": "home_attachment", "add": 15},
+                 {"personality": "money_focus", "add": 10}, {"history": "стал отцом"}]},
+
+    {"id": "partner_posts", "who": "player", "base": 0.004, "cooldown": 52,
+     "when": [{"flag": "has_partner"}, {"no_flag": "partner_scandal"}],
+     "weight": [{"if": {"personality": "media", "gt": 60}, "mul": 2}, {"if": {"club": "brand", "gt": 60}, "mul": 1.5}],
+     "title": "Пост партнёрши {a} взорвал соцсети",
+     "text": "Партнёрша {a} опубликовала провокационный контент на острую общественную тему. Фанаты клуба {club} требуют реакции.",
+     "options": [
+       {"label": "Поговорить с {a} приватно", "ai": 2,
+        "effects": [{"state": "coach_trust", "add": 5}, {"follow": "scandal_viral", "in_weeks": 2, "chance": 0.5}]},
+       {"label": "Публично дистанцироваться от поста", "ai": 1, "ai_weight": [{"if": {"club": "brand", "gt": 70}, "mul": 2}],
+        "effects": [{"brand": 1}, {"state": "morale", "add": -15}, {"state": "coach_trust", "add": -20}]},
+       {"label": "Промолчать", "ai": 1, "effects": [{"follow": "scandal_viral", "in_weeks": 1}]}],
+     "effects": [{"flag": "partner_scandal"}, {"state": "stress", "add": 15}]},
+
+    {"id": "scandal_viral", "who": "player", "chain_only": true, "base": 0,
+     "title": "Скандал вокруг {a} вышел в медиа",
+     "text": "Медиа подхватили историю. Спонсоры клуба {club} пишут, что видят высокие репутационные риски.",
+     "options": [
+       {"label": "Отстранить {a} от состава", "ai": 2, "ai_weight": [{"if": {"club": "brand", "gt": 60}, "mul": 2}],
+        "effects": [{"bench": true}, {"state": "morale", "add": -25}, {"team_morale": -5}, {"brand": 2},
+                    {"history": "отстранён из-за репутационных рисков"}, {"follow": "public_breakup", "in_weeks": 4, "chance": 0.6}]},
+       {"label": "Защищать игрока", "ai": 1, "ai_weight": [{"if": {"personality": "loyalty", "gt": 70}, "mul": 2}],
+        "effects": [{"sponsor_leaves": "any", "chance": 0.5}, {"brand": -3}, {"state": "coach_trust", "add": 20},
+                    {"personality": "loyalty", "add": 10}, {"team_morale": 3}, {"follow": "public_breakup", "in_weeks": 6, "chance": 0.4}]},
+       {"label": "Расторгнуть контракт", "ai": 1,
+        "effects": [{"release": true}, {"brand": 3}, {"team_morale": -8}, {"history": "контракт расторгнут из-за скандала"},
+                    {"follow": "public_breakup", "in_weeks": 4, "chance": 0.6}]}],
+     "effects": [{"fans_pct": -2}, {"brand": -4}, {"state": "stress", "add": 20}]},
+
+    {"id": "public_breakup", "who": "player", "chain_only": true, "base": 0,
+     "title": "Громкий развод {a}", "text": "Отношения {a} закончились публично: взаимные обвинения, переписки, скриншоты.",
+     "effects": [{"unflag": "has_partner"}, {"state": "stress", "add": 25}, {"state": "sleep", "add": -20}, {"state": "form", "add": -10},
+                 {"history": "публичный развод"}, {"follow": "ex_accusations", "in_weeks": 2, "chance": 0.5}],
+     "options": [
+       {"label": "Дать отпуск на две недели", "ai": 2, "effects": [{"state": "stress", "add": -15}, {"state": "fatigue", "add": -20}, {"state": "coach_trust", "add": 10}]},
+       {"label": "Оплатить психолога", "ai": 1, "effects": [{"cash": -15000}, {"state": "stress", "add": -20}, {"add_trait": "iron_routine", "chance": 0.15}]},
+       {"label": "Ничего не делать", "ai": 1, "effects": [{"state": "burnout", "add": 10}]}]},
+
+    {"id": "ex_accusations", "who": "player", "chain_only": true, "base": 0,
+     "title": "Обвинения против {a} в соцсетях", "text": "Бывшая партнёрша {a} публикует серьёзные обвинения. {a} всё отрицает и говорит о шантаже.",
+     "options": [
+       {"label": "Провести внутреннее расследование", "ai": 2,
+        "effects": [{"cash": -10000}, {"follow_random": [["accusation_cleared", 0.7], ["accusation_confirmed", 0.3]], "in_weeks": 3}]},
+       {"label": "Сразу выступить в поддержку {a}", "ai": 1,
+        "effects": [{"state": "coach_trust", "add": 15}, {"follow_random": [["accusation_cleared", 0.7], ["accusation_confirmed", 0.3]], "in_weeks": 3}]},
+       {"label": "Дистанцироваться", "ai": 1, "effects": [{"state": "coach_trust", "add": -20}, {"brand": 1}]}],
+     "effects": [{"state": "stress", "add": 20}, {"brand": -2}]},
+
+    {"id": "accusation_cleared", "who": "player", "chain_only": true, "base": 0,
+     "title": "{a} оправдан", "text": "Обвинения против {a} не подтвердились. Часть фанатов извиняется, часть нет.",
+     "effects": [{"state": "stress", "add": -20}, {"state": "morale", "add": 10}, {"brand": 1}, {"unflag": "benched"},
+                 {"add_trait": "cult_hero", "chance": 0.2}, {"history": "обвинения не подтвердились"}]},
+
+    {"id": "accusation_confirmed", "who": "player", "chain_only": true, "base": 0,
+     "title": "Часть обвинений против {a} подтвердилась", "text": "Расследование нашло подтверждения. Спонсоры ждут решения.",
+     "options": [
+       {"label": "Расторгнуть контракт", "ai": 3, "effects": [{"release": true}, {"brand": 2}]},
+       {"label": "Дать второй шанс со штрафом", "ai": 1, "effects": [{"sponsor_leaves": "any"}, {"brand": -4}, {"state": "morale", "add": -10}]}],
+     "effects": [{"fans_pct": -1}, {"history": "обвинения подтвердились"}]},
+
+    {"id": "family_illness", "who": "player", "base": 0.002, "cooldown": 52,
+     "weight": [{"if": {"personality": "home_attachment", "gt": 70}, "mul": 1.5}],
+     "title": "Болезнь в семье {a}", "text": "У {a} серьёзно заболел близкий. Он просит отпустить его домой.",
+     "options": [
+       {"label": "Отпустить, сколько нужно", "ai": 3, "effects": [{"state": "coach_trust", "add": 15}, {"personality": "loyalty", "add": 10}, {"state": "form", "add": -8}]},
+       {"label": "Попросить доиграть турнир", "ai": 1, "ai_weight": [{"if": {"club": "rank", "lt": 5}, "mul": 2}],
+        "effects": [{"state": "stress", "add": 25}, {"state": "coach_trust", "add": -25}, {"personality": "loyalty", "add": -15}]}],
+     "effects": [{"state": "stress", "add": 15}]},
+
+    {"id": "visa_denied", "who": "player", "base": 0.004, "cooldown": 26,
+     "weight": [{"if": {"flag": "travel_heavy"}, "mul": 2}],
+     "title": "{a} не получил визу", "text": "{a} не получил визу на ближайший LAN. Нужен юрист или замена.",
+     "options": [
+       {"label": "Нанять юриста", "ai": 2, "effects": [{"cash": -8000}, {"state": "stress", "add": 5}]},
+       {"label": "Играть с заменой", "ai": 1, "effects": [{"team_morale": -4}, {"state": "morale", "add": -8}]}],
+     "effects": []},
+
+    {"id": "food_poisoning", "who": "player", "base": 0.003, "cooldown": 20,
+     "title": "{a} отравился перед матчем", "text": "{a} всю ночь провёл в обнимку с унитазом и выйдет на игру слабым.",
+     "effects": [{"state": "health", "add": -20}, {"state": "sleep", "add": -25}, {"state": "form", "add": -6}]},
+
+    {"id": "gambling_habit", "who": "player", "base": 0.002, "cooldown": 52,
+     "when": [{"personality": "risk", "gt": 65}],
+     "weight": [{"if": {"stat": "discipline", "lt": 55}, "mul": 2.5}, {"if": {"sponsor": "betting"}, "mul": 1.5},
+                {"if": {"state": "stress", "gt": 60}, "mul": 2}],
+     "title": "{a} увлёкся ставками", "text": "Сокомандники замечают, что {a} ночами сидит в казино и на ставках.",
+     "options": [
+       {"label": "Жёсткий разговор и запрет", "ai": 2, "effects": [{"state": "coach_trust", "add": -10}, {"follow": "gambling_debt", "in_weeks": 8, "chance": 0.3}]},
+       {"label": "Оплатить специалиста по зависимостям", "ai": 1, "effects": [{"cash": -12000}, {"follow": "gambling_debt", "in_weeks": 8, "chance": 0.1}]},
+       {"label": "Не вмешиваться", "ai": 1, "effects": [{"follow": "gambling_debt", "in_weeks": 6, "chance": 0.7}]}],
+     "effects": [{"flag": "gambler"}, {"state": "sleep", "add": -10}]},
+
+    {"id": "gambling_debt", "who": "player", "chain_only": true, "base": 0,
+     "title": "У {a} крупные долги", "text": "{a} проигрался и просит аванс по зарплате.",
+     "options": [
+       {"label": "Дать аванс", "ai": 1, "effects": [{"cash": -20000}, {"state": "stress", "add": -10}, {"follow": "fixing_approach", "in_weeks": 4, "chance": 0.15}]},
+       {"label": "Отказать", "ai": 1, "effects": [{"state": "stress", "add": 15}, {"follow": "fixing_approach", "in_weeks": 3, "chance": 0.45}]}],
+     "effects": [{"state": "stress", "add": 20}]},
+
+    {"id": "fixing_approach", "who": "player", "chain_only": true, "base": 0,
+     "title": "К {a} подошли с предложением слить матч", "text": "Незнакомцы предлагают {a} закрыть долги за проигранную карту.",
+     "options": [
+       {"label": "Сообщить в интегрити-службу лиги", "ai": 3, "effects": [{"brand": 2}, {"state": "stress", "add": -10}, {"history": "сообщил о попытке договорняка"}]},
+       {"label": "Замять внутри клуба", "ai": 1,
+        "effects": [{"follow_random": [["fixing_scandal", 0.4], ["fixing_quiet", 0.6]], "in_weeks": 5}]}],
+     "effects": []},
+
+    {"id": "fixing_scandal", "who": "player", "chain_only": true, "base": 0,
+     "title": "Договорной скандал вокруг {club}", "text": "История с {a} всплыла. Лига начинает расследование.",
+     "effects": [{"brand": -10}, {"fans_pct": -5}, {"sponsor_leaves": "any"}, {"bench": true}, {"history": "фигурант договорного скандала"}]},
+
+    {"id": "fixing_quiet", "who": "player", "chain_only": true, "base": 0,
+     "title": "История с {a} затихла", "text": "Никто ничего не узнал. Пока что.",
+     "effects": [{"state": "stress", "add": 10}]},
+
+    {"id": "streaming_boom", "who": "player", "base": 0.005, "cooldown": 26,
+     "when": [{"any": [{"personality": "media", "gt": 65}, {"trait": "streamer_brain"}]}],
+     "title": "Стримы {a} взлетели", "text": "На стримы {a} пришла огромная аудитория.",
+     "options": [
+       {"label": "Поддержать: клубная студия и бренд", "ai": 2, "effects": [{"fans_pct": 4}, {"state": "fatigue", "add": 10}]},
+       {"label": "Ограничить стримы ради тренировок", "ai": 1, "effects": [{"state": "morale", "add": -10}, {"state": "fatigue", "add": -5}]}],
+     "effects": [{"fans_pct": 2}, {"add_trait": "media_darling", "chance": 0.15}]},
+
+    {"id": "toxic_post", "who": "player", "base": 0.004, "cooldown": 20,
+     "when": [{"any": [{"trait": "unfiltered"}, {"personality": "conflict", "gt": 70}]}],
+     "weight": [{"if": {"state": "stress", "gt": 50}, "mul": 2}, {"if": {"state": "morale", "lt": 40}, "mul": 2}],
+     "title": "Токсичный пост {a}", "text": "{a} после поражения резко написал о соперниках и фанатах.",
+     "options": [
+       {"label": "Оштрафовать", "ai": 2, "effects": [{"state": "coach_trust", "add": -10}, {"brand": 1}]},
+       {"label": "Публичные извинения", "ai": 1, "effects": [{"state": "morale", "add": -5}]},
+       {"label": "Сделать вид, что ничего не было", "ai": 1, "effects": [{"follow": "sponsor_complaint", "in_weeks": 1, "chance": 0.5}]}],
+     "effects": [{"fans_pct": 0.5}]},
+
+    {"id": "sponsor_complaint", "who": "club", "chain_only": true, "base": 0,
+     "title": "Спонсор {club} недоволен", "text": "Спонсор пишет, что не хочет ассоциироваться с токсичностью.",
+     "effects": [{"brand": -2}, {"sponsor_leaves": "any", "chance": 0.2}]},
+
+    {"id": "viral_clip", "who": "player", "base": 0.005, "cooldown": 20,
+     "when": [{"state": "form", "gt": 65}],
+     "title": "Клатч {a} разлетелся по сети", "text": "Момент {a} 1v4 собрал миллионы просмотров.",
+     "effects": [{"fans_pct": 3}, {"state": "confidence", "add": 10}, {"add_trait": "cult_hero", "chance": 0.1}]},
+
+    {"id": "teammates_bond", "who": "pair", "base": 0.003, "cooldown": 26,
+     "when": [{"rel": "friendship", "gt": 55}],
+     "title": "{a} и {b} сдружились", "text": "{a} и {b} вместе уехали на выходные. Вернулись лучшими друзьями.",
+     "effects": [{"rel": "friendship", "add": 12}, {"rel": "trust", "add": 10}]},
+
+    {"id": "role_interview", "who": "pair", "base": 0.004, "cooldown": 20,
+     "when": [{"rel": "role_rivalry", "gt": 35}],
+     "weight": [{"if": {"personality": "ego", "gt": 70}, "mul": 2.5}, {"if": {"personality": "media", "gt": 60}, "mul": 1.5}],
+     "title": "{a} высказался о роли в интервью", "text": "{a} намекнул журналистам, что {b} забирает его ресурсы в команде.",
+     "options": [
+       {"label": "Поговорить с обоими", "ai": 2, "effects": [{"rel": "irritation", "add": -10}]},
+       {"label": "Встать на сторону {a}", "ai": 1, "effects": [{"state": "role_satisfaction", "add": 15}, {"state": "role_satisfaction", "add": -20, "who": "b"}, {"rel": "resentment", "add": 15, "both": false}]},
+       {"label": "Встать на сторону {b}", "ai": 1, "effects": [{"state": "role_satisfaction", "add": -15}, {"rel": "resentment", "add": 10}]}],
+     "effects": [{"rel": "irritation", "add": 15}]},
+
+    {"id": "mentorship", "who": "pair", "base": 0.004, "cooldown": 30,
+     "when": [{"any": [{"trait": "mentor_magnet"}, {"stat": "leadership", "gt": 85}]}, {"age": "", "lt": 20, "who": "b"}],
+     "title": "{a} взял шефство над {b}", "text": "{a} каждый вечер разбирает демки с молодым {b}.",
+     "effects": [{"stat": "game_sense", "add": 2, "who": "b"}, {"stat": "utility_iq", "add": 2, "who": "b"}, {"rel": "respect", "add": 12}]},
+
+    {"id": "language_gap", "who": "pair", "base": 0.004, "cooldown": 26,
+     "when": [{"rel": "culture", "lt": 35}],
+     "title": "{a} и {b} не понимают друг друга", "text": "Коммуникация между {a} и {b} в раундах ломается из-за языка.",
+     "options": [
+       {"label": "Оплатить курсы английского", "ai": 2, "effects": [{"cash": -3000}, {"rel": "culture", "add": 20}]},
+       {"label": "Пусть сами разбираются", "ai": 1, "effects": [{"rel": "irritation", "add": 10}]}],
+     "effects": []},
+
+    {"id": "tapped_up", "who": "player", "base": 0.004, "cooldown": 20,
+     "when": [{"state": "form", "gt": 62}, {"club": "rank", "gt": 5}],
+     "weight": [{"if": {"personality": "ambition", "gt": 70}, "mul": 2}, {"if": {"personality": "money_focus", "gt": 70}, "mul": 2}],
+     "title": "Топ-клуб обрабатывает {a}", "text": "Агент {a} сообщает: топ-клуб готов платить вдвое больше.",
+     "options": [
+       {"label": "Поднять зарплату", "ai": 1, "effects": [{"cash": -30000}, {"state": "morale", "add": 10}]},
+       {"label": "Напомнить о контракте", "ai": 2, "effects": [{"state": "morale", "add": -8}, {"flag": "transfer_requested", "chance": 0.4}]}],
+     "effects": []},
+
+    {"id": "burnout_crash", "who": "player", "base": 0.05, "cooldown": 26,
+     "when": [{"state": "burnout", "gt": 55}],
+     "title": "{a} выгорел", "text": "{a} признаётся, что больше не получает удовольствия от игры.",
+     "options": [
+       {"label": "Отпуск на месяц", "ai": 2, "effects": [{"state": "burnout", "add": -35}, {"state": "fatigue", "add": -40}, {"state": "form", "add": -10}, {"add_trait": "second_wind", "chance": 0.2}]},
+       {"label": "Спортивный психолог", "ai": 1, "effects": [{"cash": -20000}, {"state": "burnout", "add": -20}]},
+       {"label": "Терпеть до конца сезона", "ai": 1, "effects": [{"state": "burnout", "add": 10}, {"state": "health", "add": -10}]}],
+     "effects": [{"state": "motivation", "add": -20}]},
+
+    {"id": "wrist_injury", "who": "player", "base": 0.003, "cooldown": 30,
+     "when": [{"state": "fatigue", "gt": 55}],
+     "weight": [{"if": {"trait": "wrist_of_glass"}, "mul": 4}, {"if": {"state": "fatigue", "gt": 75}, "mul": 2}],
+     "title": "У {a} травма запястья", "text": "{a} жалуется на боль в запястье после марафона тренировок.",
+     "options": [
+       {"label": "Операция и восстановление", "ai": 1, "effects": [{"cash": -15000}, {"state": "health", "add": 25}, {"state": "form", "add": -15}]},
+       {"label": "Обезболивающее и играть", "ai": 1, "effects": [{"state": "health", "add": -15}, {"follow": "wrist_injury_relapse", "in_weeks": 6, "chance": 0.4}]}],
+     "effects": [{"state": "health", "add": -30}]},
+
+    {"id": "wrist_injury_relapse", "who": "player", "chain_only": true, "base": 0,
+     "title": "Травма {a} вернулась", "text": "Запястье {a} снова не выдержало, теперь серьёзнее.",
+     "effects": [{"state": "health", "add": -40}, {"stat": "aim", "add": -3}, {"history": "рецидив травмы запястья"}]},
+
+    {"id": "cheating_accusation", "who": "player", "base": 0.003, "cooldown": 52,
+     "when": [{"state": "form", "gt": 72}, {"age": "", "lt": 21}],
+     "title": "{a} обвиняют в читах", "text": "После невероятной серии игр {a} в сети пишут, что он играет с читами.",
+     "options": [
+       {"label": "Открытая проверка ПК на стриме", "ai": 2, "effects": [{"cash": -3000}, {"brand": 2}, {"state": "stress", "add": 5}]},
+       {"label": "Игнорировать", "ai": 1, "effects": [{"brand": -1}, {"state": "stress", "add": 15}]}],
+     "effects": [{"state": "stress", "add": 10}]},
+
+    {"id": "homesick", "who": "player", "base": 0.006, "cooldown": 26,
+     "when": [{"personality": "home_attachment", "gt": 70}, {"state": "adaptation", "lt": 65}],
+     "weight": [{"if": {"trait": "homebody"}, "mul": 3}],
+     "title": "{a} скучает по дому", "text": "{a} тяжело живёт в чужой стране и думает о возвращении.",
+     "options": [
+       {"label": "Привезти семью", "ai": 1, "effects": [{"cash": -10000}, {"state": "adaptation", "add": 25}]},
+       {"label": "Тренироваться из дома неделю", "ai": 2, "effects": [{"state": "adaptation", "add": 10}, {"team_morale": -1}]}],
+     "effects": [{"state": "morale", "add": -10}, {"flag": "transfer_requested", "chance": 0.15}]},
+
+    {"id": "crypto_collapse", "who": "club", "base": 0.01, "cooldown": 52,
+     "when": [{"sponsor": "crypto"}],
+     "title": "Криптобиржа-спонсор {club} рухнула", "text": "Спонсор обанкротился и перестал платить.",
+     "effects": [{"sponsor_leaves": ["crypto"]}, {"brand": -3}]},
+
+    {"id": "betting_ad_ban", "who": "club", "base": 0.006, "cooldown": 52,
+     "when": [{"sponsor": "betting"}],
+     "title": "Запрет рекламы ставок", "text": "Регулятор запретил рекламу букмекеров. Спонсор {club} просит пересмотреть контракт.",
+     "options": [
+       {"label": "Согласиться на меньшую сумму", "ai": 2, "effects": [{"cash": -50000}]},
+       {"label": "Разорвать контракт", "ai": 1, "effects": [{"sponsor_leaves": ["betting"]}, {"fans_pct": 1}]}],
+     "effects": []},
+
+    {"id": "festival_grant", "who": "club", "base": 0.01, "cooldown": 52,
+     "when": [{"club": "brand", "gt": 55}],
+     "title": "{club} пригласили в программу фестиваля", "text": "Богатый фестиваль предлагает клубу грант на развитие бренда.",
+     "options": [
+       {"label": "Принять грант", "ai": 3, "effects": [{"cash": 500000}, {"club_flag": "festival_partner"}]},
+       {"label": "Отказаться: не хотим обязательств", "ai": 1, "effects": [{"fans_pct": 1}]}],
+     "effects": []},
+
+    {"id": "tax_audit", "who": "club", "base": 0.004, "cooldown": 52,
+     "title": "Налоговая проверка {club}", "text": "Налоговая нашла нарушения в контрактах прошлых лет.",
+     "effects": [{"cash": -40000}]},
+
+    {"id": "fan_protest", "who": "club", "base": 0.02, "cooldown": 26,
+     "when": [{"club": "rank", "gt": 20}, {"club": "brand", "gt": 50}],
+     "title": "Фанаты {club} недовольны", "text": "Фанаты требуют перемен после провального сезона.",
+     "effects": [{"team_morale": -5}, {"fans_pct": -2}]}
+  ]
+}

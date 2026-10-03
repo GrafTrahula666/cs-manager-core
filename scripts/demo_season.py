@@ -12,6 +12,7 @@ from csmcore.economy import Club, Contract, Sponsor, Tournament
 from csmcore.generate import concept_examples, make_player
 from csmcore.relations import RelationGraph
 from csmcore.season import run_season
+from csmcore.storylets import StoryEngine
 
 ROLES = ["igl", "awp", "entry", "rifler", "support"]
 
@@ -59,7 +60,7 @@ def build_world(seed: int):
 def main() -> None:
     seed = int(sys.argv[1]) if len(sys.argv) > 1 else 1
     clubs, graph, calendar = build_world(seed)
-    log = run_season(clubs, graph, calendar, seed)
+    log = run_season(clubs, graph, calendar, seed, stories=StoryEngine())
     for line in log.results[-8:]:
         print(line)
     print("\nFinal ranking and money:")
@@ -70,6 +71,11 @@ def main() -> None:
     print(f"\n{len(log.events)} emergent events. First five with causes:")
     for e in log.events[:5]:
         print(f"week {e.week}: {e.text}\n   why: {'; '.join(e.causes)}")
+    print(f"\n{len(log.stories)} life events (storylets). Club2 (vanta, north, sable):")
+    for f in log.stories:
+        if f.club.name == "Club2":
+            pick = f" → выбор: {f.options[f.choice]}" if f.choice is not None else ""
+            print(f"week {f.week}: {f.title}{pick}\n   why: {'; '.join(f.why)}\n   итог: {'; '.join(f.outcome)}")
 
 
 if __name__ == "__main__":
