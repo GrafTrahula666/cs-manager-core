@@ -1,0 +1,496 @@
+<title>CS MENEDGER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a manager's tactical board. Sticky club strip on top, tab rail, one working panel. */
+:root {
+  --bg: #e9edf1;
+  --panel: #f7f9fb;
+  --line: #c9d1da;
+  --fg: #17202b;
+  --muted: #5b6876;
+  --accent: #d9771c;      /* T-side orange */
+  --accent-fg: #ffffff;
+  --ct: #2f6db3;          /* CT-side blue */
+  --good: #2e8b57;
+  --warn: #b7791f;
+  --bad: #c0392b;
+  --chip: #dde4eb;
+  --display: "Chakra Petch", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121820; --panel: #1a222c; --line: #2c3845; --fg: #e3e9ef; --muted: #8d9aa8;
+    --accent: #ee8e33; --accent-fg: #1a1208; --ct: #6aa3e6; --good: #4fbf82; --warn: #e0a84a; --bad: #e46a5c;
+    --chip: #253141; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121820; --panel: #1a222c; --line: #2c3845; --fg: #e3e9ef; --muted: #8d9aa8;
+  --accent: #ee8e33; --accent-fg: #1a1208; --ct: #6aa3e6; --good: #4fbf82; --warn: #e0a84a; --bad: #e46a5c;
+  --chip: #253141; color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { background: var(--bg); color: var(--fg); }
+body { font: 15px/1.5 var(--body); padding-inline: 16px; padding-block: 0 48px; }
+.wrap { max-width: 1080px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: .01em; }
+h2 { font-size: 1.15rem; }
+h3 { font-size: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 6px 12px; }
+button:hover { border-color: var(--accent); }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--ct); outline-offset: 2px; }
+button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
+button.small { padding: 2px 8px; font-size: .85rem; }
+button:disabled { opacity: .5; cursor: wait; }
+select, input { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+
+/* boot + start */
+.boot { min-height: 70vh; display: grid; place-items: center; text-align: center; }
+.logo { font-family: var(--display); font-size: clamp(2.2rem, 7vw, 3.6rem); font-weight: 700; letter-spacing: .04em; }
+.logo span { color: var(--accent); }
+.tag { color: var(--muted); max-width: 52ch; margin: 8px auto 20px; }
+.start { display: grid; gap: 12px; justify-items: center; }
+.start .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: end; }
+.start label { display: grid; gap: 4px; font-size: .85rem; color: var(--muted); text-align: left; }
+.err { color: var(--bad); max-width: 60ch; }
+
+/* top strip */
+.strip { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 12px 8px; border-bottom: 1px solid var(--line); }
+.strip .top { display: flex; gap: 12px 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.club { display: grid; }
+.club b { font-family: var(--display); font-size: 1.35rem; line-height: 1.1; }
+.club small { color: var(--muted); }
+.kpis { display: flex; gap: 6px 18px; flex-wrap: wrap; }
+.kpi { display: grid; }
+.kpi small { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; }
+.kpi span { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 500; }
+.go { display: flex; gap: 6px; }
+.tabs { display: flex; gap: 2px; overflow-x: auto; margin-top: 10px; scrollbar-width: none; }
+.tabs button { border: 0; border-radius: 0; background: none; padding: 6px 12px; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); font-weight: 600; }
+.badge { display: inline-block; min-width: 18px; padding: 0 5px; border-radius: 9px; background: var(--accent); color: var(--accent-fg); font-size: .72rem; font-weight: 600; text-align: center; margin-left: 4px; }
+
+main { padding-block: 16px; display: grid; gap: 16px; }
+.grid2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 10px; min-width: 0; align-content: start; }
+.muted { color: var(--muted); }
+.feed { display: grid; gap: 6px; max-height: 420px; overflow-y: auto; }
+.feed .wk { font-family: var(--mono); font-size: .75rem; color: var(--muted); margin-top: 6px; }
+.line { display: flex; gap: 8px; align-items: baseline; }
+.pill { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; padding: 1px 6px; border-radius: 4px; background: var(--chip); color: var(--muted); flex: none; }
+.pill.match { background: color-mix(in srgb, var(--ct) 18%, transparent); color: var(--ct); }
+.pill.story { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+.pill.club { background: color-mix(in srgb, var(--good) 18%, transparent); color: var(--good); }
+.event { border-left: 3px solid var(--accent); padding-left: 10px; display: grid; gap: 6px; }
+.event .opts { display: flex; gap: 6px; flex-wrap: wrap; }
+.why { font-size: .8rem; color: var(--muted); }
+.result { font-size: .85rem; background: var(--chip); border-radius: 6px; padding: 6px 10px; }
+
+.tablebox { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.r, th.r { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+tr.me td { background: color-mix(in srgb, var(--accent) 12%, transparent); font-weight: 600; }
+tr.bench td { opacity: .6; }
+.bar { height: 6px; border-radius: 3px; background: var(--chip); position: relative; min-width: 50px; }
+.bar i { position: absolute; inset: 0 auto 0 0; border-radius: 3px; background: var(--good); }
+.bar.mid i { background: var(--warn); }
+.bar.low i { background: var(--bad); }
+.traits { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
+.traits span { font-size: .7rem; padding: 0 5px; border-radius: 3px; background: var(--chip); color: var(--muted); }
+.flag { color: var(--bad); font-size: .78rem; }
+.range { font-family: var(--mono); }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: 8px; max-width: min(92vw, 560px); font-size: .9rem; z-index: 10; }
+.busy { position: fixed; inset: 0; display: grid; place-items: center; background: color-mix(in srgb, var(--bg) 60%, transparent); z-index: 9; font-family: var(--display); font-size: 1.2rem; }
+.money-pos { color: var(--good); }
+.money-neg { color: var(--bad); }
+textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s; } }
+@media (max-width: 520px) { .hide-sm { display: none; } }
+</style>
+
+<div class="wrap" id="app">
+  <section class="boot" id="boot">
+    <div>
+      <div class="logo">CS <span>MENEDGER</span></div>
+      <p class="tag">Менеджер киберспортивного клуба: деньги, спонсоры, трансферы, люди и их истории. Матчи считает ядро игры прямо в браузере.</p>
+      <p id="bootMsg" class="muted">Загружаю движок Python…</p>
+      <div class="start" id="startBox" hidden>
+        <div class="row">
+          <label for="seed">Зерно мира<input id="seed" type="number" value="7" min="1" style="width:90px"></label>
+          <label for="nclubs">Клубов<select id="nclubs"><option>100</option><option selected>120</option><option>150</option></select></label>
+          <label for="director">Режиссёр судьбы<select id="director">
+            <option value="cassandra" selected>Кассандра: нарастающая драма</option>
+            <option value="phoebe">Фиби: даёт передышку</option>
+            <option value="randy">Рэнди: чистый хаос</option></select></label>
+        </div>
+        <div class="row">
+          <button class="primary" id="newBtn">Новая карьера</button>
+          <button id="contBtn" hidden>Продолжить сохранение</button>
+        </div>
+        <label for="importText" style="width:min(520px,90vw)">Или вставьте экспортированное сохранение
+          <textarea id="importText" placeholder="CSM1:…"></textarea></label>
+        <button id="importBtn">Загрузить из текста</button>
+      </div>
+      <p class="err" id="bootErr" hidden></p>
+    </div>
+  </section>
+
+  <div id="game" hidden>
+    <header class="strip">
+      <div class="top">
+        <div class="club"><b id="clubName">—</b><small id="clubSub">—</small></div>
+        <div class="kpis">
+          <div class="kpi"><small>Сезон · неделя</small><span id="kWeek">—</span></div>
+          <div class="kpi"><small>Место</small><span id="kRank">—</span></div>
+          <div class="kpi"><small>Касса</small><span id="kCash">—</span></div>
+          <div class="kpi"><small>Владелец</small><span id="kOwner">—</span></div>
+          <div class="kpi hide-sm"><small>Репутация</small><span id="kRep">—</span></div>
+        </div>
+        <div class="go">
+          <button class="primary" id="nextBtn">Следующая неделя</button>
+          <button id="next4Btn" title="Остановится, если нужно ваше решение">+4</button>
+        </div>
+      </div>
+      <nav class="tabs" role="tablist" id="tabs"></nav>
+    </header>
+    <main id="main"></main>
+  </div>
+</div>
+<div class="busy" id="busy" hidden>Идёт неделя…</div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="py/pyodide.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const money = (x) => {
+  const a = Math.abs(x), s = x < 0 ? "−" : "";
+  if (a >= 1e6) return s + "$" + (a / 1e6).toFixed(a >= 1e7 ? 1 : 2) + "M";
+  if (a >= 1e3) return s + "$" + Math.round(a / 1e3) + "k";
+  return s + "$" + Math.round(a);
+};
+const TIER = { super: "суперклуб", tier1: "tier-1", tier2: "tier-2", tier3: "tier-3" };
+const ROLE = { igl: "капитан", awp: "AWP", entry: "entry", rifler: "rifler", support: "support", lurker: "lurker" };
+const ITEM = { salaries: "зарплаты", staff: "персонал", sponsors: "спонсоры", merch: "мерч и билеты", content: "контент",
+  prizes: "призовые", stickers: "стикеры", travel: "перелёты", transfers_in: "покупки", transfers_out: "продажи",
+  facilities: "базы", interest: "проценты", loan: "кредит", investment: "инвестиции", build: "стройка",
+  release: "отступные", sponsor_bonus: "бонусы спонсоров", events: "события", signing_bonus: "подъёмные",
+  agents: "агенты", win_bonuses: "премии за титулы" };
+const SAVE_KEY = "csm-save-v1";
+let py, api, META, tab = "office", log = [], lastResults = {};
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.h); toast.h = setTimeout(() => (t.hidden = true), 4200);
+}
+function call(fn, ...args) {
+  py.globals.set("_ARGS", JSON.stringify(args));
+  py.globals.set("_FN", fn);
+  return JSON.parse(py.runPython("json.dumps(getattr(api, _FN)(*json.loads(_ARGS)), ensure_ascii=False)"));
+}
+function busy(on, text) { $("busy").hidden = !on; if (text) $("busy").textContent = text; }
+const later = (f) => new Promise((ok) => setTimeout(() => ok(f()), 30));
+
+// The host serves no archives: the stdlib arrives as JSON of source text and is packed into an
+// uncompressed zip here, handed to Pyodide when it asks for python_stdlib.zip.
+const CRC = new Uint32Array(256).map((_, n) => { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; return c >>> 0; });
+function crc32(b) { let c = 0xffffffff; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }
+function storeZip(files) {
+  const enc = new TextEncoder(), parts = [], central = []; let off = 0;
+  for (const [name, text] of Object.entries(files)) {
+    const nb = enc.encode(name), data = enc.encode(text), crc = crc32(data);
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x800, true);
+    h.setUint32(14, crc, true); h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, nb.length, true);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x800, true);
+    c.setUint32(16, crc, true); c.setUint32(20, data.length, true); c.setUint32(24, data.length, true); c.setUint16(28, nb.length, true); c.setUint32(42, off, true);
+    parts.push(new Uint8Array(h.buffer), nb, data); central.push(new Uint8Array(c.buffer), nb);
+    off += 30 + nb.length + data.length;
+  }
+  const csize = central.reduce((a, b) => a + b.length, 0), n = Object.keys(files).length;
+  const e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, n, true); e.setUint16(10, n, true); e.setUint32(12, csize, true); e.setUint32(16, off, true);
+  return new Blob([...parts, ...central, new Uint8Array(e.buffer)], { type: "application/octet-stream" });
+}
+
+async function boot() {
+  try {
+    const base = new URL("py/", document.baseURI).href;
+    const stdlib = await (await fetch(base + "stdlib.json")).json();
+    const zip = storeZip(stdlib);
+    const realFetch = window.fetch.bind(window);
+    window.fetch = (u, o) => String(u).endsWith("python_stdlib.zip") ? Promise.resolve(new Response(zip)) : realFetch(u, o);
+    $("bootMsg").textContent = "Запускаю Python…";
+    py = await loadPyodide({ indexURL: base });
+    $("bootMsg").textContent = "Распаковываю ядро игры…";
+    const core = await (await realFetch(new URL("csmcore.json", document.baseURI))).json();
+    for (const [path, text] of Object.entries(core)) {
+      const full = "/home/pyodide/lib/" + path;
+      py.FS.mkdirTree(full.slice(0, full.lastIndexOf("/")));
+      py.FS.writeFile(full, text);
+    }
+    py.runPython("import sys, json; sys.path.insert(0, '/home/pyodide/lib'); from csmcore import api");
+    META = call("meta_info");
+    $("bootMsg").hidden = true; $("startBox").hidden = false;
+    try { if (localStorage.getItem(SAVE_KEY)) $("contBtn").hidden = false; } catch (e) {}
+  } catch (e) {
+    $("bootMsg").hidden = true;
+    $("bootErr").hidden = false;
+    $("bootErr").textContent = "Не удалось запустить движок в этом окне: " + (e.message || e);
+  }
+}
+
+async function startNew() {
+  busy(true, "Создаю мир…");
+  const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value));
+  busy(false); log = []; enterGame(s);
+  toast(`Вы возглавили ${s.club}. Цели владельца: ${s.objectives.join("; ")}`);
+}
+async function loadFrom(text) {
+  busy(true, "Загружаю…");
+  try { const s = await later(() => call("load_b64", text.replace(/^CSM1:/, "").trim())); log = []; enterGame(s); }
+  catch (e) { toast("Не получилось загрузить: " + (e.message || e).toString().slice(-160)); }
+  busy(false);
+}
+function enterGame(s) { $("boot").hidden = true; $("game").hidden = false; render(s); }
+
+function autosave() {
+  try { localStorage.setItem(SAVE_KEY, call("save_b64")); return true; } catch (e) { return false; }
+}
+
+async function advance(n) {
+  $("nextBtn").disabled = $("next4Btn").disabled = true;
+  busy(true, n > 1 ? "Идут недели…" : "Идёт неделя…");
+  const res = await later(() => call("advance", n));
+  log = res.reverse().concat(log).slice(0, 40);
+  const s = call("state");
+  if (s.abs_week % 4 === 0) autosave();
+  busy(false);
+  $("nextBtn").disabled = $("next4Btn").disabled = false;
+  if (s.pending_events || s.offers) tab = "office";
+  render(s);
+  if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
+}
+
+const TABS = [["office", "Сводка"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+  ["table", "Рейтинг"], ["history", "Летопись"], ["career", "Карьера"]];
+
+function render(s) {
+  s = s || call("state");
+  $("clubName").textContent = s.club;
+  $("clubSub").textContent = `${TIER[s.tier]} · ${s.region} · бренд ${s.brand} · фанаты ${s.fans.toLocaleString("ru")}`;
+  $("kWeek").textContent = `${s.season} · ${s.week}/52`;
+  $("kRank").textContent = "#" + s.rank;
+  $("kCash").textContent = money(s.cash);
+  $("kCash").className = s.cash < 0 ? "money-neg" : "";
+  $("kOwner").textContent = s.owner_confidence + "/100";
+  $("kOwner").className = s.owner_confidence < 35 ? "money-neg" : "";
+  $("kRep").textContent = s.manager.reputation;
+  const due = s.pending_events + s.offers;
+  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}</button>`).join("");
+  const views = { office: viewOffice, squad: viewSquad, market: viewMarket, money: viewMoney, table: viewTable, history: viewHistory, career: viewCareer };
+  $("main").innerHTML = views[tab](s);
+}
+
+function kind(line) {
+  const k = line.split(":")[0];
+  return { "матч": "match", "история": "story", "клуб": "club" }[k] || "";
+}
+function newsHtml() {
+  if (!log.length) return `<p class="muted">Новостей пока нет. Нажмите «Следующая неделя».</p>`;
+  return log.map((w) => `<div class="wk">Сезон ${w.season}, неделя ${w.week}</div>` +
+    (w.lines.length ? w.lines.map((l) => {
+      const [k, ...rest] = l.split(": ");
+      return `<div class="line"><span class="pill ${kind(l)}">${esc(k)}</span><span>${esc(rest.join(": "))}</span></div>`;
+    }).join("") : `<div class="muted">тихая неделя</div>`)).join("");
+}
+
+function viewOffice(s) {
+  const ib = call("inbox");
+  const events = ib.events.map((e) => `<div class="event">
+      <b>${esc(e.title)}</b><span>${esc(e.text)}</span>
+      ${e.why.length ? `<span class="why">Почему: ${esc(e.why.join("; "))}</span>` : ""}
+      <div class="opts">${e.options.map((o, j) => `<button class="small" data-ev="${e.i}" data-opt="${j}">${esc(o)}</button>`).join("")}</div>
+      ${lastResults["ev" + e.i] ? "" : ""}
+    </div>`).join("");
+  const offers = ib.offers.map((o) => `<div class="event">
+      <b>${esc(o.buyer)} хочет ${esc(o.player)}</b>
+      <span class="num">${money(o.fee)} за трансфер · зарплата ${money(o.salary)}/мес</span>
+      <div class="opts"><button class="small" data-offer="${o.i}" data-acc="1">Продать</button><button class="small" data-offer="${o.i}" data-acc="0">Отказать</button></div>
+    </div>`).join("");
+  const next = s.next_events.map((e) => `<div class="line"><span class="num muted">н${e.week}</span><span>${esc(e.name)}</span>${e.invited ? `<span class="pill club">участвуем</span>` : `<span class="pill">не приглашены</span>`}</div>`).join("");
+  const tones = Object.entries(META.tones).map(([k, v]) => `<button class="small" data-talk="${k}">${v}</button>`).join("");
+  return `<div class="grid2">
+    <section class="card"><h3>Требует решения</h3>${events || offers ? events + offers : `<p class="muted">Ничего не ждёт. Нерешённое через 2 недели решит ассистент.</p>`}
+      ${lastResults.inbox ? `<div class="result">${esc(lastResults.inbox)}</div>` : ""}</section>
+    <section class="card"><h3>Цели владельца</h3>${s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
+      <h3>Ближайшие турниры</h3>${next || `<p class="muted">До конца сезона турниров нет</p>`}
+      <div class="muted">Патч: ${esc(s.patch)}</div></section>
+  </div>
+  <div class="grid2">
+    <section class="card"><h3>Новости</h3><div class="feed">${newsHtml()}</div></section>
+    <section class="card"><h3>План недели</h3>
+      <div class="controls">
+        <label for="pHours">Тренировки, ч</label><input id="pHours" type="number" min="0" max="50" value="30" style="width:70px">
+        <label for="pRest">Выходных</label><input id="pRest" type="number" min="0" max="3" value="1" style="width:60px">
+        <label for="pComm">Дни спонсоров</label><input id="pComm" type="number" min="0" max="3" value="0" style="width:60px">
+        <button class="small" id="planBtn">Применить</button>
+      </div>
+      <h3>Разговор с командой</h3><div class="controls">${tones}</div>
+      <h3>Пресс-конференция</h3>
+      <div class="controls"><button class="small" data-press="about_rival|trash_talk">Задеть соперника</button>
+        <button class="small" data-press="about_rival|respect">Уважительно о сопернике</button>
+        <button class="small" data-press="about_owner_goals|promise_title">Пообещать титул</button>
+        <button class="small" data-press="about_owner_goals|manage_expectations">Снизить ожидания</button></div>
+      ${lastResults.office ? `<div class="result">${lastResults.office}</div>` : ""}
+    </section>
+  </div>`;
+}
+
+function stateBar(v, invert) {
+  const good = invert ? 100 - v : v;
+  const cls = good < 35 ? "low" : good < 60 ? "mid" : "";
+  return `<div class="bar ${cls}" title="${v}"><i style="width:${Math.max(3, Math.min(100, v))}%"></i></div>`;
+}
+function viewSquad() {
+  const r = call("roster");
+  const rows = r.map((p) => `<tr class="${p.benched ? "bench" : ""}">
+      <td><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span>
+        ${p.wants_out ? `<div class="flag">просит трансфер</div>` : ""}
+        <div class="traits">${p.traits.map((t) => `<span>${esc(t)}</span>`).join("")}</div></td>
+      <td class="r">${p.ovr}</td><td>${stateBar(p.form)}</td><td>${stateBar(p.morale)}</td><td>${stateBar(p.stress, true)}</td>
+      <td class="r">${money(p.salary)}</td><td class="r">н${p.contract_end}</td><td class="r">${money(p.value)}</td>
+      <td><button class="small" data-bench="${esc(p.name)}">${p.benched ? "в состав" : "в запас"}</button>
+        <button class="small" data-release="${esc(p.name)}">отпустить</button></td></tr>`).join("");
+  return `<section class="card"><h2>Состав</h2>
+    <p class="muted">Играют пятеро лучших по форме дня, кроме тех, кого вы посадили в запас. Отпустить игрока стоит трёх его зарплат.</p>
+    ${lastResults.squad ? `<div class="result">${esc(lastResults.squad)}</div>` : ""}
+    <div class="tablebox"><table><thead><tr><th>Игрок</th><th class="r">Ур.</th><th>Форма</th><th>Мораль</th><th>Стресс</th><th class="r">З/п</th><th class="r">До</th><th class="r">Цена</th><th></th></tr></thead>
+    <tbody>${rows}</tbody></table></div></section>`;
+}
+
+function viewMarket() {
+  const m = call("market", 40);
+  const rows = m.map((p) => `<tr>
+      <td><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>
+        <div class="traits">${p.traits.map((t) => `<span>${esc(t)}</span>`).join("")}</div></td>
+      <td>${p.club ? esc(p.club) : `<span class="pill club">свободен</span>`}</td>
+      <td class="r range">${p.ovr_range[0]}–${p.ovr_range[1]}</td><td class="r">${p.known}%</td><td>${esc(p.potential)}</td>
+      <td class="r">${money(p.salary_wish)}</td><td class="r">${p.fee ? money(p.fee) : "—"}</td>
+      <td><button class="small" data-scout="${esc(p.name)}">скаут</button>
+        <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"}</button></td></tr>`).join("");
+  return `<section class="card"><h2>Рынок</h2>
+    <p class="muted">Свободные агенты и игроки, которые просят трансфер. Уровень виден диапазоном: чем дольше смотрят скауты, тем он точнее. Предложение идёт по запрошенной цене и желаемой зарплате, решает сам игрок.</p>
+    ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}
+    <div class="tablebox"><table><thead><tr><th>Игрок</th><th>Клуб</th><th class="r">Уровень</th><th class="r">Изучен</th><th>Потенциал</th><th class="r">Хочет/мес</th><th class="r">Цена</th><th></th></tr></thead>
+    <tbody>${rows || `<tr><td colspan="8" class="muted">Рынок пуст</td></tr>`}</tbody></table></div></section>`;
+}
+
+function moneyRows(obj) {
+  const e = Object.entries(obj);
+  if (!e.length) return `<tr><td class="muted" colspan="2">пока нет движений</td></tr>`;
+  return e.map(([k, v]) => `<tr><td>${esc(ITEM[k] || k)}</td><td class="r ${v < 0 ? "money-neg" : "money-pos"}">${money(v)}</td></tr>`).join("");
+}
+function viewMoney() {
+  const f = call("finances");
+  const sp = f.sponsors.map((s) => `<tr><td>${esc(s.name)} <span class="muted">${esc(s.category)}</span></td><td class="r">${money(s.annual)}/год</td><td class="r">до н${s.until}</td><td class="r">${s.kpi_rank ? "бонус за топ-" + s.kpi_rank : "—"}</td></tr>`).join("");
+  return `<div class="grid2">
+    <section class="card"><h3>Последние 4 недели</h3><div class="tablebox"><table>${moneyRows(f.month)}</table></div></section>
+    <section class="card"><h3>С начала сезона</h3><div class="tablebox"><table>${moneyRows(f.season)}</table></div></section>
+  </div>
+  <section class="card"><h3>Спонсоры</h3><div class="tablebox"><table>${sp}</table></div>
+    <div class="muted">Зарплаты игроков ${money(f.wages_month)}/мес, персонал ${money(f.staff_month)}/мес, долг ${money(f.debt)}.</div>
+    <div class="controls"><button class="small" data-build="bootcamp">Построить буткемп</button><button class="small" data-build="academy">Академию</button>
+      <button class="small" data-build="studio">Студию контента</button><button class="small" data-loan="500000">Кредит $500k</button></div>
+    ${lastResults.money ? `<div class="result">${esc(lastResults.money)}</div>` : ""}</section>`;
+}
+
+let tableRegion = "";
+function viewTable(s) {
+  const t = call("table", 40, tableRegion || null);
+  const opts = ["", "EU", "CIS", "NA", "SA", "Asia", "OCE"].map((r) => `<option value="${r}" ${r === tableRegion ? "selected" : ""}>${r || "Весь мир"}</option>`).join("");
+  return `<section class="card"><div class="controls"><h2>Мировой рейтинг</h2><select id="regionSel" aria-label="Регион">${opts}</select></div>
+    <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Уровень клуба</th><th>Регион</th><th class="r">Сила состава</th><th class="r">Очки</th><th class="r">Титулы</th></tr></thead>
+    <tbody>${t.map((c) => `<tr class="${c.me ? "me" : ""}"><td class="r">${c.rank}</td><td>${esc(c.club)}</td><td>${TIER[c.tier]}</td><td>${c.region}</td><td class="r">${c.ovr}</td><td class="r">${c.points}</td><td class="r">${c.titles}</td></tr>`).join("")}</tbody></table></div></section>`;
+}
+
+function viewHistory() {
+  const ch = call("chronicle", 40), rv = call("rivalries", 6);
+  return `<div class="grid2">
+    <section class="card"><h3>Летопись мира</h3><div class="feed">${ch.map((l) => `<div>${esc(l)}</div>`).join("") || `<p class="muted">История только начинается.</p>`}</div></section>
+    <section class="card"><h3>Соперничества</h3>${rv.filter((r) => r.score > 0).map((r) => `<div><b>${esc(r.clubs.join(" — "))}</b> <span class="num">${r.score}/100</span>
+      <div class="muted">встреч ${r.meetings}: ${Object.entries(r.wins).map(([k, v]) => esc(k) + " " + v).join(", ")}</div></div>`).join("") || `<p class="muted">Пока никто никого не ненавидит.</p>`}</section>
+  </div>`;
+}
+
+function viewCareer(s) {
+  const jobs = s.sacked ? call("jobs") : [];
+  let saved = "";
+  try { saved = localStorage.getItem(SAVE_KEY) ? "Автосохранение каждые 4 недели в этом браузере включено." : ""; } catch (e) {}
+  return `<div class="grid2">
+    <section class="card"><h3>Менеджер</h3><div><b>${esc(s.manager.name)}</b>, репутация ${s.manager.reputation}, титулов ${s.manager.titles}</div>
+      ${s.sacked ? `<div class="flag">Вас уволили. Клубы, готовые вас взять:</div>` + jobs.map((j) => `<div class="line"><span>${esc(j.club)} (${TIER[j.tier]}, #${j.rank}, ${j.region})</span><button class="small" data-job="${esc(j.club)}">Принять</button></div>`).join("") : `<div class="muted">Владелец оценивает вас раз в месяц. Доверие ниже 12 означает увольнение.</div>`}
+    </section>
+    <section class="card"><h3>Сохранение</h3><div class="muted">${saved}</div>
+      <div class="controls"><button class="small" id="saveBtn">Сохранить сейчас</button><button class="small" id="exportBtn">Скопировать сохранение текстом</button><button class="small" id="quitBtn">Выйти в меню</button></div>
+      ${lastResults.career ? `<div class="result">${esc(lastResults.career)}</div>` : ""}
+      <textarea id="exportText" hidden readonly aria-label="Сохранение"></textarea></section>
+  </div>`;
+}
+
+document.addEventListener("click", async (ev) => {
+  const b = ev.target.closest("button");
+  if (!b) return;
+  const d = b.dataset;
+  try {
+    if (b.id === "newBtn") return startNew();
+    if (b.id === "contBtn") { let t = ""; try { t = localStorage.getItem(SAVE_KEY) || ""; } catch (e) {} return loadFrom(t); }
+    if (b.id === "importBtn") return loadFrom($("importText").value);
+    if (b.id === "nextBtn") return advance(1);
+    if (b.id === "next4Btn") return advance(4);
+    if (d.tab) { tab = d.tab; return render(); }
+    if (d.ev !== undefined) { lastResults.inbox = call("answer_event", +d.ev, +d.opt).join("; ") || "Решение принято"; return render(); }
+    if (d.offer !== undefined) { lastResults.inbox = call("answer_offer", +d.offer, d.acc === "1"); return render(); }
+    if (d.talk) { lastResults.office = call("talk", d.talk).map(esc).join("<br>"); return render(); }
+    if (d.press) { const [q, a] = d.press.split("|"); lastResults.office = call("press", q, a, null).map(esc).join("<br>") || "Без последствий"; return render(); }
+    if (b.id === "planBtn") { const p = call("plan", +$("pHours").value, +$("pRest").value, false, +$("pComm").value); lastResults.office = `План на неделю: ${p.practice_hours} ч тренировок, выходных ${p.rest_days}, спонсорских дней ${p.commercial_days}`; return render(); }
+    if (d.bench) { lastResults.squad = call("toggle_bench", d.bench); return render(); }
+    if (d.release) {
+      if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "точно?"; return; }
+      lastResults.squad = call("release", d.release); return render();
+    }
+    if (d.scout) { const r = call("scout", d.scout); lastResults.market = `${r.name}: изучен на ${r.known}%, потенциал ${r.potential}${r.traits.length ? ", черты: " + r.traits.join(", ") : ""}`; return render(); }
+    if (d.sign) {
+      lastResults.market = d.club === "1" ? call("bid", d.sign, +d.fee, +d.sal) : call("sign", d.sign, +d.sal);
+      return render();
+    }
+    if (d.build) { lastResults.money = call("build", d.build); return render(); }
+    if (d.loan) { lastResults.money = call("loan", +d.loan); return render(); }
+    if (d.job) { lastResults.career = call("take_job", d.job); tab = "office"; return render(); }
+    if (b.id === "saveBtn") { lastResults.career = autosave() ? "Сохранено в этом браузере." : "Браузер не дал сохранить. Скопируйте сохранение текстом."; return render(); }
+    if (b.id === "exportBtn") {
+      const t = $("exportText"); t.value = "CSM1:" + call("save_b64"); t.hidden = false; t.select();
+      try { await navigator.clipboard.writeText(t.value); toast("Сохранение скопировано. Вставьте его на стартовом экране, чтобы продолжить."); }
+      catch (e) { toast("Выделил текст сохранения: скопируйте его вручную."); }
+      return;
+    }
+    if (b.id === "quitBtn") { autosave(); $("game").hidden = true; $("boot").hidden = false; try { $("contBtn").hidden = !localStorage.getItem(SAVE_KEY); } catch (e) {} return; }
+  } catch (e) {
+    toast("Ошибка: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]);
+  }
+});
+document.addEventListener("change", (ev) => {
+  if (ev.target.id === "regionSel") { tableRegion = ev.target.value; render(); }
+});
+boot();
+</script>

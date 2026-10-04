@@ -153,6 +153,133 @@ def rerank(clubs: list[Club]) -> None:
         c.rank = i
 
 
+@dataclass
+class SeasonRun:
+    """Everything a season needs between weeks, so the game can stop after any week and
+    resume (or be saved) without changing what happens next."""
+    season: int
+    start_week: int
+    rng: random.Random
+    meta_rng: random.Random
+    story_rng: random.Random
+    mgmt_rng: random.Random
+    log: SeasonLog
+    titles_before: dict
+    wk: int = 0
+
+
+def season_begin(clubs: list[Club], seed: int, sysm: Systems, season: int = 1, start_week: int = 0) -> SeasonRun:
+    run = SeasonRun(season, start_week, random.Random(seed), random.Random(seed + 3),
+                    random.Random(seed + 1),  # separate streams: adding layers does not reshuffle matches
+                    random.Random(seed + 2), SeasonLog(),
+                    {k: len(v) for k, v in (sysm.chronicle.titles.items() if sysm.chronicle else [])})
+    if sysm.stories is not None and sysm.secrets is not None:
+        sysm.stories.secrets = sysm.secrets
+    if sysm.careers is not None:
+        for c in clubs:
+            if c.name not in sysm.careers.managers:
+                sysm.careers.hire(c, start_week, run.mgmt_rng)
+    for o_club in clubs:
+        if sysm.owners and o_club.name in sysm.owners and not sysm.owners[o_club.name].objectives:
+            sysm.owners[o_club.name].set_objectives(o_club)
+    return run
+
+
+def season_week(run: SeasonRun, clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tournament],
+                sysm: Systems, plans: dict | None = None) -> None:
+    """Advance one week of the season."""
+    run.wk += 1
+    wk, season, log = run.wk, run.season, run.log
+    rng, meta_rng, story_rng, mgmt_rng = run.rng, run.meta_rng, run.story_rng, run.mgmt_rng
+    week = run.start_week + wk  # absolute week: contracts and sponsors use it
+    week_plans = dict(plans or {})
+    events = calendar.get(wk, [])
+    events = events if isinstance(events, list) else [events]   # a big world runs several events a week
+    for t in events:
+        for c in clubs:
+            if t.invited(c):
+                week_plans.setdefault(c.name, world.WeekPlan(travel=t.lan))
+    if sysm.meta and wk % sysm.patch_every == 1:
+        line = sysm.meta.new_patch(week, meta_rng)
+        if sysm.chronicle:
+            sysm.chronicle.add(season, week, "patch", line.split(": ", 1)[1])
+    if sysm.meta:
+        for c in clubs:
+            sysm.meta.practice(c)
+    if sysm.rivalries:
+        sysm.rivalries.decay()
+    log.events += world.world_week(clubs, graph, week, rng, week_plans)
+    if sysm.secrets is not None:
+        log.management += sysm.secrets.discovery_week(clubs, graph, week, mgmt_rng)
+    if sysm.stories is not None:
+        fired = sysm.stories.week(clubs, graph, week, story_rng, sysm.manager_club)
+        log.stories += fired
+        if sysm.chronicle:
+            for f in fired:
+                if sysm.stories.events[f.event_id].get("chain_only") or f.event_id in ("wedding", "festival_grant"):
+                    sysm.chronicle.add(season, week, "story", f.title, [f.a.name] if f.a else [])
+    for c in clubs:
+        log.management += squad.leader_mood_spread(c, graph, week)
+        if sysm.promises and c.name in sysm.promises:
+            log.management += promises_mod.check(sysm.promises[c.name], c, graph, week)
+    if sysm.market is not None:
+        deals = sysm.market.week(clubs, week, mgmt_rng, sysm.manager_club)
+        log.management += deals
+        if sysm.chronicle:
+            for d in deals:
+                if "→" in d or "подписал" in d:
+                    sysm.chronicle.add(season, week, "transfer", d)
+    if week % 4 == 0:
+        for c in clubs:
+            if sysm.development:
+                mentor = any(p.mod("team_youth_learning")[1] > 1 for p in c.roster)
+                lineup = c.lineup()
+                for p in c.roster:
+                    development.month(p, c, mgmt_rng, played=p in lineup, mentor_in_team=mentor)
+            if sysm.owners and c.name in sysm.owners:
+                review = sysm.owners[c.name].monthly_review(c, week)
+                log.management += review
+                for r in review:
+                    if "увольняет" not in r:
+                        continue
+                    if sysm.chronicle:
+                        sysm.chronicle.add(season, week, "board", r.split(": ", 1)[1])
+                    if sysm.careers is not None:
+                        gone = sysm.careers.sack(c, week)
+                        new = sysm.careers.hire(c, week, mgmt_rng)
+                        owner = sysm.owners[c.name]
+                        owner.fired, owner.confidence = False, 50.0   # new manager, fresh start
+                        if sysm.chronicle and gone:
+                            sysm.chronicle.add(season, week, "board",
+                                               f"{c.name}: {gone.name} уволен, новый менеджер {new.name}")
+    for t in events:
+        run_tournament(t, clubs, graph, week, rng, log, sysm, season)
+    if events:
+        rerank(clubs)
+
+
+def season_finish(run: SeasonRun, clubs: list[Club], sysm: Systems) -> None:
+    """Season-end reviews, retirements, new talents and ageing."""
+    season, mgmt_rng, log = run.season, run.mgmt_rng, run.log
+    end_week = run.start_week + run.wk
+    if sysm.careers is not None:
+        for c in clubs:
+            m = sysm.careers.managers.get(c.name)
+            if m:
+                won = len(sysm.chronicle.titles.get(c.name, [])) - run.titles_before.get(c.name, 0) if sysm.chronicle else 0
+                m.season_review(c, sysm.owners.get(c.name) if sysm.owners else None, won, season)
+    if sysm.legacy:
+        for line in sysm.legacy.season_end(clubs, end_week, mgmt_rng):
+            log.management.append(line)
+            if sysm.chronicle:
+                sysm.chronicle.add(season, end_week, "retirement", line)
+        talents = sysm.legacy.new_talents(sysm.talents_per_season, mgmt_rng, season)
+        if sysm.market is not None:
+            sysm.market.free_agents += talents
+    if sysm.development:
+        development.season_end([p for c in clubs for p in c.roster])
+
+
 def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tournament], seed: int,
                weeks: int = economy.WEEKS_PER_YEAR, plans: dict | None = None,
                stories: StoryEngine | None = None, manager_club: str | None = None,
@@ -161,98 +288,8 @@ def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tour
     owners, promises and development. The manager's club gets its choices in
     stories.pending / market.offers instead of having the AI decide."""
     sysm = systems or Systems(stories=stories, manager_club=manager_club, development=False)
-    rng = random.Random(seed)
-    meta_rng = random.Random(seed + 3)
-    story_rng = random.Random(seed + 1)  # separate streams: adding layers does not reshuffle matches
-    mgmt_rng = random.Random(seed + 2)
-    log = SeasonLog()
-    if sysm.stories is not None and sysm.secrets is not None:
-        sysm.stories.secrets = sysm.secrets
-    if sysm.careers is not None:
-        for c in clubs:
-            if c.name not in sysm.careers.managers:
-                sysm.careers.hire(c, start_week, mgmt_rng)
-    titles_before = {k: len(v) for k, v in (sysm.chronicle.titles.items() if sysm.chronicle else [])}
-    for o_club in clubs:
-        if sysm.owners and o_club.name in sysm.owners and not sysm.owners[o_club.name].objectives:
-            sysm.owners[o_club.name].set_objectives(o_club)
-    for wk in range(1, weeks + 1):
-        week = start_week + wk  # absolute week: contracts and sponsors use it
-        week_plans = dict(plans or {})
-        if wk in calendar:
-            for c in clubs:
-                if calendar[wk].invited(c):
-                    week_plans.setdefault(c.name, world.WeekPlan(travel=calendar[wk].lan))
-        if sysm.meta and wk % sysm.patch_every == 1:
-            line = sysm.meta.new_patch(week, meta_rng)
-            if sysm.chronicle:
-                sysm.chronicle.add(season, week, "patch", line.split(": ", 1)[1])
-        if sysm.meta:
-            for c in clubs:
-                sysm.meta.practice(c)
-        if sysm.rivalries:
-            sysm.rivalries.decay()
-        log.events += world.world_week(clubs, graph, week, rng, week_plans)
-        if sysm.secrets is not None:
-            log.management += sysm.secrets.discovery_week(clubs, graph, week, mgmt_rng)
-        if sysm.stories is not None:
-            fired = sysm.stories.week(clubs, graph, week, story_rng, sysm.manager_club)
-            log.stories += fired
-            if sysm.chronicle:
-                for f in fired:
-                    if sysm.stories.events[f.event_id].get("chain_only") or f.event_id in ("wedding", "festival_grant"):
-                        sysm.chronicle.add(season, week, "story", f.title, [f.a.name] if f.a else [])
-        for c in clubs:
-            log.management += squad.leader_mood_spread(c, graph, week)
-            if sysm.promises and c.name in sysm.promises:
-                log.management += promises_mod.check(sysm.promises[c.name], c, graph, week)
-        if sysm.market is not None:
-            deals = sysm.market.week(clubs, week, mgmt_rng, sysm.manager_club)
-            log.management += deals
-            if sysm.chronicle:
-                for d in deals:
-                    if "→" in d or "подписал" in d:
-                        sysm.chronicle.add(season, week, "transfer", d)
-        if week % 4 == 0:
-            for c in clubs:
-                if sysm.development:
-                    mentor = any(p.mod("team_youth_learning")[1] > 1 for p in c.roster)
-                    lineup = c.lineup()
-                    for p in c.roster:
-                        development.month(p, c, mgmt_rng, played=p in lineup, mentor_in_team=mentor)
-                if sysm.owners and c.name in sysm.owners:
-                    review = sysm.owners[c.name].monthly_review(c, week)
-                    log.management += review
-                    for r in review:
-                        if "увольняет" not in r:
-                            continue
-                        if sysm.chronicle:
-                            sysm.chronicle.add(season, week, "board", r.split(": ", 1)[1])
-                        if sysm.careers is not None:
-                            gone = sysm.careers.sack(c, week)
-                            new = sysm.careers.hire(c, week, mgmt_rng)
-                            owner = sysm.owners[c.name]
-                            owner.fired, owner.confidence = False, 50.0   # new manager, fresh start
-                            if sysm.chronicle and gone:
-                                sysm.chronicle.add(season, week, "board",
-                                                   f"{c.name}: {gone.name} уволен, новый менеджер {new.name}")
-        if wk in calendar:
-            run_tournament(calendar[wk], clubs, graph, week, rng, log, sysm, season)
-            rerank(clubs)
-    if sysm.careers is not None:
-        for c in clubs:
-            m = sysm.careers.managers.get(c.name)
-            if m:
-                won = len(sysm.chronicle.titles.get(c.name, [])) - titles_before.get(c.name, 0) if sysm.chronicle else 0
-                m.season_review(c, sysm.owners.get(c.name) if sysm.owners else None, won, season)
-    if sysm.legacy:
-        for line in sysm.legacy.season_end(clubs, start_week + weeks, mgmt_rng):
-            log.management.append(line)
-            if sysm.chronicle:
-                sysm.chronicle.add(season, start_week + weeks, "retirement", line)
-        talents = sysm.legacy.new_talents(sysm.talents_per_season, mgmt_rng, season)
-        if sysm.market is not None:
-            sysm.market.free_agents += talents
-    if sysm.development:
-        development.season_end([p for c in clubs for p in c.roster])
-    return log
+    run = season_begin(clubs, seed, sysm, season, start_week)
+    for _ in range(weeks):
+        season_week(run, clubs, graph, calendar, sysm, plans)
+    season_finish(run, clubs, sysm)
+    return run.log

@@ -89,6 +89,7 @@ class Market:
             if seller is not None and seller.name == manager_club:
                 self.offers.append(offer)
                 notes.append(f"{buyer.name} предлагает {fee:,.0f} за {p.name}: ждёт решения менеджера")
+                pool = [(q, s) for q, s in pool if q is not p]   # one bid per player per window
                 continue
             note = self.complete(offer, week, rng)
             notes.append(note)

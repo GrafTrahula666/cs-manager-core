@@ -74,6 +74,7 @@ class LedgerLine:
 class Club:
     name: str
     tier: str = "tier2"
+    region: str = "EU"
     cash: float = 500_000.0
     debt: float = 0.0
     debt_rate_year: float = 0.12
@@ -188,13 +189,17 @@ class Tournament:
     prize_pool: float
     distribution: list[float]  # share by place, 1st first
     max_rank_invite: int = 999  # VRS-like: invites go by ranking only
+    min_rank_invite: int = 1    # lower-tier events skip the elite
+    region: str | None = None   # regional qualifiers/leagues
     lan: bool = True
     major: bool = False
     travel_cost: float = 0.0
     sticker_revenue: float = 0.0  # total token revenue if major
 
     def invited(self, club: Club) -> bool:
-        return club.rank <= self.max_rank_invite
+        if self.region is not None and club.region != self.region:
+            return False
+        return self.min_rank_invite <= club.rank <= self.max_rank_invite
 
 
 def award(club: Club, t: Tournament, place: int, week: int, field_size: int) -> float:

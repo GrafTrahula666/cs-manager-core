@@ -18,6 +18,9 @@ DUEL_SCALE = 18.0
 CHEMISTRY_WEIGHT = 1 / 12
 # Duel points lost when a team plays a round on an eco/force buy.
 ECO_PENALTY = 8.0
+# Day form: each team's whole-map bonus is drawn per map. Without it a 3-point level edge won
+# ~80% of maps, so one club swept every event of a 120-club season; real top-5 teams trade maps.
+DAY_FORM_SD = 7.0
 
 
 def duel_win_prob(a: Player, b: Player, ctx_a: dict | None = None, ctx_b: dict | None = None,
@@ -73,6 +76,10 @@ def play_map(team_a: list[Player], team_b: list[Player], seed: int, rounds_to_wi
              chemistry: tuple[float, float] = (0.0, 0.0)) -> MapResult:
     """MR12: pistol rounds 1 and 13; the pistol loser plays the next round on an eco."""
     rng = random.Random(seed)
+    form_rng = random.Random(seed * 7 + 13)   # own stream: round draws stay the same
+    form = (form_rng.gauss(0, DAY_FORM_SD), form_rng.gauss(0, DAY_FORM_SD))
+    ctx_a = {**(ctx_a or {}), "team_bonus": (ctx_a or {}).get("team_bonus", 0.0) + form[0]}
+    ctx_b = {**(ctx_b or {}), "team_bonus": (ctx_b or {}).get("team_bonus", 0.0) + form[1]}
     score = [0, 0]
     rounds: list[RoundResult] = []
     half = rounds_to_win - 1

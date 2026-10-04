@@ -1,7 +1,7 @@
 # cs-manager-core
 
 Simulation core for an esports manager game: a tactical-FPS match engine calibrated on real match data.
-Headless Python library, no UI. Design comes from the "Simulated Esports World" concept.
+Python library plus a browser prototype (`web/`). Design comes from the "Simulated Esports World" concept.
 
 Design overview (RU): [docs/core-design.md](docs/core-design.md).
 
@@ -27,7 +27,12 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `src/csmcore/legacy.py` – retirements, second careers, new talents inheriting legends' traits
 - `src/csmcore/secrets.py` – CK3-style secrets, discovery, hooks and leaks
 - `src/csmcore/manager.py` – manager careers (reputation, sackings, hiring) and `ManagerDesk`, the one API for UI
-- `src/csmcore/season.py` – season loop: weeks, ranking-based invites, tournaments
+- `src/csmcore/season.py` – season loop: weeks, ranking-based invites, tournaments; stepwise via `SeasonRun`
+- `src/csmcore/worldgen.py` – procedural 100–150 club world: regions, tiers, rosters, sponsors, big-world calendar
+- `src/csmcore/game.py` – one playable career: week clock, news, assistant, season rollover, sacking and new jobs
+- `src/csmcore/save.py` – save/load the whole game (gzip pickle, exact continuation)
+- `src/csmcore/api.py` – JSON-friendly facade for UIs
+- `web/index.html` + `scripts/build_web.py` – browser prototype running the core in Pyodide
 - `src/csmcore/engine.py` – seeded duel -> round -> map engine (pistol/eco, pressure, chemistry)
 - `scripts/demo_season.py` – one season of an 8-club world, prints money, results, events
 - `scripts/parse_demo.py` – demo -> compact table (untested skeleton, needs `pip install -e ".[data]"`)
@@ -46,4 +51,5 @@ pip install -e ".[dev]"
 pytest
 python scripts/demo_season.py 1
 cd scripts && python demo_world.py 2 3 cassandra   # several seasons, every system on
+python scripts/build_web.py path/to/pyodide/package  # then serve web/dist and open index.html
 ```
