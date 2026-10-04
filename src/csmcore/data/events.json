@@ -853,6 +853,10 @@
        "follow": "gambling_debt",
        "in_weeks": 8,
        "chance": 0.3
+      },
+      {
+       "secret": "gambling",
+       "known_by_club": true
       }
      ]
     },
@@ -878,6 +882,9 @@
        "follow": "gambling_debt",
        "in_weeks": 6,
        "chance": 0.7
+      },
+      {
+       "secret": "gambling"
       }
      ]
     }
@@ -1024,6 +1031,10 @@
     {
      "state": "stress",
      "add": 10
+    },
+    {
+     "secret": "fixing_contact",
+     "known_by_club": true
     }
    ]
   },
@@ -1462,6 +1473,10 @@
       {
        "flag": "transfer_requested",
        "chance": 0.4
+      },
+      {
+       "secret": "side_deal",
+       "chance": 0.3
       }
      ]
     }
@@ -2096,6 +2111,107 @@
     }
    ],
    "tone": "bad"
+  },
+  {
+   "id": "stimulants_offer",
+   "who": "player",
+   "base": 0.003,
+   "cooldown": 52,
+   "tone": "bad",
+   "when": [
+    {
+     "state": "fatigue",
+     "gt": 55
+    },
+    {
+     "personality": "risk",
+     "gt": 55
+    }
+   ],
+   "weight": [
+    {
+     "if": {
+      "personality": "ambition",
+      "gt": 75
+     },
+     "mul": 2
+    },
+    {
+     "if": {
+      "club": "rank",
+      "lt": 10
+     },
+     "mul": 1.5
+    }
+   ],
+   "title": "{a} начал принимать стимуляторы",
+   "text": "Чтобы держать концентрацию на марафонах, {a} тайком начал принимать стимуляторы.",
+   "effects": [
+    {
+     "secret": "stimulants"
+    },
+    {
+     "state": "fatigue",
+     "add": -15
+    },
+    {
+     "state": "health",
+     "add": -5
+    }
+   ]
+  },
+  {
+   "id": "old_posts_found",
+   "who": "player",
+   "base": 0.004,
+   "cooldown": 104,
+   "tone": "bad",
+   "when": [
+    {
+     "personality": "conflict",
+     "gt": 60
+    }
+   ],
+   "weight": [
+    {
+     "if": {
+      "trait": "unfiltered"
+     },
+     "mul": 2
+    }
+   ],
+   "title": "У {a} нашли старые посты",
+   "text": "Кто-то из окружения {a} сохранил его токсичные посты пятилетней давности.",
+   "effects": [
+    {
+     "secret": "toxic_past"
+    }
+   ]
+  },
+  {
+   "id": "fake_age_youth",
+   "who": "player",
+   "base": 0.004,
+   "cooldown": 999,
+   "once": true,
+   "tone": "bad",
+   "when": [
+    {
+     "age": "",
+     "lt": 18
+    },
+    {
+     "personality": "risk",
+     "gt": 60
+    }
+   ],
+   "title": "С возрастом {a} не всё чисто",
+   "text": "В документах {a} при подписании юниорского контракта есть несостыковки.",
+   "effects": [
+    {
+     "secret": "fake_age"
+    }
+   ]
   }
  ]
 }

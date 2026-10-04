@@ -7,7 +7,7 @@ from csmcore.storylets import StoryEngine, check, library
 
 COND_KEYS = {"any", "not", "stat", "state", "personality", "age", "trait", "role", "flag", "no_flag",
              "club_flag", "no_club_flag", "rel", "club", "sponsor"}
-EFFECT_KEYS = {"state", "stat", "personality", "rel", "team_morale", "cash", "fans_pct", "brand", "sponsor_leaves",
+EFFECT_KEYS = {"secret", "state", "stat", "personality", "rel", "team_morale", "cash", "fans_pct", "brand", "sponsor_leaves",
                "flag", "unflag", "club_flag", "add_trait", "bench", "release", "follow", "follow_random", "history"}
 
 

@@ -25,6 +25,8 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `src/csmcore/meta.py` – patches, role meta, map pool, map familiarity, Bo3 veto
 - `src/csmcore/talks.py` – team talks and press conferences
 - `src/csmcore/legacy.py` – retirements, second careers, new talents inheriting legends' traits
+- `src/csmcore/secrets.py` – CK3-style secrets, discovery, hooks and leaks
+- `src/csmcore/manager.py` – manager careers (reputation, sackings, hiring) and `ManagerDesk`, the one API for UI
 - `src/csmcore/season.py` – season loop: weeks, ranking-based invites, tournaments
 - `src/csmcore/engine.py` – seeded duel -> round -> map engine (pistol/eco, pressure, chemistry)
 - `scripts/demo_season.py` – one season of an 8-club world, prints money, results, events

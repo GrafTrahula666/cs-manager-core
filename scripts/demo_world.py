@@ -16,6 +16,8 @@ from csmcore.director import Director
 from csmcore.economy import Sponsor
 from csmcore.generate import make_player
 from csmcore.legacy import Legacy
+from csmcore.manager import Careers
+from csmcore.secrets import Secrets
 from csmcore.market import Market
 from csmcore.meta import Meta
 from csmcore.rivalry import Rivalries
@@ -37,6 +39,7 @@ def main() -> None:
         owners={c.name: Owner(f"owner{c.name}", patience=rng.uniform(20, 80), ambition=rng.uniform(30, 90),
                               money_focus=rng.uniform(20, 80)) for c in clubs},
         rivalries=Rivalries(), meta=Meta(), chronicle=Chronicle(), legacy=Legacy(),
+        secrets=Secrets(), careers=Careers(),
     )
     everyone = {p.name: p for c in clubs for p in c.roster}
     for s in range(1, seasons + 1):
@@ -44,8 +47,6 @@ def main() -> None:
         for c in clubs:
             c.rating_points *= 0.5
             c.sponsors = [Sponsor(f"{c.name} HW", "hardware", sp, start + 52) for sp in [max(50_000, c.brand * 20_000)]]
-            if sysm.owners[c.name].fired:
-                sysm.owners[c.name] = Owner(f"owner{c.name}", patience=rng.uniform(20, 80), ambition=rng.uniform(30, 90))
             sysm.owners[c.name].objectives = []
         run_season(clubs, graph, calendar, seed * 100 + s, systems=sysm, season=s, start_week=start)
         for c in clubs:
@@ -78,6 +79,15 @@ def main() -> None:
     heirs = [p for p in sysm.legacy.born if any("легенды" in h for h in p.history)]
     for p in heirs[:2]:
         print(f"  талант {p.name}: {p.history[-1]}")
+    sec = sysm.secrets
+    print(f"\nСекреты: всего {len(sec.items)}, раскрыто {sum(s.exposed for s in sec.items)}")
+    for s in sec.items[:4]:
+        print(f"  {s.player}: {s.kind}, знают {sorted(s.known_by)[:4]}" + (" — ВСПЛЫЛ" if s.exposed else ""))
+    print("\nМенеджеры:")
+    for club, m in sorted(sysm.careers.managers.items()):
+        print(f"  {club}: {m.name}, репутация {m.reputation:.0f}, титулов {m.titles}, увольнений {m.sackings}")
+    for m in sysm.careers.pool[:3]:
+        print(f"  без работы: {m.name}, репутация {m.reputation:.0f}, {m.history[-1]}")
     print("\nРазговор перед финалом (Club2, тон «требовательный», фаворит):")
     for r in team_talk(clubs[1], "demand", favourite=True):
         print(f"  {r.player}: {r.text} (мораль {r.delta_morale:+})")

@@ -10,7 +10,9 @@ from .board import Owner
 from .chronicle import Chronicle
 from .legacy import Legacy
 from .meta import Meta
+from .manager import Careers
 from .rivalry import Rivalries
+from .secrets import Secrets
 from .market import Market
 from .economy import Club, Tournament
 from .engine import play_map
@@ -39,6 +41,8 @@ class Systems:
     meta: Meta | None = None
     chronicle: Chronicle | None = None
     legacy: Legacy | None = None
+    secrets: Secrets | None = None
+    careers: Careers | None = None
     talents_per_season: int = 6
     patch_every: int = 13
 
@@ -65,6 +69,14 @@ def play_series(a: Club, b: Club, graph: RelationGraph, seed: int, ctx: dict, ma
         if rc.get("rivalry"):
             base_a["playoffs"] = base_b["playoffs"] = True   # a derby feels like a playoff
             base_a["team_bonus"] = base_b["team_bonus"] = 0.0
+    if riv and sysm.secrets and stage in ("semi", "final"):
+        score = riv.get(a.name, b.name).score
+        leaks = sysm.secrets.rival_leaks(a, b, score, week, graph, random.Random(seed)) + \
+            sysm.secrets.rival_leaks(b, a, score, week, graph, random.Random(seed + 1))
+        if notes is not None:
+            notes += leaks
+        if leaks:
+            la, lb = a.lineup(), b.lineup()
     logs: list[str] = []
     for m in range(maps):
         if max(wins) > maps // 2:
@@ -154,6 +166,13 @@ def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tour
     story_rng = random.Random(seed + 1)  # separate streams: adding layers does not reshuffle matches
     mgmt_rng = random.Random(seed + 2)
     log = SeasonLog()
+    if sysm.stories is not None and sysm.secrets is not None:
+        sysm.stories.secrets = sysm.secrets
+    if sysm.careers is not None:
+        for c in clubs:
+            if c.name not in sysm.careers.managers:
+                sysm.careers.hire(c, start_week, mgmt_rng)
+    titles_before = {k: len(v) for k, v in (sysm.chronicle.titles.items() if sysm.chronicle else [])}
     for o_club in clubs:
         if sysm.owners and o_club.name in sysm.owners and not sysm.owners[o_club.name].objectives:
             sysm.owners[o_club.name].set_objectives(o_club)
@@ -174,6 +193,8 @@ def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tour
         if sysm.rivalries:
             sysm.rivalries.decay()
         log.events += world.world_week(clubs, graph, week, rng, week_plans)
+        if sysm.secrets is not None:
+            log.management += sysm.secrets.discovery_week(clubs, graph, week, mgmt_rng)
         if sysm.stories is not None:
             fired = sysm.stories.week(clubs, graph, week, story_rng, sysm.manager_club)
             log.stories += fired
@@ -202,13 +223,28 @@ def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tour
                 if sysm.owners and c.name in sysm.owners:
                     review = sysm.owners[c.name].monthly_review(c, week)
                     log.management += review
-                    if sysm.chronicle:
-                        for r in review:
-                            if "увольняет" in r:
-                                sysm.chronicle.add(season, week, "board", r.split(": ", 1)[1])
+                    for r in review:
+                        if "увольняет" not in r:
+                            continue
+                        if sysm.chronicle:
+                            sysm.chronicle.add(season, week, "board", r.split(": ", 1)[1])
+                        if sysm.careers is not None:
+                            gone = sysm.careers.sack(c, week)
+                            new = sysm.careers.hire(c, week, mgmt_rng)
+                            owner = sysm.owners[c.name]
+                            owner.fired, owner.confidence = False, 50.0   # new manager, fresh start
+                            if sysm.chronicle and gone:
+                                sysm.chronicle.add(season, week, "board",
+                                                   f"{c.name}: {gone.name} уволен, новый менеджер {new.name}")
         if wk in calendar:
             run_tournament(calendar[wk], clubs, graph, week, rng, log, sysm, season)
             rerank(clubs)
+    if sysm.careers is not None:
+        for c in clubs:
+            m = sysm.careers.managers.get(c.name)
+            if m:
+                won = len(sysm.chronicle.titles.get(c.name, [])) - titles_before.get(c.name, 0) if sysm.chronicle else 0
+                m.season_review(c, sysm.owners.get(c.name) if sysm.owners else None, won, season)
     if sysm.legacy:
         for line in sysm.legacy.season_end(clubs, start_week + weeks, mgmt_rng):
             log.management.append(line)

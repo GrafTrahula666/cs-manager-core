@@ -108,7 +108,7 @@ def _clamp(v: float) -> float:
 
 
 def apply_effects(effects: list[dict], f: Fired, graph: RelationGraph, rng: random.Random,
-                  queue: list[tuple[int, str, Club, str | None, str | None]]) -> list[str]:
+                  queue: list[tuple[int, str, Club, str | None, str | None]], secrets=None) -> list[str]:
     out = []
     club = f.club
     for e in effects:
@@ -165,6 +165,11 @@ def apply_effects(effects: list[dict], f: Fired, graph: RelationGraph, rng: rand
             p.former_clubs.add(club.name)
             p.flags.add("free_agent")
             out.append(f"{p.name} покинул клуб")
+        elif "secret" in e and p and secrets is not None:
+            sec = secrets.add(p, e["secret"], f.week)
+            if e.get("known_by_club"):
+                sec.known_by.add(club.name)
+            out.append(f"у {p.name} появился секрет")
         elif "follow_random" in e:
             ids, odds = zip(*e["follow_random"])
             pick = rng.choices(ids, weights=odds)[0]
@@ -184,6 +189,7 @@ class StoryEngine:
     def __init__(self, events: dict[str, dict] | None = None, director=None) -> None:
         self.events = events or library()
         self.director = director  # optional director.Director: shapes the drama per club
+        self.secrets = None       # optional secrets.Secrets: events can leave secrets behind
         self.queue: list[tuple[int, str, Club, str | None, str | None]] = []  # scheduled follow-ups
         self.last_fired: dict[tuple[str, str], int] = {}  # (event, subject) -> week
         self.pending: list[Fired] = []  # waiting for the manager's choice
@@ -288,10 +294,10 @@ class StoryEngine:
 
     def resolve(self, f: Fired, choice: int | None, graph: RelationGraph, rng: random.Random) -> Fired:
         ev = self.events[f.event_id]
-        f.outcome += apply_effects(ev.get("effects", []), f, graph, rng, self.queue)
+        f.outcome += apply_effects(ev.get("effects", []), f, graph, rng, self.queue, self.secrets)
         if choice is not None and ev.get("options"):
             f.choice = choice
-            f.outcome += apply_effects(ev["options"][choice].get("effects", []), f, graph, rng, self.queue)
+            f.outcome += apply_effects(ev["options"][choice].get("effects", []), f, graph, rng, self.queue, self.secrets)
         if f in self.pending:
             self.pending.remove(f)
         return f
