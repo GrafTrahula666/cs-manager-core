@@ -255,6 +255,7 @@ def transfer(buyer: Club, seller: Club, player: Player, fee: float, new: Contrac
     seller.contracts.pop(player.name, None)
     buyer.roster.append(player)
     buyer.contracts[player.name] = new
+    player.former_clubs.add(seller.name)
     player.history.append(f"week {week}: {seller.name} -> {buyer.name} за {fee:,.0f}")
 
 

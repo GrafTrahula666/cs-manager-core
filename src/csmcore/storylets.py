@@ -162,6 +162,7 @@ def apply_effects(effects: list[dict], f: Fired, graph: RelationGraph, rng: rand
             club.roster.remove(p)
             club.contracts.pop(p.name, None)
             club.former.append(p)
+            p.former_clubs.add(club.name)
             p.flags.add("free_agent")
             out.append(f"{p.name} покинул клуб")
         elif "follow_random" in e:
@@ -180,15 +181,21 @@ def apply_effects(effects: list[dict], f: Fired, graph: RelationGraph, rng: rand
 # ---------- engine ----------
 
 class StoryEngine:
-    def __init__(self, events: dict[str, dict] | None = None) -> None:
+    def __init__(self, events: dict[str, dict] | None = None, director=None) -> None:
         self.events = events or library()
+        self.director = director  # optional director.Director: shapes the drama per club
         self.queue: list[tuple[int, str, Club, str | None, str | None]] = []  # scheduled follow-ups
         self.last_fired: dict[tuple[str, str], int] = {}  # (event, subject) -> week
         self.pending: list[Fired] = []  # waiting for the manager's choice
 
-    def _weight(self, ev: dict, club, a, b, graph) -> tuple[float, list[str]]:
+    def _weight(self, ev: dict, club, a, b, graph, week: int = 0) -> tuple[float, list[str]]:
         w = ev.get("base", 0.01)
         why = []
+        if self.director is not None:
+            m = self.director.multiplier(club, ev.get("tone", "neutral"), week)
+            if abs(m - 1) > 0.05:
+                w *= m
+                why.append(f"режиссёр ({self.director.mode}) ×{m:.2f}")
         for m in ev.get("weight", []):
             if check(m["if"], club, a, b, graph):
                 w *= m["mul"]
@@ -247,12 +254,18 @@ class StoryEngine:
                         continue
                     if not self._eligible(ev, week, club, a, b, graph):
                         continue
-                    w, why = self._weight(ev, club, a, b, graph)
+                    w, why = self._weight(ev, club, a, b, graph, week)
                     if rng.random() < w:
                         why = [describe(c) for c in ev.get("when", [])] + why
                         fired.append(self._fire(ev, week, club, a, b, why))
                         if a:
                             busy[a.name] = busy.get(a.name, 0) + 1
+        if self.director is not None:
+            for c in clubs:
+                self.director.observe(c, week)
+            for f in fired:
+                if self.events[f.event_id].get("tone") == "bad":
+                    self.director.hurt(f.club, week, 10.0)
         for f in fired:
             if f.club.name == manager_club and f.options:
                 self.pending.append(f)

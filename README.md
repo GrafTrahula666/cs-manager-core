@@ -19,6 +19,12 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `src/csmcore/squad.py` – dressing-room hierarchy, cliques, leader mood spread
 - `src/csmcore/board.py` – owner objectives, confidence, sacking, next budget
 - `src/csmcore/market.py` – AI transfer market, free agents, offers to the manager
+- `src/csmcore/director.py` – RimWorld-style drama director (cassandra / phoebe / randy)
+- `src/csmcore/rivalry.py` – club rivalries, player nemeses, nicknames (Nemesis-system style)
+- `src/csmcore/chronicle.py` – world history, titles, Hall of Fame, headlines
+- `src/csmcore/meta.py` – patches, role meta, map pool, map familiarity, Bo3 veto
+- `src/csmcore/talks.py` – team talks and press conferences
+- `src/csmcore/legacy.py` – retirements, second careers, new talents inheriting legends' traits
 - `src/csmcore/season.py` – season loop: weeks, ranking-based invites, tournaments
 - `src/csmcore/engine.py` – seeded duel -> round -> map engine (pistol/eco, pressure, chemistry)
 - `scripts/demo_season.py` – one season of an 8-club world, prints money, results, events
@@ -37,4 +43,5 @@ Early scaffold. All weights are placeholders. Next steps:
 pip install -e ".[dev]"
 pytest
 python scripts/demo_season.py 1
+cd scripts && python demo_world.py 2 3 cassandra   # several seasons, every system on
 ```

@@ -74,6 +74,7 @@ class Player:
         self.potential: float = min(100.0, self.overall() + 5) if self.stats else 60.0
         self.fame: float = 0.0          # public profile, grows with results and media events
         self.joined_week: int = 0       # for tenure in the squad hierarchy
+        self.former_clubs: set[str] = set()
         if form is not None:
             self.state["form"] = form
         if morale is not None:
@@ -109,6 +110,8 @@ class Player:
         """Single number for a duel in a context. Weights follow the concept's opening-duel table
         (aim 24, reaction 16, positioning 13, timing 12, game sense 9 ...) and are placeholders
         until calibrated on demo data."""
+        if ctx and ctx.get("opponent") in self.former_clubs:
+            ctx = {**ctx, "vs_former_club": True}   # Revenge Game wakes up
         st = lambda k: self.stat(k, ctx)  # noqa: E731
         base = (
             0.40 * st("aim") + 0.25 * st("reaction") + 0.15 * st("positioning")
@@ -117,7 +120,8 @@ class Player:
         state = (0.10 * (self.s("form") - 50) + 0.05 * (self.s("morale") - 60)
                  + 0.04 * (self.s("confidence") - 55) - 0.05 * max(0.0, self.s("fatigue") - 40))
         add, mul = self.mod("duel", ctx)
-        return (base + state + add) * mul - self.pressure_penalty(ctx)
+        meta = (ctx or {}).get("meta_roles", {}).get(self.role, 0.0)  # patch favours some roles
+        return (base + state + add + meta) * mul - self.pressure_penalty(ctx)
 
     def overall(self) -> float:
         """Rough public rating, used by market value and AI clubs. Not used by the match engine."""

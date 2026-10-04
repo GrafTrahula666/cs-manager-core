@@ -28,8 +28,10 @@ def duel_win_prob(a: Player, b: Player, ctx_a: dict | None = None, ctx_b: dict |
 
 def team_bonus(team: list[Player], ctx: dict | None, chemistry: float = 0.0) -> float:
     """Team-wide duel bonus: team-scoped traits (Utility Architect) + chemistry from the graph."""
-    eco = -ECO_PENALTY if (ctx or {}).get("round") == "eco" else 0.0
-    return sum(p.mod("team_duel", ctx)[0] for p in team) + chemistry * CHEMISTRY_WEIGHT + eco
+    ctx = ctx or {}
+    eco = -ECO_PENALTY if ctx.get("round") == "eco" else 0.0
+    # ctx["team_bonus"]: map familiarity, rivalry motivation, team talk etc. computed by callers.
+    return sum(p.mod("team_duel", ctx)[0] for p in team) + chemistry * CHEMISTRY_WEIGHT + eco + ctx.get("team_bonus", 0.0)
 
 
 @dataclass

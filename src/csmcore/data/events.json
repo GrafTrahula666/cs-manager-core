@@ -44,7 +44,8 @@
     {
      "history": "начал отношения"
     }
-   ]
+   ],
+   "tone": "good"
   },
   {
    "id": "quiet_breakup",
@@ -93,7 +94,8 @@
      "state": "stress",
      "add": 10
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "wedding",
@@ -182,7 +184,8 @@
      "in_weeks": 40,
      "chance": 0.4
     }
-   ]
+   ],
+   "tone": "good"
   },
   {
    "id": "child_born",
@@ -306,7 +309,8 @@
      "add": 15
     }
    ],
-   "scandal": true
+   "scandal": true,
+   "tone": "bad"
   },
   {
    "id": "scandal_viral",
@@ -729,7 +733,8 @@
      "state": "stress",
      "add": 15
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "visa_denied",
@@ -774,7 +779,8 @@
      ]
     }
    ],
-   "effects": []
+   "effects": [],
+   "tone": "bad"
   },
   {
    "id": "food_poisoning",
@@ -796,7 +802,8 @@
      "state": "form",
      "add": -6
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "gambling_habit",
@@ -883,7 +890,8 @@
      "state": "sleep",
      "add": -10
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "gambling_debt",
@@ -1076,7 +1084,8 @@
      "add_trait": "media_darling",
      "chance": 0.15
     }
-   ]
+   ],
+   "tone": "good"
   },
   {
    "id": "toxic_post",
@@ -1155,7 +1164,8 @@
      "fans_pct": 0.5
     }
    ],
-   "scandal": true
+   "scandal": true,
+   "tone": "bad"
   },
   {
    "id": "sponsor_complaint",
@@ -1199,7 +1209,8 @@
      "add_trait": "cult_hero",
      "chance": 0.1
     }
-   ]
+   ],
+   "tone": "good"
   },
   {
    "id": "teammates_bond",
@@ -1223,7 +1234,8 @@
      "rel": "trust",
      "add": 10
     }
-   ]
+   ],
+   "tone": "good"
   },
   {
    "id": "role_interview",
@@ -1305,7 +1317,8 @@
      "rel": "irritation",
      "add": 15
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "mentorship",
@@ -1347,7 +1360,8 @@
      "rel": "respect",
      "add": 12
     }
-   ]
+   ],
+   "tone": "good"
   },
   {
    "id": "language_gap",
@@ -1387,7 +1401,8 @@
      ]
     }
    ],
-   "effects": []
+   "effects": [],
+   "tone": "bad"
   },
   {
    "id": "tapped_up",
@@ -1451,7 +1466,8 @@
      ]
     }
    ],
-   "effects": []
+   "effects": [],
+   "tone": "bad"
   },
   {
    "id": "burnout_crash",
@@ -1522,7 +1538,8 @@
      "state": "motivation",
      "add": -20
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "wrist_injury",
@@ -1591,7 +1608,8 @@
      "state": "health",
      "add": -30
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "wrist_injury_relapse",
@@ -1668,7 +1686,8 @@
      "add": 10
     }
    ],
-   "scandal": true
+   "scandal": true,
+   "tone": "bad"
   },
   {
    "id": "homesick",
@@ -1732,7 +1751,8 @@
      "flag": "transfer_requested",
      "chance": 0.15
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "crypto_collapse",
@@ -1755,7 +1775,8 @@
     {
      "brand": -3
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "betting_ad_ban",
@@ -1794,7 +1815,8 @@
      ]
     }
    ],
-   "effects": []
+   "effects": [],
+   "tone": "bad"
   },
   {
    "id": "festival_grant",
@@ -1832,7 +1854,8 @@
      ]
     }
    ],
-   "effects": []
+   "effects": [],
+   "tone": "good"
   },
   {
    "id": "tax_audit",
@@ -1845,7 +1868,8 @@
     {
      "cash": -40000
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "fan_protest",
@@ -1871,7 +1895,8 @@
     {
      "fans_pct": -2
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "stress_break_1",
@@ -1986,7 +2011,8 @@
     {
      "team_morale": -2
     }
-   ]
+   ],
+   "tone": "bad"
   },
   {
    "id": "stress_break_2",
@@ -2068,7 +2094,8 @@
     {
      "history": "нервный срыв"
     }
-   ]
+   ],
+   "tone": "bad"
   }
  ]
 }
