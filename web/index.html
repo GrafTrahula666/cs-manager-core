@@ -57,6 +57,9 @@ select, input { background: var(--panel); border: 1px solid var(--line); border-
 .tag { color: var(--muted); max-width: 52ch; margin: 8px auto 20px; }
 .start { display: grid; gap: 12px; justify-items: center; }
 .start .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: end; }
+.hints { max-width: 56ch; text-align: left; font-size: .85rem; color: var(--muted); display: grid; gap: 6px; }
+.hints p { margin: 0; }
+.hints b { color: var(--fg); }
 .start label { display: grid; gap: 4px; font-size: .85rem; color: var(--muted); text-align: left; }
 .err { color: var(--bad); max-width: 60ch; }
 
@@ -131,6 +134,10 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
             <option value="cassandra" selected>Кассандра: нарастающая драма</option>
             <option value="phoebe">Фиби: даёт передышку</option>
             <option value="randy">Рэнди: чистый хаос</option></select></label>
+        </div>
+        <div class="hints">
+          <p><b>Зерно мира</b> задаёт мир: одно и то же число всегда даёт те же клубы и игроков. Другое число даст другой мир. Если не важно, оставьте как есть.</p>
+          <p><b>Режиссёр судьбы</b> решает, как часто с клубом случаются плохие и хорошие истории. <i>Кассандра</i> нагнетает драму, когда всё слишком спокойно. <i>Фиби</i> после трудного периода даёт передышку. <i>Рэнди</i> бросает кости: то тишина, то три скандала подряд.</p>
         </div>
         <div class="row">
           <button class="primary" id="newBtn">Новая карьера</button>
