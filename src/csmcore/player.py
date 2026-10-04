@@ -69,6 +69,11 @@ class Player:
         self.history = list(history or [])
         self.earnings = earnings
         self.flags: set[str] = set()  # open situations, e.g. "transfer_requested"
+        # Hidden ceiling for the average of the 20 stats (FM-style potential ability). Defaults to
+        # a little above the current level; generators set it explicitly.
+        self.potential: float = min(100.0, self.overall() + 5) if self.stats else 60.0
+        self.fame: float = 0.0          # public profile, grows with results and media events
+        self.joined_week: int = 0       # for tenure in the squad hierarchy
         if form is not None:
             self.state["form"] = form
         if morale is not None:

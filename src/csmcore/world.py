@@ -56,7 +56,21 @@ def update_state(p: Player, plan: WeekPlan, rng: random.Random, club: Club) -> l
     if plan.travel:
         add_stress = 4 * p.mod("travel_stress")[1] * (0.5 + p.p("home_attachment") / 100)
         st["stress"] = _clamp(st["stress"] + add_stress)
-    st["stress"] = _clamp(st["stress"] - 3 - plan.rest_days)
+    # CK3-style: acting against your own personality is stressful.
+    against = []
+    if plan.commercial_days and p.p("media") < 35:
+        against.append(("коммерция при закрытом характере", 3 * plan.commercial_days))
+    if "benched" in p.flags and p.p("ego") > 60:
+        against.append(("сидит в запасе при высоком эго", 5))
+    if p.role == "support" and p.p("ego") > 70:
+        against.append(("роль support при высоком эго", 3))
+    if plan.practice_hours > 40 and p.stat("discipline") < 45:
+        against.append(("жёсткий режим при низкой дисциплине", 3))
+    for why, amount in against:
+        st["stress"] = _clamp(st["stress"] + amount)
+        notes.append(f"стресс: {why}")
+    relief = (3 + plan.rest_days) * p.mod("stress_relief")[1]
+    st["stress"] = _clamp(st["stress"] - relief)
 
     if st["fatigue"] > 65:
         st["burnout"] = _clamp(st["burnout"] + (st["fatigue"] - 65) / 5 * p.mod("burnout_gain")[1])
@@ -92,6 +106,12 @@ def after_match(p: Player, won: bool, mistake: bool, ctx: dict) -> None:
         st["morale"] = _clamp(st["morale"] - 3 * (1.3 - p.stat("tilt_control") / 100))
     if mistake:
         st["confidence"] = _clamp(st["confidence"] - 6)
+
+
+def stress_level(p: Player) -> int:
+    """CK3-style stress levels: 0 calm, 1 strained (>35), 2 breaking (>65), 3 crisis (>85)."""
+    s = p.s("stress")
+    return 3 if s > 85 else 2 if s > 65 else 1 if s > 35 else 0
 
 
 def world_week(clubs: list[Club], graph: RelationGraph, week: int, rng: random.Random,

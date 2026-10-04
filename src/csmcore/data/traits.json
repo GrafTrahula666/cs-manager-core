@@ -1,121 +1,704 @@
 {
-  "_doc": "Gold Traits as data: id, name, family, effects (target/op/value/when), incompatible, hidden_until. Golden does NOT mean positive. 'when' keys are matched against the event context dict. Values are placeholders for balancing.",
-  "distribution": {"1": 0.70, "2": 0.27, "3": 0.03},
-  "traits": [
-    {"id": "lan_animal", "name": "LAN Animal", "family": "match",
-     "desc": "На LAN получает бонус к стрессоустойчивости и уверенности; online-бонуса нет.",
-     "effects": [{"target": "stat:stress_resistance", "op": "add", "value": 10, "when": {"lan": true}},
-                 {"target": "duel", "op": "add", "value": 2, "when": {"lan": true}}]},
-    {"id": "hunter_of_giants", "name": "Hunter of Giants", "family": "match",
-     "desc": "Против команд выше рейтинга играет смелее и быстрее восстанавливает мораль.",
-     "effects": [{"target": "duel", "op": "add", "value": 2.5, "when": {"underdog": true}},
-                 {"target": "morale_recovery", "op": "mul", "value": 1.5, "when": {"underdog": true}}]},
-    {"id": "match_point_ice", "name": "Match Point Ice", "family": "match",
-     "desc": "На match point почти не получает pressure penalty.",
-     "effects": [{"target": "pressure_penalty", "op": "mul", "value": 0.1, "when": {"match_point": true}}]},
-    {"id": "reverse_sweep_believer", "name": "Reverse Sweep Believer", "family": "match",
-     "desc": "После проигранной первой карты меньше теряет уверенность.",
-     "effects": [{"target": "confidence_loss", "op": "mul", "value": 0.4, "when": {"after_map_loss": true}},
-                 {"target": "duel", "op": "add", "value": 1.5, "when": {"after_map_loss": true}}]},
-    {"id": "big_stage_silence", "name": "Big Stage Silence", "family": "match",
-     "desc": "В плей-офф хуже коммуницирует, даже если механика остаётся высокой.",
-     "effects": [{"target": "stat:communication", "op": "add", "value": -15, "when": {"playoffs": true}}]},
-    {"id": "revenge_game", "name": "Revenge Game", "family": "match",
-     "desc": "Против бывшего клуба получает мотивацию, но растёт риск overpeek.",
-     "effects": [{"target": "duel", "op": "add", "value": 2, "when": {"vs_former_club": true}},
-                 {"target": "stat:tactical_discipline", "op": "add", "value": -10, "when": {"vs_former_club": true}}]},
-    {"id": "pistol_savant", "name": "Pistol Savant", "family": "mechanics",
-     "desc": "Непропорционально силён в pistol rounds.",
-     "effects": [{"target": "duel", "op": "add", "value": 6, "when": {"round": "pistol"}}]},
-    {"id": "first_bullet_artist", "name": "First Bullet Artist", "family": "mechanics",
-     "desc": "Бонус в коротких дуэлях; слабее в длинных spray fights.",
-     "effects": [{"target": "duel", "op": "add", "value": 3, "when": {"duel_type": "short"}},
-                 {"target": "duel", "op": "add", "value": -2, "when": {"duel_type": "spray"}}]},
-    {"id": "spray_transfer_freak", "name": "Spray Transfer Freak", "family": "mechanics",
-     "desc": "Повышает шанс multi-kill после первого контакта.",
-     "effects": [{"target": "multikill", "op": "mul", "value": 1.6}]},
-    {"id": "awp_magnet", "name": "AWP Magnet", "family": "mechanics",
-     "desc": "Лучше извлекает value из AWP, но сильнее страдает от плохой экономики.",
-     "effects": [{"target": "duel", "op": "add", "value": 4, "when": {"round": "full"}},
-                 {"target": "duel", "op": "add", "value": -3, "when": {"round": "eco"}}]},
-    {"id": "eco_prophet", "name": "Eco Prophet", "family": "mechanics",
-     "desc": "Необычно хорошо играет force/eco rounds.",
-     "effects": [{"target": "duel", "op": "add", "value": 5, "when": {"round": "eco"}}]},
-    {"id": "utility_architect", "name": "Utility Architect", "family": "mechanics",
-     "desc": "Повышает эффективность utility всей пятёрки в подготовленных раундах.",
-     "effects": [{"target": "team_duel", "op": "add", "value": 1.5, "when": {"prepared": true}}]},
-    {"id": "tactical_sponge", "name": "Tactical Sponge", "family": "learning",
-     "desc": "Очень быстро усваивает новые playbooks и роли.",
-     "effects": [{"target": "learning", "op": "mul", "value": 1.6}]},
-    {"id": "deep_mastery", "name": "Deep Mastery", "family": "learning",
-     "desc": "Медленно учится, но освоенное почти не деградирует.",
-     "effects": [{"target": "learning", "op": "mul", "value": 0.7}, {"target": "decay", "op": "mul", "value": 0.2}]},
-    {"id": "pattern_thief", "name": "Pattern Thief", "family": "learning",
-     "desc": "После нескольких карт лучше читает привычки соперника.",
-     "effects": [{"target": "duel", "op": "add", "value": 2, "when": {"late_series": true}}]},
-    {"id": "one_map_native", "name": "One-Map Native", "family": "learning",
-     "desc": "На одной карте аномально высокий потолок, но медленнее расширяет pool.",
-     "effects": [{"target": "duel", "op": "add", "value": 5, "when": {"home_map": true}},
-                 {"target": "map_learning", "op": "mul", "value": 0.6}]},
-    {"id": "meta_chameleon", "name": "Meta Chameleon", "family": "learning",
-     "desc": "Быстрее адаптируется после патчей и смены меты.",
-     "effects": [{"target": "meta_adaptation", "op": "mul", "value": 2.0}]},
-    {"id": "demo_obsessive", "name": "Demo Obsessive", "family": "learning",
-     "desc": "Больше эффекта от demo review, но легче выгорает.",
-     "effects": [{"target": "learning", "op": "mul", "value": 1.3}, {"target": "burnout_gain", "op": "mul", "value": 1.4}]},
-    {"id": "atmosphere_stabilizer", "name": "Atmosphere Stabilizer", "family": "team",
-     "desc": "Снижает скорость распространения tilt внутри команды.",
-     "effects": [{"target": "team_tilt_spread", "op": "mul", "value": 0.5}]},
-    {"id": "pack_leader", "name": "Pack Leader", "family": "team",
-     "desc": "Сильно влияет на мораль группы; его недовольство заражает других.",
-     "effects": [{"target": "influence", "op": "mul", "value": 2.0}]},
-    {"id": "mentor_magnet", "name": "Mentor Magnet", "family": "team",
-     "desc": "Молодые игроки рядом развиваются быстрее.",
-     "effects": [{"target": "team_youth_learning", "op": "mul", "value": 1.3}]},
-    {"id": "lone_wolf", "name": "Lone Wolf", "family": "team",
-     "desc": "Почти не зависит от атмосферы, но медленнее строит доверие.",
-     "effects": [{"target": "atmosphere_sensitivity", "op": "mul", "value": 0.2}, {"target": "trust_gain", "op": "mul", "value": 0.5}]},
-    {"id": "role_thief", "name": "Role Thief", "family": "team",
-     "desc": "Со временем претендует на ресурсы и позицию более статусного игрока.",
-     "effects": [{"target": "role_hunger", "op": "add", "value": 1.0}], "hidden_until": "behaviour"},
-    {"id": "bridge_builder", "name": "Bridge Builder", "family": "team",
-     "desc": "Снижает культурные и языковые трения в составе.",
-     "effects": [{"target": "team_culture_friction", "op": "mul", "value": 0.5}]},
-    {"id": "contract_year_beast", "name": "Contract Year Beast", "family": "career",
-     "desc": "За 6–9 месяцев до конца контракта растёт мотивация и медийность.",
-     "effects": [{"target": "duel", "op": "add", "value": 2, "when": {"contract_final_months": true}}]},
-    {"id": "homebody", "name": "Homebody", "family": "career",
-     "desc": "Плохо переносит релокацию и буткемпы вдали от дома.",
-     "effects": [{"target": "travel_stress", "op": "mul", "value": 2.0}], "incompatible": ["nomad"]},
-    {"id": "iron_routine", "name": "Iron Routine", "family": "career",
-     "desc": "Режим сна и тренировок почти не ломается при перелётах.",
-     "effects": [{"target": "sleep_loss", "op": "mul", "value": 0.2}]},
-    {"id": "wrist_of_glass", "name": "Wrist of Glass", "family": "health",
-     "desc": "Повышенная тяжесть травмы запястья при перегрузе.",
-     "effects": [{"target": "injury_risk", "op": "mul", "value": 2.5}], "hidden_until": "behaviour"},
-    {"id": "second_wind", "name": "Second Wind", "family": "career",
-     "desc": "После выгорания может один раз вернуться на новый пик.",
-     "effects": [{"target": "comeback_once", "op": "add", "value": 1}], "hidden_until": "behaviour"},
-    {"id": "nomad", "name": "Nomad", "family": "career",
-     "desc": "Быстро адаптируется к новым странам и языкам.",
-     "effects": [{"target": "travel_stress", "op": "mul", "value": 0.3}], "incompatible": ["homebody"]},
-    {"id": "media_darling", "name": "Media Darling", "family": "media",
-     "desc": "Даже средняя форма хорошо конвертируется в фанатов и sponsor value.",
-     "effects": [{"target": "fan_gain", "op": "mul", "value": 1.8}, {"target": "sponsor_value", "op": "mul", "value": 1.3}]},
-    {"id": "sponsor_gold", "name": "Sponsor Gold", "family": "media",
-     "desc": "Хорошо выполняет коммерческие активности без потери морали.",
-     "effects": [{"target": "sponsor_value", "op": "mul", "value": 1.2}, {"target": "commercial_morale_cost", "op": "mul", "value": 0.1}]},
-    {"id": "unfiltered", "name": "Unfiltered", "family": "media",
-     "desc": "Больше вовлечённость аудитории, но выше риск скандалов и штрафов.",
-     "effects": [{"target": "fan_gain", "op": "mul", "value": 1.4}, {"target": "scandal_risk", "op": "mul", "value": 3.0}]},
-    {"id": "cult_hero", "name": "Cult Hero", "family": "media",
-     "desc": "Может стать любимцем фанатов независимо от рейтинга.",
-     "effects": [{"target": "fan_gain", "op": "mul", "value": 1.5}]},
-    {"id": "camera_freeze", "name": "Camera Freeze", "family": "media",
-     "desc": "Публичность повышает стресс перед важными матчами.",
-     "effects": [{"target": "pressure_penalty", "op": "mul", "value": 1.6, "when": {"playoffs": true}}]},
-    {"id": "streamer_brain", "name": "Streamer Brain", "family": "media",
-     "desc": "Стриминг быстрее растит популярность, но отнимает время восстановления.",
-     "effects": [{"target": "fan_gain", "op": "mul", "value": 1.5}, {"target": "recovery", "op": "mul", "value": 0.8}]}
-  ]
+ "_doc": "Gold Traits as data: id, name, family, effects (target/op/value/when), incompatible, hidden_until. Golden does NOT mean positive. 'when' keys are matched against the event context dict. Values are placeholders for balancing.",
+ "distribution": {
+  "1": 0.7,
+  "2": 0.27,
+  "3": 0.03
+ },
+ "traits": [
+  {
+   "id": "lan_animal",
+   "name": "LAN Animal",
+   "family": "match",
+   "desc": "На LAN получает бонус к стрессоустойчивости и уверенности; online-бонуса нет.",
+   "effects": [
+    {
+     "target": "stat:stress_resistance",
+     "op": "add",
+     "value": 10,
+     "when": {
+      "lan": true
+     }
+    },
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 2,
+     "when": {
+      "lan": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunter_of_giants",
+   "name": "Hunter of Giants",
+   "family": "match",
+   "desc": "Против команд выше рейтинга играет смелее и быстрее восстанавливает мораль.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 2.5,
+     "when": {
+      "underdog": true
+     }
+    },
+    {
+     "target": "morale_recovery",
+     "op": "mul",
+     "value": 1.5,
+     "when": {
+      "underdog": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "match_point_ice",
+   "name": "Match Point Ice",
+   "family": "match",
+   "desc": "На match point почти не получает pressure penalty.",
+   "effects": [
+    {
+     "target": "pressure_penalty",
+     "op": "mul",
+     "value": 0.1,
+     "when": {
+      "match_point": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "reverse_sweep_believer",
+   "name": "Reverse Sweep Believer",
+   "family": "match",
+   "desc": "После проигранной первой карты меньше теряет уверенность.",
+   "effects": [
+    {
+     "target": "confidence_loss",
+     "op": "mul",
+     "value": 0.4,
+     "when": {
+      "after_map_loss": true
+     }
+    },
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 1.5,
+     "when": {
+      "after_map_loss": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "big_stage_silence",
+   "name": "Big Stage Silence",
+   "family": "match",
+   "desc": "В плей-офф хуже коммуницирует, даже если механика остаётся высокой.",
+   "effects": [
+    {
+     "target": "stat:communication",
+     "op": "add",
+     "value": -15,
+     "when": {
+      "playoffs": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "revenge_game",
+   "name": "Revenge Game",
+   "family": "match",
+   "desc": "Против бывшего клуба получает мотивацию, но растёт риск overpeek.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 2,
+     "when": {
+      "vs_former_club": true
+     }
+    },
+    {
+     "target": "stat:tactical_discipline",
+     "op": "add",
+     "value": -10,
+     "when": {
+      "vs_former_club": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "pistol_savant",
+   "name": "Pistol Savant",
+   "family": "mechanics",
+   "desc": "Непропорционально силён в pistol rounds.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 6,
+     "when": {
+      "round": "pistol"
+     }
+    }
+   ]
+  },
+  {
+   "id": "first_bullet_artist",
+   "name": "First Bullet Artist",
+   "family": "mechanics",
+   "desc": "Бонус в коротких дуэлях; слабее в длинных spray fights.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 3,
+     "when": {
+      "duel_type": "short"
+     }
+    },
+    {
+     "target": "duel",
+     "op": "add",
+     "value": -2,
+     "when": {
+      "duel_type": "spray"
+     }
+    }
+   ]
+  },
+  {
+   "id": "spray_transfer_freak",
+   "name": "Spray Transfer Freak",
+   "family": "mechanics",
+   "desc": "Повышает шанс multi-kill после первого контакта.",
+   "effects": [
+    {
+     "target": "multikill",
+     "op": "mul",
+     "value": 1.6
+    }
+   ]
+  },
+  {
+   "id": "awp_magnet",
+   "name": "AWP Magnet",
+   "family": "mechanics",
+   "desc": "Лучше извлекает value из AWP, но сильнее страдает от плохой экономики.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 4,
+     "when": {
+      "round": "full"
+     }
+    },
+    {
+     "target": "duel",
+     "op": "add",
+     "value": -3,
+     "when": {
+      "round": "eco"
+     }
+    }
+   ]
+  },
+  {
+   "id": "eco_prophet",
+   "name": "Eco Prophet",
+   "family": "mechanics",
+   "desc": "Необычно хорошо играет force/eco rounds.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 5,
+     "when": {
+      "round": "eco"
+     }
+    }
+   ]
+  },
+  {
+   "id": "utility_architect",
+   "name": "Utility Architect",
+   "family": "mechanics",
+   "desc": "Повышает эффективность utility всей пятёрки в подготовленных раундах.",
+   "effects": [
+    {
+     "target": "team_duel",
+     "op": "add",
+     "value": 1.5,
+     "when": {
+      "prepared": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "tactical_sponge",
+   "name": "Tactical Sponge",
+   "family": "learning",
+   "desc": "Очень быстро усваивает новые playbooks и роли.",
+   "effects": [
+    {
+     "target": "learning",
+     "op": "mul",
+     "value": 1.6
+    }
+   ]
+  },
+  {
+   "id": "deep_mastery",
+   "name": "Deep Mastery",
+   "family": "learning",
+   "desc": "Медленно учится, но освоенное почти не деградирует.",
+   "effects": [
+    {
+     "target": "learning",
+     "op": "mul",
+     "value": 0.7
+    },
+    {
+     "target": "decay",
+     "op": "mul",
+     "value": 0.2
+    }
+   ]
+  },
+  {
+   "id": "pattern_thief",
+   "name": "Pattern Thief",
+   "family": "learning",
+   "desc": "После нескольких карт лучше читает привычки соперника.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 2,
+     "when": {
+      "late_series": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "one_map_native",
+   "name": "One-Map Native",
+   "family": "learning",
+   "desc": "На одной карте аномально высокий потолок, но медленнее расширяет pool.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 5,
+     "when": {
+      "home_map": true
+     }
+    },
+    {
+     "target": "map_learning",
+     "op": "mul",
+     "value": 0.6
+    }
+   ]
+  },
+  {
+   "id": "meta_chameleon",
+   "name": "Meta Chameleon",
+   "family": "learning",
+   "desc": "Быстрее адаптируется после патчей и смены меты.",
+   "effects": [
+    {
+     "target": "meta_adaptation",
+     "op": "mul",
+     "value": 2.0
+    }
+   ]
+  },
+  {
+   "id": "demo_obsessive",
+   "name": "Demo Obsessive",
+   "family": "learning",
+   "desc": "Больше эффекта от demo review, но легче выгорает.",
+   "effects": [
+    {
+     "target": "learning",
+     "op": "mul",
+     "value": 1.3
+    },
+    {
+     "target": "burnout_gain",
+     "op": "mul",
+     "value": 1.4
+    }
+   ]
+  },
+  {
+   "id": "atmosphere_stabilizer",
+   "name": "Atmosphere Stabilizer",
+   "family": "team",
+   "desc": "Снижает скорость распространения tilt внутри команды.",
+   "effects": [
+    {
+     "target": "team_tilt_spread",
+     "op": "mul",
+     "value": 0.5
+    }
+   ]
+  },
+  {
+   "id": "pack_leader",
+   "name": "Pack Leader",
+   "family": "team",
+   "desc": "Сильно влияет на мораль группы; его недовольство заражает других.",
+   "effects": [
+    {
+     "target": "influence",
+     "op": "mul",
+     "value": 2.0
+    }
+   ]
+  },
+  {
+   "id": "mentor_magnet",
+   "name": "Mentor Magnet",
+   "family": "team",
+   "desc": "Молодые игроки рядом развиваются быстрее.",
+   "effects": [
+    {
+     "target": "team_youth_learning",
+     "op": "mul",
+     "value": 1.3
+    }
+   ]
+  },
+  {
+   "id": "lone_wolf",
+   "name": "Lone Wolf",
+   "family": "team",
+   "desc": "Почти не зависит от атмосферы, но медленнее строит доверие.",
+   "effects": [
+    {
+     "target": "atmosphere_sensitivity",
+     "op": "mul",
+     "value": 0.2
+    },
+    {
+     "target": "trust_gain",
+     "op": "mul",
+     "value": 0.5
+    }
+   ]
+  },
+  {
+   "id": "role_thief",
+   "name": "Role Thief",
+   "family": "team",
+   "desc": "Со временем претендует на ресурсы и позицию более статусного игрока.",
+   "effects": [
+    {
+     "target": "role_hunger",
+     "op": "add",
+     "value": 1.0
+    }
+   ],
+   "hidden_until": "behaviour"
+  },
+  {
+   "id": "bridge_builder",
+   "name": "Bridge Builder",
+   "family": "team",
+   "desc": "Снижает культурные и языковые трения в составе.",
+   "effects": [
+    {
+     "target": "team_culture_friction",
+     "op": "mul",
+     "value": 0.5
+    }
+   ]
+  },
+  {
+   "id": "contract_year_beast",
+   "name": "Contract Year Beast",
+   "family": "career",
+   "desc": "За 6–9 месяцев до конца контракта растёт мотивация и медийность.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 2,
+     "when": {
+      "contract_final_months": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "homebody",
+   "name": "Homebody",
+   "family": "career",
+   "desc": "Плохо переносит релокацию и буткемпы вдали от дома.",
+   "effects": [
+    {
+     "target": "travel_stress",
+     "op": "mul",
+     "value": 2.0
+    }
+   ],
+   "incompatible": [
+    "nomad"
+   ]
+  },
+  {
+   "id": "iron_routine",
+   "name": "Iron Routine",
+   "family": "career",
+   "desc": "Режим сна и тренировок почти не ломается при перелётах.",
+   "effects": [
+    {
+     "target": "sleep_loss",
+     "op": "mul",
+     "value": 0.2
+    }
+   ]
+  },
+  {
+   "id": "wrist_of_glass",
+   "name": "Wrist of Glass",
+   "family": "health",
+   "desc": "Повышенная тяжесть травмы запястья при перегрузе.",
+   "effects": [
+    {
+     "target": "injury_risk",
+     "op": "mul",
+     "value": 2.5
+    }
+   ],
+   "hidden_until": "behaviour"
+  },
+  {
+   "id": "second_wind",
+   "name": "Second Wind",
+   "family": "career",
+   "desc": "После выгорания может один раз вернуться на новый пик.",
+   "effects": [
+    {
+     "target": "comeback_once",
+     "op": "add",
+     "value": 1
+    }
+   ],
+   "hidden_until": "behaviour"
+  },
+  {
+   "id": "nomad",
+   "name": "Nomad",
+   "family": "career",
+   "desc": "Быстро адаптируется к новым странам и языкам.",
+   "effects": [
+    {
+     "target": "travel_stress",
+     "op": "mul",
+     "value": 0.3
+    }
+   ],
+   "incompatible": [
+    "homebody"
+   ]
+  },
+  {
+   "id": "media_darling",
+   "name": "Media Darling",
+   "family": "media",
+   "desc": "Даже средняя форма хорошо конвертируется в фанатов и sponsor value.",
+   "effects": [
+    {
+     "target": "fan_gain",
+     "op": "mul",
+     "value": 1.8
+    },
+    {
+     "target": "sponsor_value",
+     "op": "mul",
+     "value": 1.3
+    }
+   ]
+  },
+  {
+   "id": "sponsor_gold",
+   "name": "Sponsor Gold",
+   "family": "media",
+   "desc": "Хорошо выполняет коммерческие активности без потери морали.",
+   "effects": [
+    {
+     "target": "sponsor_value",
+     "op": "mul",
+     "value": 1.2
+    },
+    {
+     "target": "commercial_morale_cost",
+     "op": "mul",
+     "value": 0.1
+    }
+   ]
+  },
+  {
+   "id": "unfiltered",
+   "name": "Unfiltered",
+   "family": "media",
+   "desc": "Больше вовлечённость аудитории, но выше риск скандалов и штрафов.",
+   "effects": [
+    {
+     "target": "fan_gain",
+     "op": "mul",
+     "value": 1.4
+    },
+    {
+     "target": "scandal_risk",
+     "op": "mul",
+     "value": 3.0
+    }
+   ]
+  },
+  {
+   "id": "cult_hero",
+   "name": "Cult Hero",
+   "family": "media",
+   "desc": "Может стать любимцем фанатов независимо от рейтинга.",
+   "effects": [
+    {
+     "target": "fan_gain",
+     "op": "mul",
+     "value": 1.5
+    }
+   ]
+  },
+  {
+   "id": "camera_freeze",
+   "name": "Camera Freeze",
+   "family": "media",
+   "desc": "Публичность повышает стресс перед важными матчами.",
+   "effects": [
+    {
+     "target": "pressure_penalty",
+     "op": "mul",
+     "value": 1.6,
+     "when": {
+      "playoffs": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "streamer_brain",
+   "name": "Streamer Brain",
+   "family": "media",
+   "desc": "Стриминг быстрее растит популярность, но отнимает время восстановления.",
+   "effects": [
+    {
+     "target": "fan_gain",
+     "op": "mul",
+     "value": 1.5
+    },
+    {
+     "target": "recovery",
+     "op": "mul",
+     "value": 0.8
+    }
+   ]
+  },
+  {
+   "id": "night_gamer",
+   "name": "Night Gamer",
+   "family": "coping",
+   "desc": "Снимает стресс ночными играми: стресс уходит быстрее, но сон страдает.",
+   "effects": [
+    {
+     "target": "stress_relief",
+     "op": "mul",
+     "value": 1.8
+    },
+    {
+     "target": "sleep_loss",
+     "op": "mul",
+     "value": 1.6
+    }
+   ],
+   "hidden_until": "behaviour"
+  },
+  {
+   "id": "gym_rat",
+   "name": "Gym Rat",
+   "family": "coping",
+   "desc": "Снимает стресс в зале: полезно, но отнимает время у тренировок.",
+   "effects": [
+    {
+     "target": "stress_relief",
+     "op": "mul",
+     "value": 1.6
+    },
+    {
+     "target": "recovery",
+     "op": "mul",
+     "value": 1.1
+    },
+    {
+     "target": "learning",
+     "op": "mul",
+     "value": 0.9
+    }
+   ]
+  },
+  {
+   "id": "party_animal",
+   "name": "Party Animal",
+   "family": "coping",
+   "desc": "Снимает стресс тусовками: быстро, но растут риск скандала и усталость.",
+   "effects": [
+    {
+     "target": "stress_relief",
+     "op": "mul",
+     "value": 2.2
+    },
+    {
+     "target": "scandal_risk",
+     "op": "mul",
+     "value": 2.0
+    },
+    {
+     "target": "recovery",
+     "op": "mul",
+     "value": 0.85
+    }
+   ],
+   "hidden_until": "behaviour"
+  },
+  {
+   "id": "meditator",
+   "name": "Meditator",
+   "family": "coping",
+   "desc": "Медитирует: стресс уходит медленно, зато под давлением спокойнее.",
+   "effects": [
+    {
+     "target": "stress_relief",
+     "op": "mul",
+     "value": 1.3
+    },
+    {
+     "target": "pressure_penalty",
+     "op": "mul",
+     "value": 0.8
+    }
+   ]
+  }
+ ]
 }

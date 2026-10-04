@@ -11,7 +11,10 @@ from csmcore import economy
 from csmcore.economy import Club, Contract, Sponsor, Tournament
 from csmcore.generate import concept_examples, make_player
 from csmcore.relations import RelationGraph
-from csmcore.season import run_season
+from csmcore.board import Owner
+from csmcore.development import roll_potential
+from csmcore.market import Market
+from csmcore.season import Systems, run_season
 from csmcore.storylets import StoryEngine
 
 ROLES = ["igl", "awp", "entry", "rifler", "support"]
@@ -35,6 +38,8 @@ def build_world(seed: int):
             roster[0], roster[1], roster[2] = ex["north"], ex["sable"], ex["vanta"]
             graph.set_pair("vanta", "sable", irritation=40, role_rivalry=50)
         for p in roster:
+            if p.name.startswith("c"):
+                p.potential = roll_potential(p.overall(), p.age, rng)
             sal = rng.uniform(lo, hi)
             club.contracts[p.name] = Contract(p.name, sal, end_week=rng.randint(30, 150),
                                               buyout=economy.buyout_for(sal, 100))
@@ -60,7 +65,14 @@ def build_world(seed: int):
 def main() -> None:
     seed = int(sys.argv[1]) if len(sys.argv) > 1 else 1
     clubs, graph, calendar = build_world(seed)
-    log = run_season(clubs, graph, calendar, seed, stories=StoryEngine())
+    rng = random.Random(seed + 99)
+    market = Market(free_agents=[make_player(f"fa{i}", rng.uniform(50, 66), rng, ROLES[i % 5]) for i in range(12)])
+    owners = {c.name: Owner(f"owner{c.name}", patience=rng.uniform(20, 80), ambition=rng.uniform(30, 90),
+                            money_focus=rng.uniform(20, 80)) for c in clubs}
+    systems = Systems(stories=StoryEngine(), market=market, owners=owners)
+    vanta = clubs[1].roster[2]
+    start_aim = vanta.stats["aim"]
+    log = run_season(clubs, graph, calendar, seed, systems=systems)
     for line in log.results[-8:]:
         print(line)
     print("\nFinal ranking and money:")
@@ -71,6 +83,15 @@ def main() -> None:
     print(f"\n{len(log.events)} emergent events. First five with causes:")
     for e in log.events[:5]:
         print(f"week {e.week}: {e.text}\n   why: {'; '.join(e.causes)}")
+    print("\nManagement (market, owners, squad):")
+    for line in [m for m in log.management if "лидер" not in m][:14]:
+        print("  " + line)
+    print(f"  ... всего записей {len(log.management)}")
+    for c in sorted(clubs, key=lambda c: c.rank)[:8]:
+        o = owners[c.name]
+        print(f"  {c.name}: цель {o.objectives[0].text}, итог #{c.rank}, доверие владельца {o.confidence:.0f}"
+              + (" — менеджер уволен" if o.fired else ""))
+    print(f"  vanta aim {start_aim:.0f} -> {vanta.stats['aim']:.0f}, возраст теперь {vanta.age}")
     print(f"\n{len(log.stories)} life events (storylets). Club2 (vanta, north, sable):")
     for f in log.stories:
         if f.club.name == "Club2":

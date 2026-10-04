@@ -85,6 +85,8 @@ class Club:
     contracts: dict[str, Contract] = field(default_factory=dict)
     sponsors: list[Sponsor] = field(default_factory=list)
     staff_month: float = 15_000.0
+    coach_quality: float = 50.0   # 0-100, drives player development
+    scout_quality: float = 50.0   # 0-100, drives how fast scouting uncertainty shrinks
     facilities: dict[str, int] = field(default_factory=dict)  # "bootcamp","academy","studio" -> level
     investor_share: float = 0.0
     ledger: list[LedgerLine] = field(default_factory=list)
@@ -106,7 +108,7 @@ class Club:
     def lineup(self, size: int = 5) -> list[Player]:
         """Players who can play: benched players sit out, missing slots get a stand-in."""
         from .player import STATS
-        out = [p for p in self.roster if "benched" not in p.flags][:size]
+        out = sorted((p for p in self.roster if "benched" not in p.flags), key=lambda p: -p.duel_skill())[:size]
         while len(out) < size:
             out.append(Player(f"{self.name}-standin{len(out)}", {s: 55.0 for s in STATS}))
         return out
@@ -232,7 +234,8 @@ def market_value(p: Player) -> float:
     age_mul = 1.0 if 19 <= p.age <= 24 else max(0.3, 1 - 0.12 * abs(p.age - (19 if p.age < 19 else 24)))
     form_mul = 0.8 + 0.4 * p.s("form") / 100
     hype = p.mod("fan_gain")[1]
-    return 2_000 * math.exp((level - 40) / 7.5) * age_mul * form_mul * (0.8 + 0.2 * hype)
+    # ~$30k at 55, ~$200k at 65, ~$1.5M at 75: in line with reported CS buyouts.
+    return 200_000 * math.exp((level - 65) / 5) * age_mul * form_mul * (0.8 + 0.2 * hype)
 
 
 def buyout_for(salary_month: float, weeks_left: int, mult: float = 2.0) -> float:

@@ -5,7 +5,9 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from . import economy, world
+from . import development, economy, promises as promises_mod, squad, world
+from .board import Owner
+from .market import Market
 from .economy import Club, Tournament
 from .engine import play_map
 from .relations import RelationGraph
@@ -17,6 +19,18 @@ class SeasonLog:
     events: list[world.Event] = field(default_factory=list)
     results: list[str] = field(default_factory=list)
     stories: list[Fired] = field(default_factory=list)
+    management: list[str] = field(default_factory=list)  # market, board, promises, squad notes
+
+
+@dataclass
+class Systems:
+    """Optional management layers. Leave a field as None to switch that layer off."""
+    stories: StoryEngine | None = None
+    market: Market | None = None
+    owners: dict[str, Owner] | None = None
+    promises: dict[str, list] | None = None     # club name -> [Promise]
+    development: bool = True
+    manager_club: str | None = None
 
 
 def play_series(a: Club, b: Club, graph: RelationGraph, seed: int, ctx: dict, maps: int = 3) -> tuple[Club, Club, str]:
@@ -79,12 +93,19 @@ def rerank(clubs: list[Club]) -> None:
 
 def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tournament], seed: int,
                weeks: int = economy.WEEKS_PER_YEAR, plans: dict | None = None,
-               stories: StoryEngine | None = None, manager_club: str | None = None) -> SeasonLog:
-    """Pass a StoryEngine to switch on life events; the manager's club gets them in
-    stories.pending instead of having the AI choose."""
+               stories: StoryEngine | None = None, manager_club: str | None = None,
+               systems: Systems | None = None) -> SeasonLog:
+    """Pass a StoryEngine (or a full Systems bundle) to switch on life events, the market,
+    owners, promises and development. The manager's club gets its choices in
+    stories.pending / market.offers instead of having the AI decide."""
+    sysm = systems or Systems(stories=stories, manager_club=manager_club, development=False)
     rng = random.Random(seed)
-    story_rng = random.Random(seed + 1)  # separate stream: adding events does not reshuffle matches
+    story_rng = random.Random(seed + 1)  # separate streams: adding layers does not reshuffle matches
+    mgmt_rng = random.Random(seed + 2)
     log = SeasonLog()
+    for o_club in clubs:
+        if sysm.owners and o_club.name in sysm.owners and not sysm.owners[o_club.name].objectives:
+            sysm.owners[o_club.name].set_objectives(o_club)
     for week in range(1, weeks + 1):
         week_plans = dict(plans or {})
         if week in calendar:
@@ -92,9 +113,26 @@ def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tour
                 if calendar[week].invited(c):
                     week_plans.setdefault(c.name, world.WeekPlan(travel=calendar[week].lan))
         log.events += world.world_week(clubs, graph, week, rng, week_plans)
-        if stories is not None:
-            log.stories += stories.week(clubs, graph, week, story_rng, manager_club)
+        if sysm.stories is not None:
+            log.stories += sysm.stories.week(clubs, graph, week, story_rng, sysm.manager_club)
+        for c in clubs:
+            log.management += squad.leader_mood_spread(c, graph, week)
+            if sysm.promises and c.name in sysm.promises:
+                log.management += promises_mod.check(sysm.promises[c.name], c, graph, week)
+        if sysm.market is not None:
+            log.management += sysm.market.week(clubs, week, mgmt_rng, sysm.manager_club)
+        if week % 4 == 0:
+            for c in clubs:
+                if sysm.development:
+                    mentor = any(p.mod("team_youth_learning")[1] > 1 for p in c.roster)
+                    lineup = c.lineup()
+                    for p in c.roster:
+                        development.month(p, c, mgmt_rng, played=p in lineup, mentor_in_team=mentor)
+                if sysm.owners and c.name in sysm.owners:
+                    log.management += sysm.owners[c.name].monthly_review(c, week)
         if week in calendar:
             run_tournament(calendar[week], clubs, graph, week, rng, log)
             rerank(clubs)
+    if sysm.development:
+        development.season_end([p for c in clubs for p in c.roster])
     return log

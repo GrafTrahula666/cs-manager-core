@@ -193,6 +193,11 @@ class StoryEngine:
             if check(m["if"], club, a, b, graph):
                 w *= m["mul"]
                 why.append(f"{describe(m['if'])} ×{m['mul']}")
+        if ev.get("scandal") and a is not None:
+            m = a.mod("scandal_risk")[1]
+            if m != 1.0:
+                w *= m
+                why.append(f"склонность к скандалам ×{m:g}")
         return min(w, 0.9), why
 
     def _eligible(self, ev: dict, week: int, club, a, b, graph) -> bool:

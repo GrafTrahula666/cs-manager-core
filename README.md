@@ -13,6 +13,12 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `src/csmcore/decisions.py` – personality-driven decisions (contract acceptance, transfer request, conflict)
 - `src/csmcore/world.py` – weekly world tick with emergent events and their causes
 - `src/csmcore/storylets.py` + `data/events.json` – Crusader-Kings-style life events: conditions, weights, choices, chains
+- `src/csmcore/development.py` – FM-style potential and monthly growth/decline
+- `src/csmcore/scouting.py` – stat ranges and trait/personality reveal by knowledge
+- `src/csmcore/promises.py` – promises to players, kept or broken
+- `src/csmcore/squad.py` – dressing-room hierarchy, cliques, leader mood spread
+- `src/csmcore/board.py` – owner objectives, confidence, sacking, next budget
+- `src/csmcore/market.py` – AI transfer market, free agents, offers to the manager
 - `src/csmcore/season.py` – season loop: weeks, ranking-based invites, tournaments
 - `src/csmcore/engine.py` – seeded duel -> round -> map engine (pistol/eco, pressure, chemistry)
 - `scripts/demo_season.py` – one season of an 8-club world, prints money, results, events
