@@ -168,12 +168,24 @@ def generate(seed: int = 1, n_clubs: int = 120, director: str = "cassandra"):
     systems = Systems(
         stories=StoryEngine(director=Director(director)),
         market=Market(free_agents=free_agents),
-        owners={c.name: Owner(f"Владелец {c.name}", patience=rng.uniform(20, 80), ambition=rng.uniform(30, 90),
-                              money_focus=rng.uniform(20, 80)) for c in clubs},
+        owners={c.name: _owner(c, rng) for c in clubs},
         rivalries=Rivalries(), meta=Meta(), chronicle=Chronicle(), legacy=Legacy(),
         secrets=Secrets(), careers=Careers(), talents_per_season=max(6, n_clubs // 3),
     )
     return clubs, graph, calendar(), systems, home.name
+
+
+# Yearly owner money by tier: below the super tier almost every org runs at a loss and lives on
+# its investors (see notes/ekonomika-igry.md). A money-focused owner pays less.
+OWNER_SUBSIDY = {"super": (0, 0), "tier1": (600_000, 1_500_000), "tier2": (100_000, 250_000), "tier3": (50_000, 110_000)}
+
+
+def _owner(club: Club, rng: random.Random) -> Owner:
+    o = Owner(f"Владелец {club.name}", patience=rng.uniform(20, 80), ambition=rng.uniform(30, 90),
+              money_focus=rng.uniform(20, 80))
+    lo, hi = OWNER_SUBSIDY[club.tier]
+    o.subsidy_year = rng.uniform(lo, hi) * (1.2 - o.money_focus / 100)
+    return o
 
 
 SPONSOR_BRANDS = {"hardware": "Kernel", "energy": "Bolt", "telecom": "Linkr", "bank": "Vault Bank",

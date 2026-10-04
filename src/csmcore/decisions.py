@@ -57,9 +57,9 @@ def contract_acceptance(player: Player, offer: Contract, expected_salary: float,
 def transfer_request(player: Player, club: Club) -> Verdict:
     """Does the player ask to leave? Low role satisfaction + high ambition in a weak club."""
     reasons = []
-    x = -3.0
+    x = -5.5   # rolled weekly: a mild grievance should take months, not weeks, to become a request
     if player.s("role_satisfaction") < 45:
-        x += (45 - player.s("role_satisfaction")) / 10
+        x += (45 - player.s("role_satisfaction")) / 7
         reasons.append(f"недоволен ролью ({player.s('role_satisfaction'):.0f})")
     if player.p("ambition") > 65 and club.rank > 20:
         x += (player.p("ambition") - 65) / 15 + (club.rank - 20) / 40

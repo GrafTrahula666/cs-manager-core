@@ -66,6 +66,11 @@ def leader_mood_spread(club: Club, graph: RelationGraph, week: int = 0) -> list[
                 continue
             follow = graph.get(q.name, leader.name).leader_loyalty / 100
             q.state["morale"] = max(0.0, min(100.0, q.s("morale") + delta * follow))
-        if delta < 0:
+        # Tell the story once, when the leader turns sour, not every week he stays sour.
+        if delta < 0 and "sour_leader" not in leader.flags:
+            leader.flags.add("sour_leader")
             notes.append(f"лидер {leader.name} недоволен (мораль {leader.s('morale'):.0f}), настроение падает у всей команды")
+    for p in club.roster:
+        if "sour_leader" in p.flags and p.s("morale") >= 55:
+            p.flags.discard("sour_leader")
     return notes

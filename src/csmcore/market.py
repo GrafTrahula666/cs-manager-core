@@ -75,10 +75,16 @@ class Market:
                     continue
                 if week - self.refused.get((p.name, buyer.name), -999) < 26:
                     continue  # he said no recently
+                if expected_salary(p) > TIER_SALARY_CAP[buyer.tier] * 1.1:
+                    continue  # cannot pay what he wants: do not waste an offer
                 salary = min(expected_salary(p) * rng.uniform(0.9, 1.15), TIER_SALARY_CAP[buyer.tier])
                 fee = 0.0 if seller is None else market_value(p) * (1.3 if seller.contracts.get(p.name) else 1.0)
                 if fee + salary * 6 > buyer.cash:
                     continue
+                guess = contract_acceptance(p, Contract(p.name, salary, week + 52, 0.0), expected_salary(p), buyer,
+                                            seller, relocation=bool(seller))
+                if guess.p < 0.25:
+                    continue  # scouts know he would say no (ambition, loyalty, home)
                 gain = p.overall() - need
                 if best is None or gain > best[0]:
                     best = (gain, p, seller, fee, salary)
@@ -87,6 +93,9 @@ class Market:
             _, p, seller, fee, salary = best
             offer = Offer(week, buyer, seller, p, fee, salary)
             if seller is not None and seller.name == manager_club:
+                if week - self.refused.get((p.name, "<manager>"), -999) < 12:
+                    continue  # the manager just said no for him: the market waits a few months
+                self.refused[(p.name, "<manager>")] = week
                 self.offers.append(offer)
                 notes.append(f"{buyer.name} предлагает {fee:,.0f} за {p.name}: ждёт решения менеджера")
                 pool = [(q, s) for q, s in pool if q is not p]   # one bid per player per window
@@ -127,6 +136,7 @@ class Market:
         self.offers.remove(o)
         if not accept:
             o.status = "rejected"
+            self.refused[(o.player.name, o.buyer.name)] = week   # this buyer will not ask again soon
             o.player.state["morale"] = max(0.0, o.player.s("morale") - 10 * o.player.p("ambition") / 50)
             return f"Предложение {o.buyer.name} за {o.player.name} отклонено"
         return self.complete(o, week, rng)

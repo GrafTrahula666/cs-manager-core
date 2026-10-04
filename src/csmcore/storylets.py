@@ -23,6 +23,10 @@ from .player import Player
 from .relations import RelationGraph
 
 MAX_EVENTS_PER_SUBJECT_WEEK = 1
+# After any story a person gets a breather: other events are rarer for a few weeks, so one
+# player does not collect a clip, a visa problem and a breakup in one month.
+STORY_REST_WEEKS = 6
+STORY_REST_MUL = 0.35
 
 
 @dataclass
@@ -206,6 +210,9 @@ class StoryEngine:
             if check(m["if"], club, a, b, graph):
                 w *= m["mul"]
                 why.append(f"{describe(m['if'])} ×{m['mul']}")
+        if a is not None and week - getattr(self, "last_any", {}).get(a.name, -10_000) < STORY_REST_WEEKS:
+            w *= STORY_REST_MUL
+            why.append(f"недавно уже была история ×{STORY_REST_MUL}")
         if ev.get("scandal") and a is not None:
             m = a.mod("scandal_risk")[1]
             if m != 1.0:
@@ -224,6 +231,8 @@ class StoryEngine:
     def _fire(self, ev: dict, week: int, club, a, b, why: list[str]) -> Fired:
         fmt = {"a": a.name if a else "", "b": b.name if b else "", "club": club.name}
         self.last_fired[(ev["id"], a.name if a else club.name)] = week
+        if a is not None:
+            self.__dict__.setdefault("last_any", {})[a.name] = week   # older saves lack the field
         return Fired(ev["id"], week, club, a, b, ev["title"].format(**fmt), ev["text"].format(**fmt),
                      [o["label"].format(**fmt) for o in ev.get("options", [])], why)
 

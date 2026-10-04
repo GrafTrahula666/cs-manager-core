@@ -29,6 +29,8 @@ class Owner:
     objectives: list[Objective] = field(default_factory=list)
     log: list[str] = field(default_factory=list)
     fired: bool = False
+    warned: int = 0           # 0 calm, 1 worried, 2 ultimatum: warnings fire on change only
+    subsidy_year: float = 0.0  # owner money that covers the club's losses, paid monthly
 
     def set_objectives(self, club: Club) -> list[Objective]:
         """Expectations come from where the club stands now (like FM's reputation-based
@@ -57,6 +59,9 @@ class Owner:
     def monthly_review(self, club: Club, week: int) -> list[str]:
         if self.fired:
             return []
+        if self.subsidy_year:
+            # Most esports orgs live on owner money; a trusted manager gets more of it.
+            club.book(week, "owner", self.subsidy_year / 13 * (0.5 + self.confidence / 100), self.name)
         total_w = sum(o.weight for o in self.objectives) or 1.0
         score = sum(self._score(o, club) * o.weight for o in self.objectives) / total_w
         speed = 6 * (1.5 - self.patience / 100)
@@ -65,10 +70,16 @@ class Owner:
         if self.confidence < 12:
             self.fired = True
             notes.append(f"week {week}: владелец {club.name} увольняет менеджера (доверие {self.confidence:.0f})")
-        elif self.confidence < 25:
-            notes.append(f"week {week}: ультиматум от владельца: доверие {self.confidence:.0f}")
-        elif self.confidence < 35:
-            notes.append(f"week {week}: владелец обеспокоен: доверие {self.confidence:.0f}")
+        else:
+            # Warnings only when the mood changes, not every month it stays the same.
+            level = 2 if self.confidence < 25 else 1 if self.confidence < 35 else 0
+            last = getattr(self, "warned", 0)
+            if level > last:
+                notes.append(f"week {week}: " + ("ультиматум от владельца" if level == 2 else "владелец обеспокоен")
+                             + f": доверие {self.confidence:.0f}")
+            elif level < last and level == 0:
+                notes.append(f"week {week}: владелец снова доволен: доверие {self.confidence:.0f}")
+            self.warned = level
         self.log += notes
         return notes
 

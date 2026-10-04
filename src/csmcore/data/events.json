@@ -4,8 +4,8 @@
   {
    "id": "new_relationship",
    "who": "player",
-   "base": 0.004,
-   "cooldown": 30,
+   "base": 0.002,
+   "cooldown": 52,
    "when": [
     {
      "age": "",
@@ -668,8 +668,8 @@
   {
    "id": "family_illness",
    "who": "player",
-   "base": 0.002,
-   "cooldown": 52,
+   "base": 0.0007,
+   "cooldown": 78,
    "weight": [
     {
      "if": {
@@ -739,8 +739,8 @@
   {
    "id": "visa_denied",
    "who": "player",
-   "base": 0.004,
-   "cooldown": 26,
+   "base": 0.0005,
+   "cooldown": 52,
    "weight": [
     {
      "if": {
@@ -785,8 +785,8 @@
   {
    "id": "food_poisoning",
    "who": "player",
-   "base": 0.003,
-   "cooldown": 20,
+   "base": 0.0007,
+   "cooldown": 52,
    "title": "{a} отравился перед матчем",
    "text": "{a} всю ночь провёл в обнимку с унитазом и выйдет на игру слабым.",
    "effects": [
@@ -1041,8 +1041,8 @@
   {
    "id": "streaming_boom",
    "who": "player",
-   "base": 0.005,
-   "cooldown": 26,
+   "base": 0.003,
+   "cooldown": 39,
    "when": [
     {
      "any": [
@@ -1101,7 +1101,7 @@
   {
    "id": "toxic_post",
    "who": "player",
-   "base": 0.004,
+   "base": 0.003,
    "cooldown": 20,
    "when": [
     {
@@ -1198,8 +1198,8 @@
   {
    "id": "viral_clip",
    "who": "player",
-   "base": 0.005,
-   "cooldown": 20,
+   "base": 0.0025,
+   "cooldown": 26,
    "when": [
     {
      "state": "form",
@@ -1418,8 +1418,8 @@
   {
    "id": "tapped_up",
    "who": "player",
-   "base": 0.004,
-   "cooldown": 20,
+   "base": 0.0012,
+   "cooldown": 26,
    "when": [
     {
      "state": "form",
@@ -1650,7 +1650,7 @@
   {
    "id": "cheating_accusation",
    "who": "player",
-   "base": 0.003,
+   "base": 0.0015,
    "cooldown": 52,
    "when": [
     {
@@ -1772,7 +1772,7 @@
   {
    "id": "crypto_collapse",
    "who": "club",
-   "base": 0.01,
+   "base": 0.003,
    "cooldown": 52,
    "when": [
     {
@@ -1796,7 +1796,7 @@
   {
    "id": "betting_ad_ban",
    "who": "club",
-   "base": 0.006,
+   "base": 0.003,
    "cooldown": 52,
    "when": [
     {
@@ -1875,8 +1875,8 @@
   {
    "id": "tax_audit",
    "who": "club",
-   "base": 0.004,
-   "cooldown": 52,
+   "base": 0.002,
+   "cooldown": 104,
    "title": "Налоговая проверка {club}",
    "text": "Налоговая нашла нарушения в контрактах прошлых лет.",
    "effects": [
@@ -2163,7 +2163,7 @@
   {
    "id": "old_posts_found",
    "who": "player",
-   "base": 0.004,
+   "base": 0.002,
    "cooldown": 104,
    "tone": "bad",
    "when": [
