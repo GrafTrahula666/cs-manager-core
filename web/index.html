@@ -63,7 +63,16 @@ select, input { background: var(--panel); border: 1px solid var(--line); border-
     linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 48px 48px,
     linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 48px 48px;
   opacity: .5; -webkit-mask-image: linear-gradient(transparent, #000 20%, #000 70%, transparent); mask-image: linear-gradient(transparent, #000 20%, #000 70%, transparent); }
-.boot.art::before { background: var(--art) center / cover no-repeat; opacity: .35; }
+/* the start screen is always dark: the art is a night arena */
+.boot { --bg: #0d1218; --panel: #141b24cc; --panel2: #18212c; --line: #243140; --fg: #e7ebef; --muted: #9aa6b4;
+  --accent: #e3a63f; --accent-fg: #1a1206; --ct: #5fa0dc; --chip: #1f2a37; --glow: rgba(227, 166, 63, .14);
+  color-scheme: dark; color: var(--fg); min-height: 100vh; }
+html:has(#boot:not([hidden])), html:has(#boot:not([hidden])) body { background: #0d1218; }
+body { overflow-x: clip; }
+.boot.art::before { inset: 0 calc(50% - 50vw); opacity: 1; -webkit-mask-image: none; mask-image: none;
+  background: linear-gradient(90deg, var(--bg) 28%, rgba(13, 18, 24, .55) 62%, rgba(13, 18, 24, .15)),
+    linear-gradient(0deg, var(--bg), transparent 30%), var(--art) right center / cover no-repeat; }
+.boot.art .start { backdrop-filter: blur(4px); }
 .bootin { display: grid; gap: 22px; width: min(720px, 100%); }
 .eyebrow { font: 600 .72rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 .logo { font-family: var(--display); font-size: clamp(2.6rem, 9vw, 5.2rem); font-weight: 800; letter-spacing: -.02em; line-height: .92; }
@@ -148,7 +157,7 @@ tr.bench td { opacity: .55; }
 .bar.low i { background: var(--bad); }
 .pl { display: flex; gap: 10px; align-items: flex-start; min-width: 0; }
 .pl .who { display: grid; min-width: 0; }
-.ava { flex: none; width: 34px; height: 34px; border-radius: 4px; display: grid; place-items: center; position: relative; color: #fff; }
+.ava { flex: none; width: 40px; height: 40px; border-radius: 4px; display: grid; place-items: center; position: relative; color: #fff; }
 .ava img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
 .ava svg { width: 18px; height: 18px; }
 .ava.igl { background: #7b5cc4; } .ava.awp { background: #2f7d6d; } .ava.entry { background: #c4553c; }
