@@ -136,7 +136,8 @@ def finances() -> dict:
 def inbox() -> dict:
     g = _g()
     st, mk = g.sysm.stories, g.sysm.market
-    events = [{"i": i, "title": f.title, "text": f.text, "options": f.options, "why": f.why[:4], "week": f.week}
+    events = [{"i": i, "id": f.event_id, "deck": bool(st.events[f.event_id].get("deck")), "title": f.title,
+               "text": f.text, "options": f.options, "why": f.why[:4], "week": f.week}
               for i, f in enumerate(st.pending if st else [])]
     offers = [{"i": i, "buyer": o.buyer.name, "player": o.player.name, "fee": _money(o.fee), "salary": _money(o.salary)}
               for i, o in enumerate(mk.offers if mk else [])]

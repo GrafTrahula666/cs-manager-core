@@ -31,6 +31,9 @@ def main() -> None:
     core = {str(f.relative_to(src)): f.read_text(encoding="utf-8")
             for f in sorted((src / "csmcore").rglob("*")) if f.suffix in (".py", ".json")}
     (dist / "csmcore.json").write_text(json.dumps(core, ensure_ascii=False), encoding="utf-8")
+    art = ROOT / "web" / "art"   # optional illustrations listed in art/manifest.json
+    if art.is_dir():
+        shutil.copytree(art, dist / "art", dirs_exist_ok=True)
     if len(sys.argv) > 1:
         pkg = Path(sys.argv[1])
         (dist / "py").mkdir(exist_ok=True)

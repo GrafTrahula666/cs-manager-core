@@ -57,6 +57,8 @@ PERSONALITY_RULES = [
     ("risk", "lt", 50, "dirty_deal", 6),
 ]
 BASELINE = {"retreat": -8, "dirty_deal": 3}   # everyone breathes out on a retreat
+AXIS_RU = {"ego": "эго", "criticism": "обидчивость", "media": "медийность", "social_need": "общительность",
+           "conflict": "конфликтность", "risk": "риск"}
 
 
 def reaction(p: Player, action: str) -> tuple[float, list[str]]:
@@ -80,7 +82,7 @@ def reaction(p: Player, action: str) -> tuple[float, list[str]]:
         if act == action and (p.p(axis) > thr if op == "gt" else p.p(axis) < thr):
             total += v
             if v > 0:
-                why.append(f"характер ({axis} {p.p(axis):.0f}): +{v}")
+                why.append(f"характер ({AXIS_RU.get(axis, axis)} {p.p(axis):.0f}): +{v}")
     return total, why
 
 

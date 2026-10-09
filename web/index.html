@@ -1,140 +1,207 @@
 <title>CS MENEDGER</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: a manager's tactical board. Sticky club strip on top, tab rail, one working panel. */
+/* Layout: a match-broadcast overlay for a manager. Scoreboard strip with crest and season bar on top,
+   tab rail, working panels. CT blue and T gold are the two sides; dark is the home look. */
 :root {
-  --bg: #e9edf1;
-  --panel: #f7f9fb;
-  --line: #c9d1da;
-  --fg: #17202b;
-  --muted: #5b6876;
-  --accent: #d9771c;      /* T-side orange */
+  --bg: #e8ecf0;
+  --panel: #f6f8fa;
+  --panel2: #edf1f5;
+  --line: #c7d0da;
+  --fg: #141c26;
+  --muted: #5a6777;
+  --accent: #c9821d;      /* T side */
   --accent-fg: #ffffff;
-  --ct: #2f6db3;          /* CT-side blue */
-  --good: #2e8b57;
-  --warn: #b7791f;
+  --ct: #2c6aad;          /* CT side */
+  --good: #2b8a55;
+  --warn: #b0761c;
   --bad: #c0392b;
-  --chip: #dde4eb;
-  --display: "Chakra Petch", "Arial Narrow", system-ui, sans-serif;
-  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --chip: #dbe2ea;
+  --glow: rgba(201, 130, 29, .16);
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #121820; --panel: #1a222c; --line: #2c3845; --fg: #e3e9ef; --muted: #8d9aa8;
-    --accent: #ee8e33; --accent-fg: #1a1208; --ct: #6aa3e6; --good: #4fbf82; --warn: #e0a84a; --bad: #e46a5c;
-    --chip: #253141; color-scheme: dark;
+    --bg: #0d1218; --panel: #141b24; --panel2: #18212c; --line: #243140; --fg: #e7ebef; --muted: #8d99a8;
+    --accent: #e3a63f; --accent-fg: #1a1206; --ct: #5fa0dc; --good: #5cc28a; --warn: #e0a84a; --bad: #e2645a;
+    --chip: #1f2a37; --glow: rgba(227, 166, 63, .14); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #121820; --panel: #1a222c; --line: #2c3845; --fg: #e3e9ef; --muted: #8d9aa8;
-  --accent: #ee8e33; --accent-fg: #1a1208; --ct: #6aa3e6; --good: #4fbf82; --warn: #e0a84a; --bad: #e46a5c;
-  --chip: #253141; color-scheme: dark;
+  --bg: #0d1218; --panel: #141b24; --panel2: #18212c; --line: #243140; --fg: #e7ebef; --muted: #8d99a8;
+  --accent: #e3a63f; --accent-fg: #1a1206; --ct: #5fa0dc; --good: #5cc28a; --warn: #e0a84a; --bad: #e2645a;
+  --chip: #1f2a37; --glow: rgba(227, 166, 63, .14); color-scheme: dark;
 }
 [hidden] { display: none !important; }
+* { box-sizing: border-box; }
 html, body { background: var(--bg); color: var(--fg); }
 body { font: 15px/1.5 var(--body); padding-inline: 16px; padding-block: 0 48px; }
-.wrap { max-width: 1080px; margin: 0 auto; }
-h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: .01em; }
-h2 { font-size: 1.15rem; }
-h3 { font-size: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; }
+.wrap { max-width: 1120px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h2 { font-size: 1.05rem; font-weight: 600; letter-spacing: .01em; }
+h3 { font: 600 .7rem/1.2 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .14em; }
 .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 button, select, input { font: inherit; color: inherit; }
-button { cursor: pointer; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 6px 12px; }
+button { cursor: pointer; border: 1px solid var(--line); background: var(--panel2); border-radius: 4px; padding: 6px 12px; transition: border-color .12s, background .12s; }
 button:hover { border-color: var(--accent); }
 button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--ct); outline-offset: 2px; }
-button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
-button.small { padding: 2px 8px; font-size: .85rem; }
+button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font: 600 .85rem/1 var(--display); letter-spacing: .02em; padding: 11px 16px; }
+button.primary:hover { filter: brightness(1.08); }
+button.small { padding: 3px 9px; font-size: .85rem; }
 button:disabled { opacity: .5; cursor: wait; }
-select, input { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+select, input { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; }
 
 /* boot + start */
-.boot { min-height: 70vh; display: grid; place-items: center; text-align: center; }
-.logo { font-family: var(--display); font-size: clamp(2.2rem, 7vw, 3.6rem); font-weight: 700; letter-spacing: .04em; }
-.logo span { color: var(--accent); }
-.tag { color: var(--muted); max-width: 52ch; margin: 8px auto 20px; }
-.start { display: grid; gap: 12px; justify-items: center; }
-.start .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: end; }
-.hints { max-width: 56ch; text-align: left; font-size: .85rem; color: var(--muted); display: grid; gap: 6px; }
+.boot { min-height: 86vh; display: grid; place-items: center; padding-block: 40px; position: relative; isolation: isolate; }
+.boot::before { content: ""; position: absolute; inset: 0 -16px; z-index: -1; pointer-events: none;
+  background: radial-gradient(60% 50% at 75% 30%, var(--glow), transparent 70%),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 48px 48px;
+  opacity: .5; -webkit-mask-image: linear-gradient(transparent, #000 20%, #000 70%, transparent); mask-image: linear-gradient(transparent, #000 20%, #000 70%, transparent); }
+.boot.art::before { background: var(--art) center / cover no-repeat; opacity: .35; }
+.bootin { display: grid; gap: 22px; width: min(720px, 100%); }
+.eyebrow { font: 600 .72rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.logo { font-family: var(--display); font-size: clamp(2.6rem, 9vw, 5.2rem); font-weight: 800; letter-spacing: -.02em; line-height: .92; }
+.logo span { display: block; color: var(--accent); }
+.logo img { display: block; max-width: min(420px, 80vw); height: auto; }
+.tag { color: var(--muted); max-width: 54ch; margin: 0; font-size: 1.02rem; }
+.start { display: grid; gap: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px; }
+.start .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+.hints { font-size: .86rem; color: var(--muted); display: grid; gap: 6px; }
 .hints p { margin: 0; }
 .hints b { color: var(--fg); }
-.start label { display: grid; gap: 4px; font-size: .85rem; color: var(--muted); text-align: left; }
+.start label { display: grid; gap: 4px; font-size: .8rem; color: var(--muted); }
 .err { color: var(--bad); max-width: 60ch; }
+details.imp summary { cursor: pointer; color: var(--muted); font-size: .85rem; }
+details.imp[open] { display: grid; gap: 8px; }
+
+/* crest */
+.crest { flex: none; display: inline-block; vertical-align: middle; }
+.cl { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
 
 /* top strip */
-.strip { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 12px 8px; border-bottom: 1px solid var(--line); }
+.strip { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px); padding-block: 12px 0; border-bottom: 1px solid var(--line); }
 .strip .top { display: flex; gap: 12px 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
-.club { display: grid; }
-.club b { font-family: var(--display); font-size: 1.35rem; line-height: 1.1; }
-.club small { color: var(--muted); }
-.kpis { display: flex; gap: 6px 18px; flex-wrap: wrap; }
-.kpi { display: grid; }
-.kpi small { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; }
-.kpi span { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 500; }
+.club { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.club .nm { display: grid; min-width: 0; }
+.club b { font: 700 1.2rem/1.1 var(--display); }
+.club small { color: var(--muted); font-size: .8rem; }
+.kpis { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); }
+.kpi { display: grid; padding: 6px 14px; border-left: 1px solid var(--line); }
+.kpi:first-child { border-left: 0; }
+.kpi small { color: var(--muted); font: 600 .62rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .12em; }
+.kpi span { font: 600 1rem/1.3 var(--mono); font-variant-numeric: tabular-nums; }
 .go { display: flex; gap: 6px; }
-.tabs { display: flex; gap: 2px; overflow-x: auto; margin-top: 10px; scrollbar-width: none; }
-.tabs button { border: 0; border-radius: 0; background: none; padding: 6px 12px; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; }
+.season { position: relative; height: 4px; background: var(--chip); border-radius: 2px; margin-top: 12px; }
+.season i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, var(--ct), var(--accent)); border-radius: 2px; }
+.season b { position: absolute; top: -3px; width: 2px; height: 10px; background: var(--muted); border-radius: 1px; }
+.season b.in { background: var(--accent); }
+.tabs { display: flex; gap: 2px; overflow-x: auto; margin-top: 6px; scrollbar-width: none; }
+.tabs button { border: 0; border-radius: 0; background: none; padding: 8px 12px; color: var(--muted); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tabs button:hover { color: var(--fg); }
 .tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); font-weight: 600; }
 .badge { display: inline-block; min-width: 18px; padding: 0 5px; border-radius: 9px; background: var(--accent); color: var(--accent-fg); font-size: .72rem; font-weight: 600; text-align: center; margin-left: 4px; }
 
-main { padding-block: 16px; display: grid; gap: 16px; }
-.grid2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 10px; min-width: 0; align-content: start; }
+main { padding-block: 18px; display: grid; gap: 16px; }
+.grid2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 12px; min-width: 0; align-content: start; }
 .muted { color: var(--muted); }
-.feed { display: grid; gap: 6px; max-height: 420px; overflow-y: auto; }
-.feed .wk { font-family: var(--mono); font-size: .75rem; color: var(--muted); margin-top: 6px; }
-.line { display: flex; gap: 8px; align-items: baseline; }
-.pill { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; padding: 1px 6px; border-radius: 4px; background: var(--chip); color: var(--muted); flex: none; }
+.feed { display: grid; gap: 4px; max-height: 440px; overflow-y: auto; }
+.feed .wk { font: .7rem var(--mono); color: var(--muted); margin-top: 8px; letter-spacing: .06em; }
+.line { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
+.pill { font: 600 .62rem/1.5 var(--mono); text-transform: uppercase; letter-spacing: .08em; padding: 1px 6px; border-radius: 3px; background: var(--chip); color: var(--muted); flex: none; }
 .pill.match { background: color-mix(in srgb, var(--ct) 18%, transparent); color: var(--ct); }
 .pill.story { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
 .pill.club { background: color-mix(in srgb, var(--good) 18%, transparent); color: var(--good); }
-.event { border-left: 3px solid var(--accent); padding-left: 10px; display: grid; gap: 6px; }
-.event .opts { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill.world { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
+.event { border-left: 3px solid var(--ct); padding: 2px 0 2px 12px; display: grid; gap: 6px; }
+.event b { font-weight: 600; }
+.event .opts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+.event.deck { border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); border-left: 3px solid var(--accent); border-radius: 4px; padding: 0; overflow: hidden; background: linear-gradient(180deg, var(--glow), transparent 60%); }
+.event.deck .body { display: grid; gap: 8px; padding: 14px; }
+.event.deck b { font: 600 1rem/1.25 var(--display); }
+.event.deck .pic { display: block; width: 100%; aspect-ratio: 3 / 2; max-height: 220px; object-fit: cover; border-bottom: 1px solid var(--line); }
+.event.offer { border-left-color: var(--good); }
 .why { font-size: .8rem; color: var(--muted); }
-.result { font-size: .85rem; background: var(--chip); border-radius: 6px; padding: 6px 10px; }
+.result { font-size: .86rem; background: var(--panel2); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
 
 .tablebox { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-size: .9rem; }
-th { text-align: left; font-weight: 500; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { text-align: left; font: 600 .62rem/1.3 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding: 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr:hover td { background: color-mix(in srgb, var(--ct) 5%, transparent); }
 td.r, th.r { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
 tr.me td { background: color-mix(in srgb, var(--accent) 12%, transparent); font-weight: 600; }
-tr.bench td { opacity: .6; }
-.bar { height: 6px; border-radius: 3px; background: var(--chip); position: relative; min-width: 50px; }
+tr.me td:first-child { box-shadow: inset 3px 0 var(--accent); }
+tr.super td { background: linear-gradient(90deg, var(--glow), transparent); }
+tr.bench td { opacity: .55; }
+.rk { display: inline-grid; place-items: center; min-width: 26px; height: 22px; padding: 0 4px; border-radius: 3px; font-weight: 600; }
+.rk.g1 { background: #d9a930; color: #1b1304; } .rk.g2 { background: #a9b4c0; color: #10161d; } .rk.g3 { background: #b9774a; color: #1a0e06; }
+.bar { height: 6px; border-radius: 3px; background: var(--chip); position: relative; min-width: 56px; }
 .bar i { position: absolute; inset: 0 auto 0 0; border-radius: 3px; background: var(--good); }
 .bar.mid i { background: var(--warn); }
 .bar.low i { background: var(--bad); }
-.traits { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
-.traits span, .traits button { font-size: .7rem; padding: 0 5px; border-radius: 3px; background: var(--chip); color: var(--muted); border: 1px solid transparent; line-height: 1.5; }
+.pl { display: flex; gap: 10px; align-items: flex-start; min-width: 0; }
+.pl .who { display: grid; min-width: 0; }
+.ava { flex: none; width: 34px; height: 34px; border-radius: 4px; display: grid; place-items: center; position: relative; color: #fff; }
+.ava img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+.ava svg { width: 18px; height: 18px; }
+.ava.igl { background: #7b5cc4; } .ava.awp { background: #2f7d6d; } .ava.entry { background: #c4553c; }
+.ava.rifler { background: #3a6db0; } .ava.support { background: #6b7a3a; } .ava.lurker { background: #59606b; }
+.ava .st { position: absolute; right: -5px; top: -7px; color: var(--accent); font-size: .9rem; text-shadow: 0 0 4px var(--bg); }
+.ovr { display: inline-block; min-width: 40px; text-align: center; padding: 2px 6px; border-radius: 3px; font-weight: 600; background: var(--chip); }
+.ovr.o90 { background: var(--accent); color: var(--accent-fg); } .ovr.o80 { background: color-mix(in srgb, var(--accent) 35%, var(--chip)); }
+.ovr.o70 { background: color-mix(in srgb, var(--ct) 30%, var(--chip)); }
+.traits { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.traits span, .traits button { font-size: .7rem; padding: 0 6px; border-radius: 3px; background: var(--chip); color: var(--muted); border: 1px solid transparent; line-height: 1.6; }
 .traits .rare { color: var(--ct); border-color: color-mix(in srgb, var(--ct) 40%, transparent); }
-.traits .special { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); font-weight: 600; }
+.traits .special { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); font-weight: 600; background: var(--glow); }
 .traits .acquired { color: var(--bad); border-style: dashed; border-color: color-mix(in srgb, var(--bad) 50%, transparent); }
 .star { color: var(--accent); font-weight: 700; }
-.tcard { display: grid; gap: 4px; }
-.tcard .tags { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.tcard { display: grid; gap: 5px; }
+.tcard b { font-family: var(--display); font-size: .92rem; font-weight: 600; }
+.tcard .tags { font: 600 .62rem/1.3 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
 .tgrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-.tgrid .card { padding: 10px 12px; gap: 4px; }
+.tgrid .card { padding: 12px; gap: 4px; background: var(--panel2); }
+.tgrid .card.special { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); background: linear-gradient(180deg, var(--glow), var(--panel2) 70%); }
+.tgrid .card.rare { border-color: color-mix(in srgb, var(--ct) 40%, var(--line)); }
+.tgrid .card.acquired { border-style: dashed; }
 .plus { color: var(--good); }
 .minus { color: var(--bad); }
 .flag { color: var(--bad); font-size: .78rem; }
 .range { font-family: var(--mono); }
+.fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 8px; align-items: end; }
+.fields label { display: grid; gap: 4px; font-size: .78rem; color: var(--muted); min-width: 0; }
+.fields input { width: 100%; font-family: var(--mono); }
+@media (max-width: 520px) { .fields { grid-template-columns: repeat(3, minmax(0, 1fr)); } .fields button { grid-column: 1 / -1; } }
 .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: 8px; max-width: min(92vw, 560px); font-size: .9rem; z-index: 10; }
-.busy { position: fixed; inset: 0; display: grid; place-items: center; background: color-mix(in srgb, var(--bg) 60%, transparent); z-index: 9; font-family: var(--display); font-size: 1.2rem; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 4px; max-width: min(92vw, 560px); font-size: .9rem; z-index: 10; box-shadow: 0 6px 24px rgba(0, 0, 0, .25); }
+.busy { position: fixed; inset: 0; display: grid; place-items: center; align-content: center; gap: 14px; background: color-mix(in srgb, var(--bg) 70%, transparent); z-index: 9; font: 600 1rem/1 var(--display); }
+.busy::before { content: ""; width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--chip); border-top-color: var(--accent); border-right-color: var(--ct); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .money-pos { color: var(--good); }
 .money-neg { color: var(--bad); }
-textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; }
-@media (prefers-reduced-motion: no-preference) { .card { transition: border-color .15s; } }
+textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; }
+@media (prefers-reduced-motion: reduce) { .busy::before { animation-duration: 3s; } button { transition: none; } }
+@media (max-width: 640px) {
+  .kpi { padding: 5px 9px; }
+  .kpi span { font-size: .9rem; }
+  .go { width: 100%; } .go .primary { flex: 1; }
+}
 @media (max-width: 520px) { .hide-sm { display: none; } }
 </style>
 
 <div class="wrap" id="app">
   <section class="boot" id="boot">
-    <div>
-      <div class="logo">CS <span>MENEDGER</span></div>
-      <p class="tag">Менеджер киберспортивного клуба: деньги, спонсоры, трансферы, люди и их истории. Матчи считает ядро игры прямо в браузере.</p>
+    <div class="bootin">
+      <div class="eyebrow">Идея HaloBack · симулятор киберспортивного клуба</div>
+      <div class="logo" id="logo">CS <span>MENEDGER</span></div>
+      <p class="tag">Деньги, спонсоры, трансферы и люди со своим характером. Матчи считает ядро игры прямо в браузере.</p>
       <p id="bootMsg" class="muted">Загружаю движок Python…</p>
       <div class="start" id="startBox" hidden>
         <div class="row">
@@ -153,9 +220,11 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <button class="primary" id="newBtn">Новая карьера</button>
           <button id="contBtn" hidden>Продолжить сохранение</button>
         </div>
-        <label for="importText" style="width:min(520px,90vw)">Или вставьте экспортированное сохранение
-          <textarea id="importText" placeholder="CSM1:…"></textarea></label>
-        <button id="importBtn">Загрузить из текста</button>
+        <details class="imp"><summary>Загрузить сохранение из текста</summary>
+          <label for="importText" class="muted">Вставьте экспортированное сохранение</label>
+          <textarea id="importText" placeholder="CSM1:…"></textarea>
+          <button id="importBtn">Загрузить</button>
+        </details>
       </div>
       <p class="err" id="bootErr" hidden></p>
     </div>
@@ -164,7 +233,7 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
   <div id="game" hidden>
     <header class="strip">
       <div class="top">
-        <div class="club"><b id="clubName">—</b><small id="clubSub">—</small></div>
+        <div class="club"><span id="clubCrest"></span><div class="nm"><b id="clubName">—</b><small id="clubSub">—</small></div></div>
         <div class="kpis">
           <div class="kpi"><small>Сезон · неделя</small><span id="kWeek">—</span></div>
           <div class="kpi"><small>Место</small><span id="kRank">—</span></div>
@@ -177,6 +246,7 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <button id="next4Btn" title="Остановится, если нужно ваше решение">+4</button>
         </div>
       </div>
+      <div class="season" id="seasonBar" aria-hidden="true"></div>
       <nav class="tabs" role="tablist" id="tabs"></nav>
     </header>
     <main id="main"></main>
@@ -204,6 +274,58 @@ const ITEM = { salaries: "зарплаты", staff: "персонал", sponsors
   agents: "агенты", win_bonuses: "премии за титулы", owner: "деньги владельца" };
 const SAVE_KEY = "csm-save-v1";
 let py, api, META, tab = "office", log = [], lastResults = {};
+
+// Optional art: drop images into art/ and list them in art/manifest.json
+// ({"logo": "art/logo.png", "start": "art/start.jpg", "deck": {"deck_retreat": "art/deck_retreat.jpg"}, "role": {...}}).
+let ART = { deck: {}, role: {}, trophy: {} };
+async function loadArt() {
+  try {
+    const r = await fetch(new URL("art/manifest.json", document.baseURI));
+    if (!r.ok) return;
+    ART = Object.assign(ART, await r.json());
+    if (ART.logo) $("logo").innerHTML = `<img src="${esc(ART.logo)}" alt="CS MENEDGER">`;
+    if (ART.start) { $("boot").classList.add("art"); $("boot").style.setProperty("--art", `url("${ART.start}")`); }
+  } catch (e) {}
+}
+
+// Club crest: shape, colours and monogram all come from the name, so a club always looks the same.
+function hash(str) { let h = 2166136261; for (const c of str) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+const SHAPES = [
+  "M16 2 L29 6 V16 C29 24 23 29 16 31 C9 29 3 24 3 16 V6 Z",
+  "M16 2 L28 9 V23 L16 30 L4 23 V9 Z",
+  "M4 4 H28 V18 C28 25 22 30 16 30 C10 30 4 25 4 18 Z",
+  "M16 2 A14 14 0 1 1 15.99 2 Z",
+];
+function crest(name, size = 26) {
+  const h = hash(name), h1 = h % 360, h2 = (h1 + 140 + (h >> 9) % 80) % 360;
+  const shape = SHAPES[(h >> 4) % SHAPES.length], band = (h >> 7) % 3;
+  const words = name.replace(/[^\p{L}\p{N} ]/gu, "").split(/\s+/).filter(Boolean);
+  const mono = ((words[0] || "?")[0] + (words[1] ? words[1][0] : "")).toUpperCase();
+  const stripe = band === 0 ? `<rect x="0" y="12" width="32" height="7" fill="hsl(${h2} 65% 52%)"/>`
+    : band === 1 ? `<path d="M0 32 L32 0 V9 L9 32 Z" fill="hsl(${h2} 65% 52%)"/>` : `<rect x="13" y="0" width="6" height="32" fill="hsl(${h2} 65% 52%)"/>`;
+  const id = "c" + h.toString(36);
+  return `<svg class="crest" width="${size}" height="${size}" viewBox="0 0 32 32" aria-hidden="true"><defs><clipPath id="${id}"><path d="${shape}"/></clipPath></defs>
+    <g clip-path="url(#${id})"><rect width="32" height="32" fill="hsl(${h1} 45% 26%)"/>${stripe}</g>
+    <path d="${shape}" fill="none" stroke="hsl(${h1} 30% 70%)" stroke-opacity=".55" stroke-width="1.2"/>
+    <text x="16" y="20.5" text-anchor="middle" font-family="Unbounded, Arial Black, sans-serif" font-weight="800" font-size="${mono.length > 1 ? 11.5 : 14}" fill="#fff" stroke="hsl(${h1} 45% 18%)" stroke-width="2.4" paint-order="stroke">${esc(mono)}</text></svg>`;
+}
+const CL = (name, size) => `<span class="cl">${crest(name, size)}<span>${esc(name)}</span></span>`;
+
+const ROLE_ICON = {
+  igl: '<path d="M6 21V4h11l-2.5 4 2.5 4H6"/>',
+  awp: '<circle cx="12" cy="12" r="6.5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/>',
+  entry: '<path d="M13 2 5 13h6l-1 9 8-12h-6z"/>',
+  rifler: '<path d="M5 6l6 6-6 6M12 6l6 6-6 6"/>',
+  support: '<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/>',
+  lurker: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/>',
+};
+function ava(p) {
+  const img = ART.role && ART.role[p.role];
+  const inner = img ? `<img src="${esc(img)}" alt="">` :
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${ROLE_ICON[p.role] || ROLE_ICON.rifler}</svg>`;
+  return `<span class="ava ${esc(p.role)}" title="${ROLE[p.role] || p.role}">${inner}${p.star ? `<span class="st">★</span>` : ""}</span>`;
+}
+const OVR = (v) => `<span class="ovr ${v >= 90 ? "o90" : v >= 80 ? "o80" : v >= 70 ? "o70" : ""}">${v}</span>`;
 
 function toast(msg) {
   const t = $("toast"); t.textContent = msg; t.hidden = false;
@@ -258,6 +380,7 @@ async function boot() {
     }
     py.runPython("import sys, json; sys.path.insert(0, '/home/pyodide/lib'); from csmcore import api");
     META = call("meta_info");
+    await loadArt();
     $("bootMsg").hidden = true; $("startBox").hidden = false;
     try { if (localStorage.getItem(SAVE_KEY)) $("contBtn").hidden = false; } catch (e) {}
   } catch (e) {
@@ -305,6 +428,9 @@ const TABS = [["office", "Сводка"], ["squad", "Состав"], ["market", 
 function render(s) {
   s = s || call("state");
   $("clubName").textContent = s.club;
+  $("clubCrest").innerHTML = crest(s.club, 42);
+  $("seasonBar").innerHTML = `<i style="width:${(s.week / 52 * 100).toFixed(1)}%"></i>` +
+    s.next_events.map((e) => `<b class="${e.invited ? "in" : ""}" style="left:${(e.week / 52 * 100).toFixed(1)}%" title="н${e.week} ${esc(e.name)}"></b>`).join("");
   $("clubSub").textContent = `${TIER[s.tier]} · ${s.region} · бренд ${s.brand} · фанаты ${s.fans.toLocaleString("ru")}`;
   $("kWeek").textContent = `${s.season} · ${s.week}/52`;
   $("kRank").textContent = "#" + s.rank;
@@ -321,7 +447,7 @@ function render(s) {
 
 function kind(line) {
   const k = line.split(":")[0];
-  return { "матч": "match", "история": "story", "клуб": "club" }[k] || "";
+  return { "матч": "match", "история": "story", "клуб": "club", "мир": "world" }[k] || "";
 }
 function newsHtml() {
   if (!log.length) return `<p class="muted">Новостей пока нет. Нажмите «Следующая неделя».</p>`;
@@ -334,15 +460,17 @@ function newsHtml() {
 
 function viewOffice(s) {
   const ib = call("inbox");
-  const events = ib.events.map((e) => `<div class="event">
-      ${e.why.includes("выбор недели") ? `<span class="pill story" style="justify-self:start">выбор недели</span>` : ""}
+  const events = ib.events.map((e) => {
+    const why = e.why.filter((w) => w !== "выбор недели"), pic = e.deck && ART.deck && ART.deck[e.id];
+    return `<div class="event ${e.deck ? "deck" : ""}">${pic ? `<img class="pic" src="${esc(pic)}" alt="">` : ""}<div class="body">
+      ${e.deck ? `<span class="pill story" style="justify-self:start">выбор недели</span>` : ""}
       <b>${esc(e.title)}</b><span>${esc(e.text)}</span>
-      ${e.why.filter((w) => w !== "выбор недели").length ? `<span class="why">Почему: ${esc(e.why.filter((w) => w !== "выбор недели").join("; "))}</span>` : ""}
+      ${why.length ? `<span class="why">Почему: ${esc(why.join("; "))}</span>` : ""}
       <div class="opts">${e.options.map((o, j) => `<button class="small" data-ev="${e.i}" data-opt="${j}">${esc(o)}</button>`).join("")}</div>
-      ${lastResults["ev" + e.i] ? "" : ""}
-    </div>`).join("");
-  const offers = ib.offers.map((o) => `<div class="event">
-      <b>${esc(o.buyer)} хочет ${esc(o.player)}</b>
+    </div></div>`;
+  }).join("");
+  const offers = ib.offers.map((o) => `<div class="event offer">
+      <b>${CL(o.buyer, 22)} хочет ${esc(o.player)}</b>
       <span class="num">${money(o.fee)} за трансфер · зарплата ${money(o.salary)}/мес</span>
       <div class="opts"><button class="small" data-offer="${o.i}" data-acc="1">Продать</button><button class="small" data-offer="${o.i}" data-acc="0">Отказать</button></div>
     </div>`).join("");
@@ -358,11 +486,11 @@ function viewOffice(s) {
   <div class="grid2">
     <section class="card"><h3>Новости</h3><div class="feed">${newsHtml()}</div></section>
     <section class="card"><h3>План недели</h3>
-      <div class="controls">
-        <label for="pHours">Тренировки, ч</label><input id="pHours" type="number" min="0" max="50" value="30" style="width:70px">
-        <label for="pRest">Выходных</label><input id="pRest" type="number" min="0" max="3" value="1" style="width:60px">
-        <label for="pComm">Дни спонсоров</label><input id="pComm" type="number" min="0" max="3" value="0" style="width:60px">
-        <button class="small" id="planBtn">Применить</button>
+      <div class="fields">
+        <label for="pHours">Тренировки, ч<input id="pHours" type="number" min="0" max="50" value="30"></label>
+        <label for="pRest">Выходных<input id="pRest" type="number" min="0" max="3" value="1"></label>
+        <label for="pComm">Дни спонсоров<input id="pComm" type="number" min="0" max="3" value="0"></label>
+        <button id="planBtn">Применить</button>
       </div>
       <h3>Разговор с командой</h3><div class="controls">${tones}</div>
       <h3>Пресс-конференция</h3>
@@ -399,10 +527,10 @@ const STAR = (on) => on ? `<span class="star" title="Звезда: уровен�
 function viewSquad() {
   const r = call("roster");
   const rows = r.map((p) => `<tr class="${p.benched ? "bench" : ""}">
-      <td>${STAR(p.star)}<b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span>
+      <td><div class="pl">${ava(p)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span></span>
         ${p.wants_out ? `<div class="flag">просит трансфер</div>` : ""}
-        ${traitChips(p.traits)}</td>
-      <td class="r">${p.ovr}</td><td class="r">${p.stats.kd ?? "—"}</td><td>${stateBar(p.form)}</td><td>${stateBar(p.morale)}</td><td>${stateBar(p.stress, true)}</td>
+        ${traitChips(p.traits)}</div></div></td>
+      <td class="r">${OVR(p.ovr)}</td><td class="r">${p.stats.kd ?? "—"}</td><td>${stateBar(p.form)}</td><td>${stateBar(p.morale)}</td><td>${stateBar(p.stress, true)}</td>
       <td class="r">${money(p.salary)}</td><td class="r">н${p.contract_end}</td><td class="r">${money(p.value)}</td>
       <td><button class="small" data-bench="${esc(p.name)}">${p.benched ? "в состав" : "в запас"}</button>
         <button class="small" data-release="${esc(p.name)}">отпустить</button></td></tr>`).join("");
@@ -417,9 +545,9 @@ function viewSquad() {
 function viewMarket() {
   const m = call("market", 40);
   const rows = m.map((p) => `<tr>
-      <td>${STAR(p.star)}<b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>
-        ${traitChips(p.traits)}</td>
-      <td>${p.club ? esc(p.club) : `<span class="pill club">свободен</span>`}</td>
+      <td><div class="pl">${ava(p)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span></span>
+        ${traitChips(p.traits)}</div></div></td>
+      <td>${p.club ? CL(p.club, 20) : `<span class="pill club">свободен</span>`}</td>
       <td class="r range">${p.ovr_range[0]}–${p.ovr_range[1]}</td><td class="r">${p.known}%</td><td>${esc(p.potential)}</td>
       <td class="r">${money(p.salary_wish)}</td><td class="r">${p.fee ? money(p.fee) : "—"}</td>
       <td><button class="small" data-scout="${esc(p.name)}">скаут</button>
@@ -456,7 +584,7 @@ function viewTable(s) {
   const opts = ["", "EU", "CIS", "NA", "SA", "Asia", "OCE"].map((r) => `<option value="${r}" ${r === tableRegion ? "selected" : ""}>${r || "Весь мир"}</option>`).join("");
   return `<section class="card"><div class="controls"><h2>Мировой рейтинг</h2><select id="regionSel" aria-label="Регион">${opts}</select></div>
     <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Уровень клуба</th><th>Регион</th><th class="r">Сила состава</th><th class="r">Очки</th><th class="r">Титулы</th></tr></thead>
-    <tbody>${t.map((c) => `<tr class="${c.me ? "me" : ""}"><td class="r">${c.rank}</td><td>${esc(c.club)}${c.superteam ? ` <span class="pill story">суперсостав</span>` : ""}${c.stars ? ` <span class="star">${"★".repeat(c.stars)}</span>` : ""}</td><td>${TIER[c.tier]}</td><td>${c.region}</td><td class="r">${c.ovr}</td><td class="r">${c.points}</td><td class="r">${c.titles}</td></tr>`).join("")}</tbody></table></div></section>`;
+    <tbody>${t.map((c) => `<tr class="${c.me ? "me" : ""} ${c.superteam ? "super" : ""}"><td class="r"><span class="rk ${c.rank <= 3 ? "g" + c.rank : ""}">${c.rank}</span></td><td>${CL(c.club, 22)}${c.superteam ? ` <span class="pill story">суперсостав</span>` : ""}${c.stars ? ` <span class="star">${"★".repeat(c.stars)}</span>` : ""}</td><td>${TIER[c.tier]}</td><td>${c.region}</td><td class="r">${c.ovr}</td><td class="r">${c.points}</td><td class="r">${c.titles}</td></tr>`).join("")}</tbody></table></div></section>`;
 }
 
 function viewHistory() {
@@ -473,7 +601,7 @@ function viewTraits() {
   const groups = [["special", "Особые: сильнее всех, но и последствия тяжелее (стресс ×1,6)"], ["rare", "Редкие (стресс ×1,25)"],
     ["common", "Обычные"], ["acquired", "Приобретённые: появляются и уходят от образа жизни"]];
   return groups.map(([r, title]) => `<section class="card"><h3>${title}</h3><div class="tgrid">${all.filter((t) => t.rarity === r)
-    .map((t) => `<div class="card">${traitCard(t)}</div>`).join("")}</div></section>`).join("");
+    .map((t) => `<div class="card ${t.rarity}">${traitCard(t)}</div>`).join("")}</div></section>`).join("");
 }
 
 function viewCareer(s) {
@@ -482,7 +610,7 @@ function viewCareer(s) {
   try { saved = localStorage.getItem(SAVE_KEY) ? "Автосохранение каждые 4 недели в этом браузере включено." : ""; } catch (e) {}
   return `<div class="grid2">
     <section class="card"><h3>Менеджер</h3><div><b>${esc(s.manager.name)}</b>, репутация ${s.manager.reputation}, титулов ${s.manager.titles}</div>
-      ${s.sacked ? `<div class="flag">Вас уволили. Клубы, готовые вас взять:</div>` + jobs.map((j) => `<div class="line"><span>${esc(j.club)} (${TIER[j.tier]}, #${j.rank}, ${j.region})</span><button class="small" data-job="${esc(j.club)}">Принять</button></div>`).join("") : `<div class="muted">Владелец оценивает вас раз в месяц. Доверие ниже 12 означает увольнение.</div>`}
+      ${s.sacked ? `<div class="flag">Вас уволили. Клубы, готовые вас взять:</div>` + jobs.map((j) => `<div class="line"><span>${CL(j.club, 20)} (${TIER[j.tier]}, #${j.rank}, ${j.region})</span><button class="small" data-job="${esc(j.club)}">Принять</button></div>`).join("") : `<div class="muted">Владелец оценивает вас раз в месяц. Доверие ниже 12 означает увольнение.</div>`}
     </section>
     <section class="card"><h3>Сохранение</h3><div class="muted">${saved}</div>
       <div class="controls"><button class="small" id="saveBtn">Сохранить сейчас</button><button class="small" id="exportBtn">Скопировать сохранение текстом</button><button class="small" id="quitBtn">Выйти в меню</button></div>
