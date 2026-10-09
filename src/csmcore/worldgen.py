@@ -14,7 +14,7 @@ from .chronicle import Chronicle
 from .development import roll_potential
 from .director import Director
 from .economy import Club, Contract, Sponsor, Tournament
-from .generate import concept_examples, make_player
+from .generate import SUFFIX, SYL, Nicknames, concept_examples, make_player  # noqa: F401
 from .legacy import Legacy
 from .manager import Careers
 from .market import Market
@@ -45,11 +45,6 @@ NAME_A = ["Nova", "Iron", "Red", "Black", "Storm", "Frost", "Neon", "Apex", "Vol
           "Steel", "Shadow", "Ember", "Static", "Quantum", "Atlas", "Zenith", "Echo"]
 NAME_B = ["Wolves", "Esports", "Gaming", "Hawks", "Dragons", "Kings", "Unit", "Squad", "Legion", "Five", "Riders",
           "Vipers", "Owls", "Bears", "Foxes", "Ravens", "Sharks", "Lynx", "Club", "Collective"]
-SYL = ["ka", "ro", "zz", "mi", "ne", "ox", "ty", "ul", "va", "si", "kr", "on", "ex", "do", "bi", "le", "ze", "ar",
-       "fu", "qi", "ny", "jo", "sk", "ip", "el", "ra", "xo", "mu", "py", "ch"]
-SUFFIX = ["", "", "", "", "x", "y", "o", "z", "1", "s"]
-
-
 def _names(rng: random.Random, n: int) -> list[str]:
     out: list[str] = []
     used: set[str] = set()
@@ -59,20 +54,6 @@ def _names(rng: random.Random, n: int) -> list[str]:
             used.add(nm)
             out.append(nm)
     return out
-
-
-class Nicknames:
-    """Unique player nicknames; avoids the reserved concept names and talent ids."""
-
-    def __init__(self, rng: random.Random, reserved=()) -> None:
-        self.rng, self.used = rng, set(reserved)
-
-    def __call__(self) -> str:
-        while True:
-            nick = "".join(self.rng.choice(SYL) for _ in range(self.rng.choice([2, 2, 3]))) + self.rng.choice(SUFFIX)
-            if nick not in self.used and not nick[:1].isdigit():
-                self.used.add(nick)
-                return nick
 
 
 def _dist(n: int) -> list[float]:
@@ -110,6 +91,38 @@ def calendar(regions=REGIONS) -> dict[int, list[Tournament]]:
     return cal
 
 
+def _contracts(club: Club, players, rng: random.Random, start_week: int = 0) -> None:
+    lo, hi = economy.TIERS[club.tier]["salary"]
+    for p in players:
+        sal = rng.uniform(lo, hi)
+        club.contracts[p.name] = Contract(p.name, sal, end_week=start_week + rng.randint(30, 150),
+                                          buyout=economy.buyout_for(sal, 100))
+        p.joined_week = start_week - rng.randint(0, 150)
+
+
+def make_club(name: str, tier: str, region: str, rank: int, rating_points: float, rng: random.Random,
+              nick, start_week: int = 0, level: float | None = None) -> Club:
+    """One club with a five-man roster, contracts and two sponsors."""
+    level = TIER_LEVEL[tier] + rng.uniform(-3, 3) if level is None else level
+    _, hi = economy.TIERS[tier]["salary"]
+    b_lo, b_hi = economy.TIERS[tier]["budget"]
+    club = Club(name, tier=tier, region=region, cash=rng.uniform(b_lo, (b_lo + b_hi) / 2) / 2,
+                brand=max(5.0, min(95.0, TIER_BRAND[tier] + rng.uniform(-8, 8))),
+                fans=int(TIER_FANS[tier] * rng.uniform(0.6, 1.5)), rank=rank,
+                rating_points=rating_points, staff_month=hi * 2,
+                coach_quality=max(20.0, min(90.0, rng.gauss(30 + level / 2, 8))),
+                scout_quality=max(20.0, min(90.0, rng.gauss(30 + level / 2, 8))))
+    countries = REGIONS[region][1]
+    for role in ROLES:
+        p = make_player(nick(), level, rng, role)
+        p.country = rng.choice(countries)
+        p.potential = roll_potential(p.overall(), p.age, rng)
+        club.roster.append(p)
+    _contracts(club, club.roster, rng, start_week)
+    club.sponsors = new_sponsors(club, rng, start_week, economy.TIERS[tier]["sponsors"][0])
+    return club
+
+
 def generate(seed: int = 1, n_clubs: int = 120, director: str = "cassandra"):
     """Build clubs, relation graph, calendar and a full Systems bundle. Returns
     (clubs, graph, calendar, systems, home_club_name)."""
@@ -131,35 +144,16 @@ def generate(seed: int = 1, n_clubs: int = 120, director: str = "cassandra"):
     home = None
     for i, (name, tier) in enumerate(zip(names, tiers)):
         region = rng.choices(region_list, weights)[0] if i else "EU"
-        level = TIER_LEVEL[tier] + rng.uniform(-3, 3)
-        lo, hi = economy.TIERS[tier]["salary"]
-        b_lo, b_hi = economy.TIERS[tier]["budget"]
-        club = Club(name, tier=tier, region=region, cash=rng.uniform(b_lo, (b_lo + b_hi) / 2) / 2,
-                    brand=max(5.0, min(95.0, TIER_BRAND[tier] + rng.uniform(-8, 8))),
-                    fans=int(TIER_FANS[tier] * rng.uniform(0.6, 1.5)), rank=i + 1,
-                    rating_points=(n_clubs - i) * 10.0, staff_month=hi * 2,
-                    coach_quality=max(20.0, min(90.0, rng.gauss(30 + level / 2, 8))),
-                    scout_quality=max(20.0, min(90.0, rng.gauss(30 + level / 2, 8))))
-        countries = REGIONS[region][1]
-        roster = []
-        for j, role in enumerate(ROLES):
-            p = make_player(nick(), level, rng, role)
-            p.country = rng.choice(countries)
-            p.potential = roll_potential(p.overall(), p.age, rng)
-            roster.append(p)
+        club = make_club(name, tier, region, i + 1, (n_clubs - i) * 10.0, rng, nick)
+        roster = club.roster
         if home is None and tier == "tier1":   # the concept's trio
             home = club
             club.region = "EU"
+            for q in roster[:3]:
+                club.contracts.pop(q.name, None)
             roster[0], roster[1], roster[2] = examples["north"], examples["sable"], examples["vanta"]
             graph.set_pair("vanta", "sable", irritation=40, role_rivalry=50)
-        for p in roster:
-            sal = rng.uniform(lo, hi)
-            club.contracts[p.name] = Contract(p.name, sal, end_week=rng.randint(30, 150),
-                                              buyout=economy.buyout_for(sal, 100))
-            p.joined_week = -rng.randint(0, 150)
-        club.roster = roster
-        sp_lo = economy.TIERS[tier]["sponsors"][0]
-        club.sponsors = new_sponsors(club, rng, 0, sp_lo)
+            _contracts(club, roster[:3], rng)
         clubs.append(club)
 
     free_agents = [make_player(nick(), rng.uniform(46, 64), rng, ROLES[i % 5]) for i in range(n_clubs // 3)]
@@ -189,13 +183,14 @@ def _owner(club: Club, rng: random.Random) -> Owner:
 
 
 SPONSOR_BRANDS = {"hardware": "Kernel", "energy": "Bolt", "telecom": "Linkr", "bank": "Vault Bank",
-                  "auto": "Motive", "crypto": "Chainz", "betting": "LuckyBet"}
+                  "auto": "Motive", "crypto": "Chainz", "betting": "LuckyBet",
+                  "luxury": "Aurum Watches"}
 
 
 def new_sponsors(club: Club, rng: random.Random, week: int, base: float) -> list[Sponsor]:
     """Two deals for a year: a safe one and a riskier one; bigger brands get more."""
     safe = rng.choice(["hardware", "energy", "telecom", "bank", "auto"])
-    risky = rng.choice(["hardware", "energy", "crypto", "betting", "telecom"])
+    risky = rng.choice(["hardware", "energy", "crypto", "betting", "telecom", "luxury"])
     scale = 0.6 + club.brand / 100
     return [Sponsor(SPONSOR_BRANDS[safe], safe, base * 0.5 * scale, week + 52),
             Sponsor(SPONSOR_BRANDS[risky], risky, base * 0.5 * scale * economy.SPONSOR_CATEGORIES[risky]["mul"] / 1.5,

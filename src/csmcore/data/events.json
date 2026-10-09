@@ -1,5 +1,5 @@
 {
- "_doc": "Storylets. who: player|pair|club. base: weekly chance before multipliers. when: all must hold. weight: [{if, mul}]. options: manager/AI choices with ai base weight and ai_weight multipliers. effects: state/stat/personality/rel/team_morale/cash/fans_pct/brand/sponsor_leaves/flag/unflag/club_flag/add_trait/bench/release/follow/follow_random/history, each may have chance. chain_only events fire only as follow-ups. Text uses {a} {b} {club}. All numbers are placeholders.",
+ "_doc": "Storylets. who: player|pair|club. base: weekly chance before multipliers. when: all must hold. weight: [{if, mul}]. options: manager/AI choices with ai base weight and ai_weight multipliers. effects: state/stat/personality/rel/team_morale/cash/fans_pct/brand/sponsor_leaves/flag/unflag/club_flag/add_trait/bench/release/follow/follow_random/history, each may have chance. chain_only events fire only as follow-ups. Text uses {a} {b} {club}. All numbers are placeholders. deck: weekly dilemmas for the manager's club (one card at the start of a quiet week, weight deck_weight). Extra effects: cash_scaled (scaled by club tier), act (character action on team|lineup|a, with scale), state_team, unclub_flag.",
  "events": [
   {
    "id": "new_relationship",
@@ -2212,6 +2212,1024 @@
      "secret": "fake_age"
     }
    ]
+  },
+  {
+   "id": "deck_hospital_match",
+   "who": "club",
+   "title": "Благотворительный матч в детской больнице",
+   "text": "Детская больница просит {club} сыграть шоу-матч с пациентами и раздать автографы в выходной.",
+   "options": [
+    {
+     "label": "Поехать всей командой",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": -5000
+      },
+      {
+       "fans_pct": 2
+      },
+      {
+       "brand": 2
+      },
+      {
+       "act": "charity",
+       "on": "team",
+       "scale": 1.0
+      },
+      {
+       "follow": "deck_hospital_story",
+       "in_weeks": 6,
+       "chance": 0.35
+      }
+     ]
+    },
+    {
+     "label": "Отправить одного игрока",
+     "ai": 1,
+     "effects": [
+      {
+       "fans_pct": 0.5
+      },
+      {
+       "brand": 1
+      }
+     ]
+    },
+    {
+     "label": "Отказаться: график",
+     "ai": 1,
+     "effects": [
+      {
+       "follow": "deck_press_heartless",
+       "in_weeks": 2,
+       "chance": 0.25
+      }
+     ]
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 1.0
+  },
+  {
+   "id": "deck_shady_sponsor",
+   "who": "club",
+   "title": "Мутный спонсор",
+   "text": "Компания «ProfitMax Capital» предлагает щедрый контракт. Что они продают, никто толком не понял.",
+   "options": [
+    {
+     "label": "Подписать",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": 180000
+      },
+      {
+       "club_flag": "shady_sponsor"
+      },
+      {
+       "act": "dirty_deal",
+       "on": "team",
+       "scale": 1.0
+      },
+      {
+       "follow_random": [
+        [
+         "deck_sponsor_scam",
+         55
+        ],
+        [
+         "deck_sponsor_fine",
+         45
+        ]
+       ],
+       "in_weeks": 12
+      }
+     ]
+    },
+    {
+     "label": "Отказаться",
+     "ai": 1,
+     "effects": [
+      {
+       "brand": 1
+      }
+     ]
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 1.0
+  },
+  {
+   "id": "deck_fixer",
+   "who": "club",
+   "when": [
+    {
+     "club": "rank",
+     "gt": 10
+    }
+   ],
+   "title": "Предложение «сыграть как надо»",
+   "text": "Незнакомец в мессенджере предлагает деньги за проигрыш в одной групповой карте. Говорит, никто не узнает.",
+   "options": [
+    {
+     "label": "Сообщить в комиссию по честности",
+     "ai": 1,
+     "effects": [
+      {
+       "brand": 3
+      },
+      {
+       "fans_pct": 1
+      },
+      {
+       "follow": "deck_fixer_revenge",
+       "in_weeks": 8,
+       "chance": 0.2
+      }
+     ]
+    },
+    {
+     "label": "Проигнорировать",
+     "ai": 1,
+     "effects": [
+      {
+       "follow": "deck_fixer_again",
+       "in_weeks": 10,
+       "chance": 0.3
+      }
+     ]
+    },
+    {
+     "label": "Согласиться",
+     "ai": 0.05,
+     "effects": [
+      {
+       "cash_scaled": 250000
+      },
+      {
+       "club_flag": "fixed_match"
+      },
+      {
+       "act": "dirty_deal",
+       "on": "team",
+       "scale": 2.0
+      },
+      {
+       "follow_random": [
+        [
+         "deck_fixing_investigation",
+         60
+        ],
+        [
+         "deck_fixing_blackmail",
+         40
+        ]
+       ],
+       "in_weeks": 10
+      }
+     ]
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.5
+  },
+  {
+   "id": "deck_cardboard_statue",
+   "who": "club",
+   "title": "Подарок фаната",
+   "text": "Фанат прислал на базу двухметровую картонную статую вашего капитана. Она стоит в коридоре и пугает уборщицу.",
+   "options": [
+    {
+     "label": "Поставить в тренировочной",
+     "ai": 1,
+     "effects": [
+      {
+       "team_morale": 2
+      }
+     ]
+    },
+    {
+     "label": "Отдать на аукцион",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": 3000
+      }
+     ]
+    },
+    {
+     "label": "Выбросить",
+     "ai": 1,
+     "effects": [
+      {
+       "team_morale": -1
+      }
+     ]
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.8
+  },
+  {
+   "id": "deck_retreat",
+   "who": "club",
+   "title": "Ретрит в горах",
+   "text": "Психолог команды предлагает неделю без компьютеров в горах: походы, баня, разговоры.",
+   "options": [
+    {
+     "label": "Поехать",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": -15000
+      },
+      {
+       "act": "retreat",
+       "on": "team",
+       "scale": 1.0
+      },
+      {
+       "team_morale": 4
+      }
+     ]
+    },
+    {
+     "label": "Не сейчас: сезон",
+     "ai": 1,
+     "effects": []
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 1.0
+  },
+  {
+   "id": "deck_charity_gala",
+   "who": "club",
+   "title": "Благотворительный вечер",
+   "text": "Клуб зовут на благотворительный вечер с костюмами, речами и фотографами.",
+   "options": [
+    {
+     "label": "Пойти всей командой",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": -3000
+      },
+      {
+       "brand": 2
+      },
+      {
+       "act": "social_event",
+       "on": "team",
+       "scale": 1.0
+      },
+      {
+       "act": "charity",
+       "on": "team",
+       "scale": 0.5
+      },
+      {
+       "follow": "deck_gala_scandal",
+       "in_weeks": 1,
+       "chance": 0.12
+      }
+     ]
+    },
+    {
+     "label": "Отправить менеджера одного",
+     "ai": 1,
+     "effects": [
+      {
+       "brand": 1
+      }
+     ]
+    },
+    {
+     "label": "Пропустить",
+     "ai": 1,
+     "effects": []
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.9
+  },
+  {
+   "id": "deck_watch_ad",
+   "who": "player",
+   "when": [
+    {
+     "fame": "",
+     "gt": 5
+    }
+   ],
+   "title": "Реклама дорогих часов для {a}",
+   "text": "Бренд часов хочет {a} лицом кампании: смокинг, яхта, взгляд в камеру. Платят хорошо.",
+   "options": [
+    {
+     "label": "Согласиться",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": 25000
+      },
+      {
+       "act": "show_off",
+       "on": "a",
+       "scale": 1.0
+      },
+      {
+       "act": "promo_shoot",
+       "on": "a",
+       "scale": 1.0
+      },
+      {
+       "fans_pct": 1
+      }
+     ]
+    },
+    {
+     "label": "Отказаться",
+     "ai": 1,
+     "effects": []
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 1.0
+  },
+  {
+   "id": "deck_energy_costume",
+   "who": "player",
+   "title": "Энергетик в костюме банки",
+   "text": "Спонсор-энергетик хочет снять {a} в ростовом костюме банки для смешной рекламы.",
+   "options": [
+    {
+     "label": "Снимаем",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": 8000
+      },
+      {
+       "act": "silly_promo",
+       "on": "a",
+       "scale": 1.0
+      },
+      {
+       "fans_pct": 1.5
+      },
+      {
+       "follow": "deck_meme_viral",
+       "in_weeks": 3,
+       "chance": 0.3
+      }
+     ]
+    },
+    {
+     "label": "Нет, это унизительно",
+     "ai": 1,
+     "effects": []
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.9
+  },
+  {
+   "id": "deck_streamer_collab",
+   "who": "player",
+   "title": "Большой стример зовёт {a}",
+   "text": "Популярный стример предлагает {a} совместный стрим на всю ночь.",
+   "options": [
+    {
+     "label": "Пусть идёт",
+     "ai": 1,
+     "effects": [
+      {
+       "fans_pct": 2
+      },
+      {
+       "act": "camera",
+       "on": "a",
+       "scale": 1.0
+      },
+      {
+       "state": "sleep",
+       "add": -15
+      }
+     ]
+    },
+    {
+     "label": "Только днём и недолго",
+     "ai": 1,
+     "effects": [
+      {
+       "fans_pct": 0.5
+      }
+     ]
+    },
+    {
+     "label": "Запретить",
+     "ai": 1,
+     "effects": [
+      {
+       "state": "morale",
+       "add": -4
+      }
+     ]
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.8
+  },
+  {
+   "id": "deck_documentary",
+   "who": "club",
+   "title": "Съёмочная группа хочет документалку",
+   "text": "Стриминговый сервис готов снимать сезон {club} изнутри: раздевалка, ссоры, победы.",
+   "options": [
+    {
+     "label": "Пускаем камеры",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": 60000
+      },
+      {
+       "fans_pct": 3
+      },
+      {
+       "act": "camera",
+       "on": "team",
+       "scale": 1.0
+      },
+      {
+       "follow": "deck_doc_drama",
+       "in_weeks": 8,
+       "chance": 0.35
+      }
+     ]
+    },
+    {
+     "label": "Только матчи, без раздевалки",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": 15000
+      },
+      {
+       "fans_pct": 1
+      }
+     ]
+    },
+    {
+     "label": "Отказать",
+     "ai": 1,
+     "effects": []
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.7
+  },
+  {
+   "id": "deck_jersey",
+   "who": "club",
+   "title": "Новая форма",
+   "text": "Дизайнер предлагает два варианта формы: дерзкую кислотную или классическую.",
+   "options": [
+    {
+     "label": "Дерзкая",
+     "ai": 1,
+     "effects": [
+      {
+       "fans_pct": 2
+      },
+      {
+       "brand": 1
+      },
+      {
+       "follow": "deck_jersey_meme",
+       "in_weeks": 3,
+       "chance": 0.3
+      }
+     ]
+    },
+    {
+     "label": "Классика",
+     "ai": 1,
+     "effects": [
+      {
+       "brand": 1
+      }
+     ]
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.8
+  },
+  {
+   "id": "deck_cat",
+   "who": "player",
+   "title": "{a} хочет взять кота на буткемп",
+   "text": "{a} говорит, что без кота у него не идёт игра. Остальные против шерсти на клавиатурах.",
+   "options": [
+    {
+     "label": "Разрешить",
+     "ai": 1,
+     "effects": [
+      {
+       "state": "morale",
+       "add": 8
+      },
+      {
+       "state": "stress",
+       "add": -8
+      },
+      {
+       "team_morale": -1
+      }
+     ]
+    },
+    {
+     "label": "Запретить",
+     "ai": 1,
+     "effects": [
+      {
+       "state": "morale",
+       "add": -6
+      }
+     ]
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.7
+  },
+  {
+   "id": "deck_bootcamp_abroad",
+   "who": "club",
+   "title": "Буткемп за границей со скидкой",
+   "text": "Европейская база предлагает две недели с сильными спарринг-партнёрами.",
+   "options": [
+    {
+     "label": "Едем",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": -20000
+      },
+      {
+       "team_morale": 3
+      },
+      {
+       "state_team": "form",
+       "add": 5
+      },
+      {
+       "act": "retreat",
+       "on": "team",
+       "scale": -0.3
+      }
+     ]
+    },
+    {
+     "label": "Остаёмся дома",
+     "ai": 1,
+     "effects": []
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.8
+  },
+  {
+   "id": "deck_journalist_bait",
+   "who": "club",
+   "title": "Журналист ищет скандал",
+   "text": "Журналист после матча спрашивает, правда ли, что соперники «играют от кемперских позиций, как трусы».",
+   "options": [
+    {
+     "label": "Поддержать: да, трусы",
+     "ai": 1,
+     "effects": [
+      {
+       "act": "trash_talk",
+       "on": "team",
+       "scale": 1.0
+      },
+      {
+       "fans_pct": 1
+      },
+      {
+       "brand": -1
+      }
+     ]
+    },
+    {
+     "label": "Уйти от ответа",
+     "ai": 1,
+     "effects": []
+    },
+    {
+     "label": "Похвалить соперника",
+     "ai": 1,
+     "effects": [
+      {
+       "brand": 1
+      },
+      {
+       "act": "charity",
+       "on": "team",
+       "scale": 0.3
+      }
+     ]
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.8
+  },
+  {
+   "id": "deck_lottery",
+   "who": "club",
+   "title": "Лотерейный билет",
+   "text": "Кто-то из стаффа купил на всю команду лотерейный билет на сдачу с пиццы.",
+   "options": [
+    {
+     "label": "Проверить результат",
+     "ai": 1,
+     "effects": [
+      {
+       "follow_random": [
+        [
+         "deck_lottery_win",
+         5
+        ],
+        [
+         "deck_lottery_nothing",
+         95
+        ]
+       ],
+       "in_weeks": 1
+      }
+     ]
+    },
+    {
+     "label": "Выбросить не глядя",
+     "ai": 1,
+     "effects": []
+    }
+   ],
+   "deck": true,
+   "base": 0,
+   "cooldown": 30,
+   "effects": [],
+   "tone": "neutral",
+   "deck_weight": 0.4
+  },
+  {
+   "id": "deck_hospital_story",
+   "who": "club",
+   "title": "История из больницы облетела сеть",
+   "text": "Мальчик из больницы, с которым играл {club}, выписался и записал видео-благодарность. Его смотрят миллионы.",
+   "effects": [
+    {
+     "fans_pct": 4
+    },
+    {
+     "brand": 3
+    },
+    {
+     "team_morale": 4
+    }
+   ],
+   "tone": "good",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_press_heartless",
+   "who": "club",
+   "title": "Пресса: «Бессердечный {club}»",
+   "text": "Журналисты узнали, что клуб отказал детской больнице.",
+   "effects": [
+    {
+     "brand": -3
+    },
+    {
+     "fans_pct": -1
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_sponsor_scam",
+   "who": "club",
+   "title": "ProfitMax оказался пирамидой",
+   "text": "Спонсор {club} рухнул, фанаты потеряли деньги и винят клуб.",
+   "effects": [
+    {
+     "brand": -8
+    },
+    {
+     "fans_pct": -5
+    },
+    {
+     "cash_scaled": -60000
+    },
+    {
+     "unclub_flag": "shady_sponsor"
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_sponsor_fine",
+   "who": "club",
+   "title": "Регулятор оштрафовал рекламу ProfitMax",
+   "text": "Реклама спонсора признана незаконной, клуб платит часть штрафа.",
+   "effects": [
+    {
+     "cash_scaled": -30000
+    },
+    {
+     "brand": -2
+    },
+    {
+     "unclub_flag": "shady_sponsor"
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_fixer_revenge",
+   "who": "club",
+   "title": "Угрозы после жалобы",
+   "text": "После обращения в комиссию игрокам {club} пишут угрозы.",
+   "effects": [
+    {
+     "team_morale": -4
+    },
+    {
+     "brand": 2
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_fixer_again",
+   "who": "club",
+   "title": "Тот же незнакомец пишет снова",
+   "text": "Теперь он предлагает вдвое больше и намекает, что знает адреса игроков.",
+   "options": [
+    {
+     "label": "Пойти в полицию и комиссию",
+     "ai": 1,
+     "effects": [
+      {
+       "brand": 3
+      },
+      {
+       "team_morale": -2
+      }
+     ]
+    },
+    {
+     "label": "Заблокировать и молчать",
+     "ai": 1,
+     "effects": [
+      {
+       "team_morale": -3
+      }
+     ]
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0,
+   "effects": []
+  },
+  {
+   "id": "deck_fixing_investigation",
+   "who": "club",
+   "title": "Расследование договорного матча {club}",
+   "text": "Комиссия по честности нашла переводы. Клубу грозят дисквалификация и уход спонсоров.",
+   "effects": [
+    {
+     "brand": -25
+    },
+    {
+     "fans_pct": -15
+    },
+    {
+     "cash_scaled": -400000
+    },
+    {
+     "sponsor_leaves": "any"
+    },
+    {
+     "sponsor_leaves": "any"
+    },
+    {
+     "team_morale": -15
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_fixing_blackmail",
+   "who": "club",
+   "title": "Шантаж",
+   "text": "Человек, заплативший за проигрыш, требует ещё одну «услугу», иначе отправит переписку журналистам.",
+   "options": [
+    {
+     "label": "Заплатить за молчание",
+     "ai": 1,
+     "effects": [
+      {
+       "cash_scaled": -150000
+      },
+      {
+       "act": "dirty_deal",
+       "on": "team",
+       "scale": 1.0
+      }
+     ]
+    },
+    {
+     "label": "Сдаться комиссии самим",
+     "ai": 1,
+     "effects": [
+      {
+       "brand": -10
+      },
+      {
+       "fans_pct": -5
+      },
+      {
+       "team_morale": -5
+      }
+     ]
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0,
+   "effects": []
+  },
+  {
+   "id": "deck_gala_scandal",
+   "who": "club",
+   "title": "Неудачное фото с вечера",
+   "text": "Фото, где игрок {club} спит лицом в салате, стало мемом.",
+   "effects": [
+    {
+     "fans_pct": 1
+    },
+    {
+     "brand": -2
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_meme_viral",
+   "who": "club",
+   "title": "Реклама в костюме банки стала мемом",
+   "text": "Ролик разлетелся по всем пабликам. Над ним смеются, но смотрят.",
+   "effects": [
+    {
+     "fans_pct": 3
+    }
+   ],
+   "tone": "good",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_doc_drama",
+   "who": "club",
+   "title": "В документалку попала ссора",
+   "text": "В трейлер попал крик в раздевалке {club}. Фанаты спорят, кто прав.",
+   "effects": [
+    {
+     "fans_pct": 4
+    },
+    {
+     "team_morale": -6
+    }
+   ],
+   "tone": "bad",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_jersey_meme",
+   "who": "club",
+   "title": "Форму {club} назвали «вырвиглаз»",
+   "text": "Новая кислотная форма стала мемом. Продажи при этом выросли.",
+   "effects": [
+    {
+     "fans_pct": 1
+    },
+    {
+     "cash_scaled": 10000
+    }
+   ],
+   "tone": "good",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_lottery_win",
+   "who": "club",
+   "title": "Билет выиграл!",
+   "text": "Невероятно, но лотерейный билет команды выиграл. Хватит на новую базу.",
+   "effects": [
+    {
+     "cash_scaled": 80000
+    },
+    {
+     "team_morale": 8
+    }
+   ],
+   "tone": "good",
+   "chain_only": true,
+   "base": 0
+  },
+  {
+   "id": "deck_lottery_nothing",
+   "who": "club",
+   "title": "Билет ничего не выиграл",
+   "text": "Как и ожидалось. Зато пицца была вкусная.",
+   "effects": [],
+   "tone": "neutral",
+   "chain_only": true,
+   "base": 0
   }
  ]
 }

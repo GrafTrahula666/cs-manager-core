@@ -107,7 +107,17 @@ tr.bench td { opacity: .6; }
 .bar.mid i { background: var(--warn); }
 .bar.low i { background: var(--bad); }
 .traits { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
-.traits span { font-size: .7rem; padding: 0 5px; border-radius: 3px; background: var(--chip); color: var(--muted); }
+.traits span, .traits button { font-size: .7rem; padding: 0 5px; border-radius: 3px; background: var(--chip); color: var(--muted); border: 1px solid transparent; line-height: 1.5; }
+.traits .rare { color: var(--ct); border-color: color-mix(in srgb, var(--ct) 40%, transparent); }
+.traits .special { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); font-weight: 600; }
+.traits .acquired { color: var(--bad); border-style: dashed; border-color: color-mix(in srgb, var(--bad) 50%, transparent); }
+.star { color: var(--accent); font-weight: 700; }
+.tcard { display: grid; gap: 4px; }
+.tcard .tags { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.tgrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.tgrid .card { padding: 10px 12px; gap: 4px; }
+.plus { color: var(--good); }
+.minus { color: var(--bad); }
 .flag { color: var(--bad); font-size: .78rem; }
 .range { font-family: var(--mono); }
 .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -290,7 +300,7 @@ async function advance(n) {
 }
 
 const TABS = [["office", "Сводка"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
-  ["table", "Рейтинг"], ["history", "Летопись"], ["career", "Карьера"]];
+  ["table", "Рейтинг"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
 
 function render(s) {
   s = s || call("state");
@@ -305,7 +315,7 @@ function render(s) {
   $("kRep").textContent = s.manager.reputation;
   const due = s.pending_events + s.offers;
   $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}</button>`).join("");
-  const views = { office: viewOffice, squad: viewSquad, market: viewMarket, money: viewMoney, table: viewTable, history: viewHistory, career: viewCareer };
+  const views = { office: viewOffice, squad: viewSquad, market: viewMarket, money: viewMoney, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
   $("main").innerHTML = views[tab](s);
 }
 
@@ -325,8 +335,9 @@ function newsHtml() {
 function viewOffice(s) {
   const ib = call("inbox");
   const events = ib.events.map((e) => `<div class="event">
+      ${e.why.includes("выбор недели") ? `<span class="pill story" style="justify-self:start">выбор недели</span>` : ""}
       <b>${esc(e.title)}</b><span>${esc(e.text)}</span>
-      ${e.why.length ? `<span class="why">Почему: ${esc(e.why.join("; "))}</span>` : ""}
+      ${e.why.filter((w) => w !== "выбор недели").length ? `<span class="why">Почему: ${esc(e.why.filter((w) => w !== "выбор недели").join("; "))}</span>` : ""}
       <div class="opts">${e.options.map((o, j) => `<button class="small" data-ev="${e.i}" data-opt="${j}">${esc(o)}</button>`).join("")}</div>
       ${lastResults["ev" + e.i] ? "" : ""}
     </div>`).join("");
@@ -359,6 +370,11 @@ function viewOffice(s) {
         <button class="small" data-press="about_rival|respect">Уважительно о сопернике</button>
         <button class="small" data-press="about_owner_goals|promise_title">Пообещать титул</button>
         <button class="small" data-press="about_owner_goals|manage_expectations">Снизить ожидания</button></div>
+      <div class="controls"><span class="muted">После поражения:</span>
+        <button class="small" data-press="about_defeat|admit_defeat">Признать поражение</button>
+        <button class="small" data-press="about_defeat|blame_luck">Свалить на пинг и удачу</button>
+        <button class="small" data-press="about_defeat|praise_opponent">Похвалить соперника</button></div>
+      <p class="why">Ответы бьют по характеру: нарцисс и лидер страдают, когда признают поражение, скромник — от громких обещаний и трештолка.</p>
       ${lastResults.office ? `<div class="result">${lastResults.office}</div>` : ""}
     </section>
   </div>`;
@@ -369,28 +385,40 @@ function stateBar(v, invert) {
   const cls = good < 35 ? "low" : good < 60 ? "mid" : "";
   return `<div class="bar ${cls}" title="${v}"><i style="width:${Math.max(3, Math.min(100, v))}%"></i></div>`;
 }
+function traitChips(ts, clickable = true) {
+  return `<div class="traits">${ts.map((t) => typeof t === "string" ? `<span>${esc(t)}</span>` :
+    clickable ? `<button class="${t.rarity}" data-trait="${t.id}" title="Что это за черта">${esc(t.name)}</button>` : `<span class="${t.rarity}">${esc(t.name)}</span>`).join("")}</div>`;
+}
+function traitCard(t) {
+  return `<div class="tcard"><b>${esc(t.name)}</b><span class="tags">${t.rarity_ru} · ${esc(t.family)}</span>
+    <span class="plus">+ ${esc(t.desc)}</span>${t.cons ? `<span class="minus">− ${esc(t.cons)}</span>` : ""}
+    ${t.stress_on.length ? `<span class="why">Стресс от: ${esc(t.stress_on.join(", "))}</span>` : ""}
+    ${t.relief_on.length ? `<span class="why">Успокаивает: ${esc(t.relief_on.join(", "))}</span>` : ""}</div>`;
+}
+const STAR = (on) => on ? `<span class="star" title="Звезда: уровень 90+">★</span> ` : "";
 function viewSquad() {
   const r = call("roster");
   const rows = r.map((p) => `<tr class="${p.benched ? "bench" : ""}">
-      <td><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span>
+      <td>${STAR(p.star)}<b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span>
         ${p.wants_out ? `<div class="flag">просит трансфер</div>` : ""}
-        <div class="traits">${p.traits.map((t) => `<span>${esc(t)}</span>`).join("")}</div></td>
-      <td class="r">${p.ovr}</td><td>${stateBar(p.form)}</td><td>${stateBar(p.morale)}</td><td>${stateBar(p.stress, true)}</td>
+        ${traitChips(p.traits)}</td>
+      <td class="r">${p.ovr}</td><td class="r">${p.stats.kd ?? "—"}</td><td>${stateBar(p.form)}</td><td>${stateBar(p.morale)}</td><td>${stateBar(p.stress, true)}</td>
       <td class="r">${money(p.salary)}</td><td class="r">н${p.contract_end}</td><td class="r">${money(p.value)}</td>
       <td><button class="small" data-bench="${esc(p.name)}">${p.benched ? "в состав" : "в запас"}</button>
         <button class="small" data-release="${esc(p.name)}">отпустить</button></td></tr>`).join("");
   return `<section class="card"><h2>Состав</h2>
-    <p class="muted">Играют пятеро лучших по форме дня, кроме тех, кого вы посадили в запас. Отпустить игрока стоит трёх его зарплат.</p>
+    <p class="muted">Играют пятеро лучших по форме дня, кроме тех, кого вы посадили в запас. Отпустить игрока стоит трёх его зарплат. Нажмите на черту, чтобы узнать плюсы, минусы и что вызывает у игрока стресс. ★ — звезда, уровень 90+.</p>
     ${lastResults.squad ? `<div class="result">${esc(lastResults.squad)}</div>` : ""}
-    <div class="tablebox"><table><thead><tr><th>Игрок</th><th class="r">Ур.</th><th>Форма</th><th>Мораль</th><th>Стресс</th><th class="r">З/п</th><th class="r">До</th><th class="r">Цена</th><th></th></tr></thead>
+    ${lastResults.trait ? `<div class="result">${lastResults.trait}</div>` : ""}
+    <div class="tablebox"><table><thead><tr><th>Игрок</th><th class="r">Ур.</th><th class="r" title="Убийства к смертям за сезон">K/D</th><th>Форма</th><th>Мораль</th><th>Стресс</th><th class="r">З/п</th><th class="r">До</th><th class="r">Цена</th><th></th></tr></thead>
     <tbody>${rows}</tbody></table></div></section>`;
 }
 
 function viewMarket() {
   const m = call("market", 40);
   const rows = m.map((p) => `<tr>
-      <td><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>
-        <div class="traits">${p.traits.map((t) => `<span>${esc(t)}</span>`).join("")}</div></td>
+      <td>${STAR(p.star)}<b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>
+        ${traitChips(p.traits)}</td>
       <td>${p.club ? esc(p.club) : `<span class="pill club">свободен</span>`}</td>
       <td class="r range">${p.ovr_range[0]}–${p.ovr_range[1]}</td><td class="r">${p.known}%</td><td>${esc(p.potential)}</td>
       <td class="r">${money(p.salary_wish)}</td><td class="r">${p.fee ? money(p.fee) : "—"}</td>
@@ -428,7 +456,7 @@ function viewTable(s) {
   const opts = ["", "EU", "CIS", "NA", "SA", "Asia", "OCE"].map((r) => `<option value="${r}" ${r === tableRegion ? "selected" : ""}>${r || "Весь мир"}</option>`).join("");
   return `<section class="card"><div class="controls"><h2>Мировой рейтинг</h2><select id="regionSel" aria-label="Регион">${opts}</select></div>
     <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Уровень клуба</th><th>Регион</th><th class="r">Сила состава</th><th class="r">Очки</th><th class="r">Титулы</th></tr></thead>
-    <tbody>${t.map((c) => `<tr class="${c.me ? "me" : ""}"><td class="r">${c.rank}</td><td>${esc(c.club)}</td><td>${TIER[c.tier]}</td><td>${c.region}</td><td class="r">${c.ovr}</td><td class="r">${c.points}</td><td class="r">${c.titles}</td></tr>`).join("")}</tbody></table></div></section>`;
+    <tbody>${t.map((c) => `<tr class="${c.me ? "me" : ""}"><td class="r">${c.rank}</td><td>${esc(c.club)}${c.superteam ? ` <span class="pill story">суперсостав</span>` : ""}${c.stars ? ` <span class="star">${"★".repeat(c.stars)}</span>` : ""}</td><td>${TIER[c.tier]}</td><td>${c.region}</td><td class="r">${c.ovr}</td><td class="r">${c.points}</td><td class="r">${c.titles}</td></tr>`).join("")}</tbody></table></div></section>`;
 }
 
 function viewHistory() {
@@ -438,6 +466,14 @@ function viewHistory() {
     <section class="card"><h3>Соперничества</h3>${rv.filter((r) => r.score > 0).map((r) => `<div><b>${esc(r.clubs.join(" — "))}</b> <span class="num">${r.score}/100</span>
       <div class="muted">встреч ${r.meetings}: ${Object.entries(r.wins).map(([k, v]) => esc(k) + " " + v).join(", ")}</div></div>`).join("") || `<p class="muted">Пока никто никого не ненавидит.</p>`}</section>
   </div>`;
+}
+
+function viewTraits() {
+  const all = call("traits_all");
+  const groups = [["special", "Особые: сильнее всех, но и последствия тяжелее (стресс ×1,6)"], ["rare", "Редкие (стресс ×1,25)"],
+    ["common", "Обычные"], ["acquired", "Приобретённые: появляются и уходят от образа жизни"]];
+  return groups.map(([r, title]) => `<section class="card"><h3>${title}</h3><div class="tgrid">${all.filter((t) => t.rarity === r)
+    .map((t) => `<div class="card">${traitCard(t)}</div>`).join("")}</div></section>`).join("");
 }
 
 function viewCareer(s) {
@@ -471,6 +507,7 @@ document.addEventListener("click", async (ev) => {
     if (d.talk) { lastResults.office = call("talk", d.talk).map(esc).join("<br>"); return render(); }
     if (d.press) { const [q, a] = d.press.split("|"); lastResults.office = call("press", q, a, null).map(esc).join("<br>") || "Без последствий"; return render(); }
     if (b.id === "planBtn") { const p = call("plan", +$("pHours").value, +$("pRest").value, false, +$("pComm").value); lastResults.office = `План на неделю: ${p.practice_hours} ч тренировок, выходных ${p.rest_days}, спонсорских дней ${p.commercial_days}`; return render(); }
+    if (d.trait) { lastResults.trait = traitCard(call("trait", d.trait)); return render(); }
     if (d.bench) { lastResults.squad = call("toggle_bench", d.bench); return render(); }
     if (d.release) {
       if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "точно?"; return; }

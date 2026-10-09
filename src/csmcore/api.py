@@ -68,7 +68,9 @@ def roster() -> list[dict]:
             "name": p.name, "role": p.role, "age": p.age, "country": p.country, "ovr": round(p.overall(), 1),
             "form": round(p.s("form")), "morale": round(p.s("morale")), "stress": round(p.s("stress")),
             "fatigue": round(p.s("fatigue")), "role_satisfaction": round(p.s("role_satisfaction")),
-            "traits": [lib[t].name for t in p.traits if t in lib and not lib[t].hidden_until],
+            "traits": [{"id": t, "name": lib[t].name, "rarity": lib[t].rarity} for t in p.traits
+                       if t in lib and not lib[t].hidden_until],
+            "star": "star" in p.flags, "stats": _season_stats(p),
             "salary": _money(k.salary_month) if k else 0, "contract_end": k.end_week if k else None,
             "value": _money(economy.market_value(p)), "lineup": p.name in lineup,
             "benched": "benched" in p.flags, "wants_out": "transfer_requested" in p.flags,
@@ -77,12 +79,41 @@ def roster() -> list[dict]:
     return out
 
 
+def _season_stats(p) -> dict:
+    st = p.__dict__.get("season_stats") or p.__dict__.get("last_season_stats")
+    if not st or not st["rounds"]:
+        return {}
+    return {"maps": st["maps"], "kd": round(st["kills"] / max(1, st["deaths"]), 2),
+            "kpr": round(st["kills"] / st["rounds"], 2)}
+
+
+RARITY_RU = {"common": "обычная", "rare": "редкая", "special": "особая", "acquired": "приобретённая"}
+
+
+def trait(tid: str) -> dict:
+    """Everything about one trait for its card: what it gives, what it costs, what stresses it."""
+    from .character import ACTIONS, RARITY_MUL
+    t = library()[tid]
+    mul = RARITY_MUL.get(t.rarity, 1.0)
+    return {"id": t.id, "name": t.name, "rarity": t.rarity, "rarity_ru": RARITY_RU.get(t.rarity, t.rarity),
+            "family": t.family, "desc": t.desc, "cons": t.cons,
+            "stress_on": [f"{ACTIONS[a]} (+{v * mul:.0f})" for a, v in t.stress_on],
+            "relief_on": [f"{ACTIONS[a]} (−{v:.0f})" for a, v in t.relief_on]}
+
+
+def traits_all() -> list[dict]:
+    order = {"special": 0, "rare": 1, "common": 2, "acquired": 3}
+    return sorted((trait(t) for t in library()), key=lambda x: (order.get(x["rarity"], 9), x["family"], x["name"]))
+
+
 def table(limit: int = 30, region: str | None = None) -> list[dict]:
     g = _g()
     rows = sorted((c for c in g.clubs if region is None or c.region == region), key=lambda c: c.rank)[:limit]
     titles = g.sysm.chronicle.titles if g.sysm.chronicle else {}
     return [{"rank": c.rank, "club": c.name, "tier": c.tier, "region": c.region, "points": round(c.rating_points),
              "titles": len(titles.get(c.name, [])), "me": c.name == g.club_name,
+             "superteam": any(f.startswith("superteam_until:") for f in c.flags),
+             "stars": sum("star" in p.flags for p in c.roster),
              "ovr": round(sum(p.overall() for p in c.lineup()) / 5, 1)} for c in rows]
 
 
@@ -136,6 +167,7 @@ def market(limit: int = 40) -> list[dict]:
         k = seller.contracts.get(p.name) if seller else None
         ask = 0 if seller is None else min(economy.market_value(p) * 0.9, k.buyout if k else float("inf"))
         out.append({"name": p.name, "role": p.role, "age": p.age, "club": seller.name if seller else None,
+                    "star": "star" in p.flags,
                     "ovr_range": [round(lo), round(hi)], "salary_wish": _money(expected_salary(p)),
                     "fee": _money(ask), "known": round(g.desk.scouting.knowledge.get(p.name, 0)),
                     "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib]})

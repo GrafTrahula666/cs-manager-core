@@ -12,7 +12,7 @@ import random
 from dataclasses import dataclass, field
 
 from .economy import Club
-from .generate import make_player
+from .generate import Nicknames, make_player
 from .player import Player
 from .development import roll_potential
 
@@ -67,13 +67,14 @@ class Legacy:
                 notes.append(f"{p.name} ({p.age}) завершил карьеру → {career}" + (f" в {hired.name}" if hired else ""))
         return notes
 
-    def new_talents(self, n: int, rng: random.Random, season: int) -> list[Player]:
+    def new_talents(self, n: int, rng: random.Random, season: int, taken=()) -> list[Player]:
         roles = ["entry", "awp", "rifler", "support", "lurker", "igl"]
         out = []
         legends = [r.player for r in self.retired if r.player.fame > 20 or len(r.player.history) > 6]
         for i in range(n):
             age = rng.randint(16, 18)
-            p = make_player(f"s{season}t{i}", rng.uniform(45, 60), rng, rng.choice(roles), age=age)
+            nick = Nicknames(rng, reserved=set(taken) | {q.name for q in self.born} | {r.player.name for r in self.retired})
+            p = make_player(nick(), rng.uniform(45, 60), rng, rng.choice(roles), age=age)
             p.potential = roll_potential(p.overall(), age, rng)
             if legends and rng.random() < 0.15:
                 idol = rng.choice(legends)

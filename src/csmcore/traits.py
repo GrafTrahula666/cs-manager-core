@@ -35,6 +35,13 @@ class Trait:
     effects: tuple[Effect, ...]
     incompatible: tuple[str, ...] = ()
     hidden_until: str | None = None
+    rarity: str = "common"          # common | rare | special | acquired
+    cons: str = ""                  # the downside, in words
+    stress_on: tuple[tuple[str, float], ...] = ()   # decisions against the trait -> stress
+    relief_on: tuple[tuple[str, float], ...] = ()   # decisions in line with it -> relief
+    acquired: bool = False          # never rolled at birth; comes and goes by acquire/lose rules
+    acquire: tuple = ()             # (conditions, monthly chance)
+    lose: tuple = ()
 
 
 @lru_cache(maxsize=1)
@@ -47,9 +54,18 @@ def library() -> dict[str, Trait]:
     out = {}
     for t in _raw()["traits"]:
         effects = tuple(Effect(e["target"], e["op"], float(e["value"]), e.get("when", {})) for e in t["effects"])
+        rule = lambda r: (tuple(map(_freeze, r["when"])), r["chance"]) if r else ()  # noqa: E731
         out[t["id"]] = Trait(t["id"], t["name"], t["family"], t["desc"], effects,
-                             tuple(t.get("incompatible", ())), t.get("hidden_until"))
+                             tuple(t.get("incompatible", ())), t.get("hidden_until"), t.get("rarity", "common"),
+                             t.get("cons", ""), tuple(t.get("stress_on", {}).items()),
+                             tuple(t.get("relief_on", {}).items()), bool(t.get("acquired")),
+                             rule(t.get("acquire")), rule(t.get("lose")))
     return out
+
+
+def _freeze(cond):
+    """Conditions stay plain dicts for storylets.check; wrapped so the frozen dataclass can hold them."""
+    return dict(cond)
 
 
 def modifier(trait_ids: list[str], target: str, ctx: dict | None = None) -> tuple[float, float]:
@@ -72,7 +88,7 @@ def roll_traits(rng: random.Random, weights: dict[str, float] | None = None) -> 
     dist = _raw()["distribution"]
     count = rng.choices([int(k) for k in dist], weights=list(dist.values()))[0]
     lib = library()
-    pool = list(lib)
+    pool = [tid for tid, t in lib.items() if not t.acquired]   # acquired traits come from life, not birth
     w = [(weights or {}).get(t, 1.0) for t in pool]
     picked: list[str] = []
     while len(picked) < count:

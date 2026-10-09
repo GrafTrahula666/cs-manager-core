@@ -6,9 +6,10 @@ from csmcore.relations import RelationGraph
 from csmcore.storylets import StoryEngine, check, library
 
 COND_KEYS = {"any", "not", "stat", "state", "personality", "age", "trait", "role", "flag", "no_flag",
-             "club_flag", "no_club_flag", "rel", "club", "sponsor"}
+             "club_flag", "no_club_flag", "rel", "club", "sponsor", "fame"}
 EFFECT_KEYS = {"secret", "state", "stat", "personality", "rel", "team_morale", "cash", "fans_pct", "brand", "sponsor_leaves",
-               "flag", "unflag", "club_flag", "add_trait", "bench", "release", "follow", "follow_random", "history"}
+               "flag", "unflag", "club_flag", "add_trait", "bench", "release", "follow", "follow_random", "history",
+               "cash_scaled", "act", "state_team", "unclub_flag"}
 
 
 def club_with(*players, **kw):
@@ -44,6 +45,10 @@ def test_event_library_is_well_formed():
     from csmcore.traits import library as traits
     for ev in lib.values():
         assert ev["who"] in ("player", "pair", "club")
+        for e in _effects(ev):
+            if "act" in e:
+                from csmcore.character import ACTIONS
+                assert e["act"] in ACTIONS, (ev["id"], e["act"])
         for c in _conds(ev):
             assert COND_KEYS & set(c), (ev["id"], c)
         for e in _effects(ev):

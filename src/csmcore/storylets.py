@@ -26,6 +26,11 @@ MAX_EVENTS_PER_SUBJECT_WEEK = 1
 # After any story a person gets a breather: other events are rarer for a few weeks, so one
 # player does not collect a clip, a visa problem and a breakup in one month.
 STORY_REST_WEEKS = 6
+# Weekly dilemmas ("deck" cards) for the manager: chance of a card in a week with no open card.
+DECK_CHANCE = 0.55
+DECK_COOLDOWN_WEEKS = 30
+# cash_scaled amounts are written for a tier-1 club and scaled to the club's size
+TIER_CASH = {"tier3": 0.08, "tier2": 0.3, "tier1": 1.0, "super": 2.0}
 STORY_REST_MUL = 0.35
 
 
@@ -69,6 +74,8 @@ def check(cond: dict, club: Club, a: Player | None, b: Player | None, graph: Rel
         return p is not None and _cmp(p.s(cond["state"]), cond)
     if "personality" in cond:
         return p is not None and _cmp(p.p(cond["personality"]), cond)
+    if "fame" in cond:
+        return p is not None and _cmp(p.fame, cond)
     if "age" in cond:
         return p is not None and _cmp(p.age, cond)
     if "trait" in cond:
@@ -136,6 +143,20 @@ def apply_effects(effects: list[dict], f: Fired, graph: RelationGraph, rng: rand
             for q in club.roster:
                 q.state["morale"] = _clamp(q.s("morale") + e["team_morale"])
             out.append(f"мораль команды {e['team_morale']:+}")
+        elif "cash_scaled" in e:
+            amount = e["cash_scaled"] * TIER_CASH.get(club.tier, 1.0)
+            club.book(f.week, "events", amount, f.title)
+            out.append(f"касса {amount:+,.0f}")
+        elif "act" in e:
+            from .character import act
+            who = [p] if e.get("on") == "a" and p else club.lineup() if e.get("on") == "lineup" else list(club.roster)
+            out += act([q for q in who if q in club.roster], e["act"], f.week, e.get("scale", 1.0))
+        elif "state_team" in e:
+            for q in club.roster:
+                q.state[e["state_team"]] = _clamp(q.s(e["state_team"]) + e["add"])
+            out.append(f"команда: {e['state_team']} {e['add']:+}")
+        elif "unclub_flag" in e:
+            club.flags.discard(e["unclub_flag"])
         elif "cash" in e:
             club.book(f.week, "events", e["cash"], f.title)
             out.append(f"касса {e['cash']:+,.0f}")
@@ -255,7 +276,7 @@ class StoryEngine:
         for club in clubs:
             busy: dict[str, int] = {}
             for ev in self.events.values():
-                if ev.get("chain_only"):
+                if ev.get("chain_only") or ev.get("deck"):
                     continue
                 subjects: list[tuple[Player | None, Player | None]]
                 if ev["who"] == "club":
@@ -275,6 +296,10 @@ class StoryEngine:
                         fired.append(self._fire(ev, week, club, a, b, why))
                         if a:
                             busy[a.name] = busy.get(a.name, 0) + 1
+        if manager_club in by_name:
+            card = self._deck_card(by_name[manager_club], graph, week, rng)
+            if card is not None:
+                fired.append(card)
         if self.director is not None:
             for c in clubs:
                 self.director.observe(c, week)
@@ -287,6 +312,30 @@ class StoryEngine:
             else:
                 self.resolve(f, self.ai_choice(f, graph, rng), graph, rng)
         return fired
+
+    def _deck_card(self, club: Club, graph: RelationGraph, week: int, rng: random.Random) -> Fired | None:
+        """At most one open dilemma at a time, so quiet weeks still ask the manager something."""
+        if any(self.events[f.event_id].get("deck") for f in self.pending) or rng.random() >= DECK_CHANCE:
+            return None
+        cards, weights, subjects = [], [], []
+        for ev in self.events.values():
+            if not ev.get("deck"):
+                continue
+            people = [None] if ev["who"] == "club" else [p for p in club.roster]
+            ok = [a for a in people if week - self.last_fired.get((ev["id"], a.name if a else club.name), -10_000)
+                  >= ev.get("cooldown", DECK_COOLDOWN_WEEKS) and all(check(c, club, a, None, graph) for c in ev.get("when", []))]
+            if ok:
+                cards.append(ev)
+                weights.append(ev.get("deck_weight", 1.0))
+                subjects.append(ok)
+        if not cards:
+            return None
+        i = rng.choices(range(len(cards)), weights=weights)[0]
+        a = rng.choice(subjects[i])
+        # a card is the same for every subject: cool it down for the whole club too
+        for q in [None] + list(club.roster):
+            self.last_fired[(cards[i]["id"], q.name if q else club.name)] = week
+        return self._fire(cards[i], week, club, a, None, ["выбор недели"])
 
     def ai_choice(self, f: Fired, graph: RelationGraph, rng: random.Random) -> int | None:
         opts = self.events[f.event_id].get("options", [])

@@ -5,7 +5,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from . import development, economy, promises as promises_mod, squad, world
+from . import character, development, economy, promises as promises_mod, squad, world
 from .board import Owner
 from .chronicle import Chronicle
 from .legacy import Legacy
@@ -45,6 +45,24 @@ class Systems:
     careers: Careers | None = None
     talents_per_season: int = 6
     patch_every: int = 13
+
+
+def _count_stats(players, r) -> None:
+    """Season K/D/rounds per player, read from the round logs (HLTV-style public stats)."""
+    by = {p.name: p for p in players}
+    rounds = len(r.rounds)
+    for p in players:
+        st = p.__dict__.setdefault("season_stats", {"maps": 0, "rounds": 0, "kills": 0, "deaths": 0})
+        st["maps"] += 1
+        st["rounds"] += rounds
+    for rr in r.rounds:
+        for line in rr.log:
+            killer, _, rest = line.partition(" kills ")
+            victim = rest.split(" ", 1)[0]
+            if killer in by:
+                by[killer].season_stats["kills"] += 1
+            if victim in by:
+                by[victim].season_stats["deaths"] += 1
 
 
 def play_series(a: Club, b: Club, graph: RelationGraph, seed: int, ctx: dict, maps: int = 3,
@@ -93,6 +111,7 @@ def play_series(a: Club, b: Club, graph: RelationGraph, seed: int, ctx: dict, ma
             meta.after_map(b, mp)
         for rr in r.rounds:
             logs += rr.log
+        _count_stats(la + lb, r)
         w = 0 if r.score[0] > r.score[1] else 1
         wins[w] += 1
         lost_prev = [w == 1, w == 0]
@@ -219,6 +238,7 @@ def season_week(run: SeasonRun, clubs: list[Club], graph: RelationGraph, calenda
                 if sysm.stories.events[f.event_id].get("chain_only") or f.event_id in ("wedding", "festival_grant"):
                     sysm.chronicle.add(season, week, "story", f.title, [f.a.name] if f.a else [])
     for c in clubs:
+        character.week(c, graph, week)
         log.management += squad.leader_mood_spread(c, graph, week)
         if sysm.promises and c.name in sysm.promises:
             log.management += promises_mod.check(sysm.promises[c.name], c, graph, week)
@@ -231,11 +251,19 @@ def season_week(run: SeasonRun, clubs: list[Club], graph: RelationGraph, calenda
                     sysm.chronicle.add(season, week, "transfer", d)
     if week % 4 == 0:
         for c in clubs:
+            log.management += [f"{c.name}: {n}" for n in character.month(c, week, mgmt_rng, graph)]
+        for n in character.stars_update(clubs, week):
+            log.management.append(n)
+            if sysm.chronicle:
+                sysm.chronicle.add(season, week, "record", n)
+        for c in clubs:
             if sysm.development:
                 mentor = any(p.mod("team_youth_learning")[1] > 1 for p in c.roster)
                 lineup = c.lineup()
                 for p in c.roster:
                     development.month(p, c, mgmt_rng, played=p in lineup, mentor_in_team=mentor)
+                    if development.breakthrough(p, mgmt_rng):
+                        p.history.append(f"week {week}: перерос свой потолок")
             if sysm.owners and c.name in sysm.owners:
                 review = sysm.owners[c.name].monthly_review(c, week)
                 log.management += review
@@ -273,9 +301,16 @@ def season_finish(run: SeasonRun, clubs: list[Club], sysm: Systems) -> None:
             log.management.append(line)
             if sysm.chronicle:
                 sysm.chronicle.add(season, end_week, "retirement", line)
-        talents = sysm.legacy.new_talents(sysm.talents_per_season, mgmt_rng, season)
+        taken = {p.name for c in clubs for p in c.roster + c.former}
+        if sysm.market is not None:
+            taken |= {p.name for p in sysm.market.free_agents}
+        talents = sysm.legacy.new_talents(sysm.talents_per_season, mgmt_rng, season, taken)
         if sysm.market is not None:
             sysm.market.free_agents += talents
+    for c in clubs:
+        for p in c.roster:
+            if "season_stats" in p.__dict__:
+                p.__dict__["last_season_stats"] = p.__dict__.pop("season_stats")
     if sysm.development:
         development.season_end([p for c in clubs for p in c.roster])
 

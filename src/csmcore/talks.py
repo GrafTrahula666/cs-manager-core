@@ -78,10 +78,18 @@ PRESS = {
         "no_comment": {},
     },
     "about_owner_goals": {
-        "promise_title": {"owner_confidence": 5, "team_morale": -2, "pressure": 8},
+        "promise_title": {"owner_confidence": 5, "team_morale": -2, "pressure": 8, "act": "big_promise"},
         "manage_expectations": {"owner_confidence": -3, "team_morale": 2},
     },
+    "about_defeat": {
+        "admit_defeat": {"brand": 1, "fans_pct": 0.3, "act": "admit_defeat"},
+        "blame_luck": {"brand": -1, "team_morale": 1, "act": "make_excuses"},
+        "praise_opponent": {"rivalry": -4, "brand": 1, "act": "admit_defeat", "act_scale": 0.5},
+    },
 }
+PRESS["about_rival"]["trash_talk"]["act"] = "trash_talk"
+PRESS["about_player_form"]["honest_criticism"]["act_player"] = "public_criticism"
+# What each answer means to the people in the room: see character.ACTIONS.
 
 
 def press_conference(club: Club, question: str, answer: str, player: Player | None = None,
@@ -113,6 +121,12 @@ def press_conference(club: Club, question: str, answer: str, player: Player | No
         club.brand = max(0.0, min(100.0, club.brand + eff["brand"]))
     if "fans_pct" in eff:
         club.fans = int(club.fans * (1 + eff["fans_pct"] / 100))
+    if "act" in eff:   # the team lives this answer through their own character
+        from .character import act
+        out += act(club.lineup(), eff["act"], 0, eff.get("act_scale", 1.0))
+    if "act_player" in eff and player is not None:
+        from .character import act
+        out += act([player], eff["act_player"], 0)
     if "owner_confidence" in eff and owner is not None:
         owner.confidence = max(0.0, min(100.0, owner.confidence + eff["owner_confidence"]))
         out.append(f"доверие владельца {eff['owner_confidence']:+}")

@@ -45,7 +45,7 @@ class Market:
         out: list[tuple[Player, Club | None]] = [(p, None) for p in self.free_agents]
         for c in clubs:
             for p in c.roster:
-                if "transfer_requested" in p.flags:
+                if "transfer_requested" in p.flags and "legend_contract" not in p.flags:
                     out.append((p, c))
             for p in c.former:
                 if "free_agent" in p.flags and p not in self.free_agents:

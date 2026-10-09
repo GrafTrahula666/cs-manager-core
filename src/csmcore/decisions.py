@@ -75,6 +75,7 @@ def conflict_chance(a: Player, b: Player, irritation: float) -> Verdict:
     """Weekly chance an irritation edge becomes an open conflict."""
     x = -6.5 + irritation / 15 + (a.p("conflict") - 50) / 20 + (a.p("ego") - 50) / 30 - (a.stat("teamwork") - 50) / 30
     x += 0.8 if a.p("criticism") > 65 else 0.0
+    x += a.mod("conflict_risk")[0]   # Rude and other acquired traits
     reasons = [f"раздражение {a.name}→{b.name} {irritation:.0f}", f"конфликтность {a.p('conflict'):.0f}",
                f"эго {a.p('ego'):.0f}"]
     return Verdict(_logistic(x), reasons)

@@ -12,15 +12,17 @@ from dataclasses import dataclass, field
 
 from .player import Player
 
-# Steepness of the skill->win-probability curve. To be fitted on real duel data.
-DUEL_SCALE = 18.0
+# Steepness of the skill->win-probability curve. Fitted to public season K/D spreads (HLTV-style
+# yearly stats: the best riflers sit around 1.3-1.4, the weakest regulars around 0.75, the median
+# near 1.0, kills per round ~0.7). At 18 the sim gave K/D up to 2.9 and down to 0.35.
+DUEL_SCALE = 32.0
 # How many duel points one point of team chemistry (-100..100) is worth.
 CHEMISTRY_WEIGHT = 1 / 12
 # Duel points lost when a team plays a round on an eco/force buy.
 ECO_PENALTY = 8.0
 # Day form: each team's whole-map bonus is drawn per map. Without it a 3-point level edge won
 # ~80% of maps, so one club swept every event of a 120-club season; real top-5 teams trade maps.
-DAY_FORM_SD = 7.0
+DAY_FORM_SD = 4.0   # with the flatter duel curve a 3-point edge still wins ~68% of maps
 
 
 def duel_win_prob(a: Player, b: Player, ctx_a: dict | None = None, ctx_b: dict | None = None,

@@ -58,8 +58,11 @@ def update_state(p: Player, plan: WeekPlan, rng: random.Random, club: Club) -> l
         st["stress"] = _clamp(st["stress"] + add_stress)
     # CK3-style: acting against your own personality is stressful.
     against = []
-    if plan.commercial_days and p.p("media") < 35:
-        against.append(("коммерция при закрытом характере", 3 * plan.commercial_days))
+    if plan.commercial_days:
+        from .character import reaction
+        d, _ = reaction(p, "promo_shoot")   # traits and personality decide how a promo day feels
+        if d > 0:
+            against.append(("рекламные дни против характера", d * plan.commercial_days))
     if "benched" in p.flags and p.p("ego") > 60:
         against.append(("сидит в запасе при высоком эго", 5))
     if p.role == "support" and p.p("ego") > 70:
@@ -69,8 +72,14 @@ def update_state(p: Player, plan: WeekPlan, rng: random.Random, club: Club) -> l
     for why, amount in against:
         st["stress"] = _clamp(st["stress"] + amount)
         notes.append(f"стресс: {why}")
-    relief = (3 + plan.rest_days) * p.mod("stress_relief")[1]
-    st["stress"] = _clamp(st["stress"] - relief)
+    # Stress drifts toward what the player's life looks like right now (losing, unhappy with the
+    # role, unpaid club, the bench) and how thick his skin is; coping traits and rest pull it down.
+    # Decisions against his character (character.act) are spikes on top of that baseline.
+    target = (8 + (100 - p.stat("stress_resistance")) * 0.2 + max(0.0, 55 - st["morale"]) * 0.5
+              + max(0.0, 50 - st["role_satisfaction"]) * 0.3 + (10 if club.cash < 0 else 0)
+              + (8 if "benched" in p.flags else 0) + max(0.0, st["fatigue"] - 50) * 0.3)
+    target -= (p.mod("stress_relief")[1] - 1) * 10 + 2 * plan.rest_days
+    st["stress"] = _clamp(st["stress"] + (max(0.0, target) - st["stress"]) * 0.15)
 
     if st["fatigue"] > 65:
         st["burnout"] = _clamp(st["burnout"] + (st["fatigue"] - 65) / 5 * p.mod("burnout_gain")[1])

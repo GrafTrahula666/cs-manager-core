@@ -8,6 +8,25 @@ from importlib import resources
 from .player import PERSONALITY, STATS, Player
 from .traits import roll_traits
 
+SYL = ["ka", "ro", "zz", "mi", "ne", "ox", "ty", "ul", "va", "si", "kr", "on", "ex", "do", "bi", "le", "ze", "ar",
+       "fu", "qi", "ny", "jo", "sk", "ip", "el", "ra", "xo", "mu", "py", "ch"]
+SUFFIX = ["", "", "", "", "x", "y", "o", "z", "1", "s"]
+
+
+class Nicknames:
+    """Unique player nicknames; avoids the reserved concept names and talent ids."""
+
+    def __init__(self, rng: random.Random, reserved=()) -> None:
+        self.rng, self.used = rng, set(reserved)
+
+    def __call__(self) -> str:
+        while True:
+            nick = "".join(self.rng.choice(SYL) for _ in range(self.rng.choice([2, 2, 3]))) + self.rng.choice(SUFFIX)
+            if nick not in self.used and not nick[:1].isdigit():
+                self.used.add(nick)
+                return nick
+
+
 # Role -> which stats get a boost and which trait families are more likely (non-uniform RNG).
 ROLE_PROFILE = {
     "entry": ({"aim": 8, "reaction": 8, "movement": 6}, {"mechanics": 2.0, "match": 1.5}),

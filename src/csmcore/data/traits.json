@@ -1,5 +1,5 @@
 {
- "_doc": "Gold Traits as data: id, name, family, effects (target/op/value/when), incompatible, hidden_until. Golden does NOT mean positive. 'when' keys are matched against the event context dict. Values are placeholders for balancing.",
+ "_doc": "Gold Traits as data: id, name, family, effects (target/op/value/when), incompatible, hidden_until. Golden does NOT mean positive. 'when' keys are matched against the event context dict. Values are placeholders for balancing. rarity: common|rare|special|acquired; the stronger the trait, the bigger its downside (special traits feel decisions against them x1.6). cons: the downside in words. stress_on/relief_on: stress from decisions that go against or with the trait (actions in character.py). acquired traits are never rolled at birth: they come and go monthly by acquire/lose conditions.",
  "distribution": {
   "1": 0.7,
   "2": 0.27,
@@ -28,7 +28,9 @@
       "lan": true
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Онлайн-матчи ему скучны: без зала и сцены бонусов нет."
   },
   {
    "id": "hunter_of_giants",
@@ -52,7 +54,9 @@
       "underdog": true
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Против слабых расслабляется и играет без огня."
   },
   {
    "id": "match_point_ice",
@@ -67,8 +71,19 @@
      "when": {
       "match_point": true
      }
+    },
+    {
+     "target": "trust_gain",
+     "op": "mul",
+     "value": 0.8
     }
-   ]
+   ],
+   "rarity": "special",
+   "cons": "Холоден к людям: доверие в команде растёт медленнее. Публичные поражения переносит тяжелее, чем показывает.",
+   "stress_on": {
+    "admit_defeat": 6,
+    "public_criticism": 6
+   }
   },
   {
    "id": "reverse_sweep_believer",
@@ -92,7 +107,9 @@
       "after_map_loss": true
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Привыкает начинать серии медленно."
   },
   {
    "id": "big_stage_silence",
@@ -108,7 +125,9 @@
       "playoffs": true
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Сам по себе недостаток: в плей-офф молчит в коммуникации."
   },
   {
    "id": "revenge_game",
@@ -132,7 +151,9 @@
       "vs_former_club": true
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Против бывшего клуба лезет на рожон и ломает тактику."
   },
   {
    "id": "pistol_savant",
@@ -148,7 +169,9 @@
       "round": "pistol"
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Пистолетки решают не всё: в длинных раундах обычный игрок."
   },
   {
    "id": "first_bullet_artist",
@@ -172,7 +195,9 @@
       "duel_type": "spray"
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Слабее в затяжных перестрелках."
   },
   {
    "id": "spray_transfer_freak",
@@ -184,8 +209,19 @@
      "target": "multikill",
      "op": "mul",
      "value": 1.6
+    },
+    {
+     "target": "role_hunger",
+     "op": "add",
+     "value": 0.3
     }
-   ]
+   ],
+   "rarity": "special",
+   "cons": "Привыкает спасать раунды в одиночку и тяжело переносит роль второго номера.",
+   "stress_on": {
+    "support_role": 10,
+    "bench": 8
+   }
   },
   {
    "id": "awp_magnet",
@@ -209,7 +245,12 @@
       "round": "eco"
      }
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Без денег на AWP заметно хуже, а на вторых ролях скучает.",
+   "stress_on": {
+    "support_role": 8
+   }
   },
   {
    "id": "eco_prophet",
@@ -225,7 +266,9 @@
       "round": "eco"
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Иногда форсит, когда надо экономить."
   },
   {
    "id": "utility_architect",
@@ -241,7 +284,9 @@
       "prepared": true
      }
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Без подготовки и тренировок польза пропадает."
   },
   {
    "id": "tactical_sponge",
@@ -254,7 +299,9 @@
      "op": "mul",
      "value": 1.6
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Так же быстро перенимает и плохие привычки."
   },
   {
    "id": "deep_mastery",
@@ -271,8 +318,18 @@
      "target": "decay",
      "op": "mul",
      "value": 0.2
+    },
+    {
+     "target": "meta_adaptation",
+     "op": "mul",
+     "value": 0.6
     }
-   ]
+   ],
+   "rarity": "special",
+   "cons": "Медленно учится новому и болезненно переносит смену меты и роли.",
+   "stress_on": {
+    "role_change": 12
+   }
   },
   {
    "id": "pattern_thief",
@@ -288,7 +345,9 @@
       "late_series": true
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "В первой карте серии без бонуса."
   },
   {
    "id": "one_map_native",
@@ -309,7 +368,9 @@
      "op": "mul",
      "value": 0.6
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Медленно осваивает остальные карты."
   },
   {
    "id": "meta_chameleon",
@@ -322,7 +383,9 @@
      "op": "mul",
      "value": 2.0
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Без стабильной роли ему скучно, мотивация падает быстрее."
   },
   {
    "id": "demo_obsessive",
@@ -340,7 +403,9 @@
      "op": "mul",
      "value": 1.4
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Быстрее выгорает от бесконечных разборов."
   },
   {
    "id": "atmosphere_stabilizer",
@@ -353,7 +418,16 @@
      "op": "mul",
      "value": 0.5
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Принимает чужие конфликты на себя, стресс копится тихо.",
+   "stress_on": {
+    "trash_talk": 4,
+    "public_criticism": 4
+   },
+   "relief_on": {
+    "retreat": 3
+   }
   },
   {
    "id": "pack_leader",
@@ -366,7 +440,17 @@
      "op": "mul",
      "value": 2.0
     }
-   ]
+   ],
+   "rarity": "special",
+   "cons": "Его плохое настроение заражает всех. Публично признать поражение для него — удар по самолюбию.",
+   "stress_on": {
+    "admit_defeat": 10,
+    "make_excuses": 4,
+    "bench": 12
+   },
+   "relief_on": {
+    "big_promise": 4
+   }
   },
   {
    "id": "mentor_magnet",
@@ -379,7 +463,12 @@
      "op": "mul",
      "value": 1.3
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Раздражается, если молодых не дают в основу.",
+   "relief_on": {
+    "charity": 3
+   }
   },
   {
    "id": "lone_wolf",
@@ -397,7 +486,9 @@
      "op": "mul",
      "value": 0.5
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Медленно строит доверие с партнёрами."
   },
   {
    "id": "role_thief",
@@ -411,7 +502,13 @@
      "value": 1.0
     }
    ],
-   "hidden_until": "behaviour"
+   "hidden_until": "behaviour",
+   "rarity": "rare",
+   "cons": "Рано или поздно захочет чужую роль и место в центре.",
+   "stress_on": {
+    "support_role": 10,
+    "bench": 8
+   }
   },
   {
    "id": "bridge_builder",
@@ -424,7 +521,15 @@
      "op": "mul",
      "value": 0.5
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Тяжело переносит грязь и оскорбления в адрес соперников.",
+   "stress_on": {
+    "trash_talk": 8
+   },
+   "relief_on": {
+    "charity": 4
+   }
   },
   {
    "id": "contract_year_beast",
@@ -440,7 +545,9 @@
       "contract_final_months": true
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "После продления контракта мотивация проседает."
   },
   {
    "id": "homebody",
@@ -456,7 +563,9 @@
    ],
    "incompatible": [
     "nomad"
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Сам по себе недостаток: тяжело переносит переезды и буткемпы."
   },
   {
    "id": "iron_routine",
@@ -469,7 +578,16 @@
      "op": "mul",
      "value": 0.2
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Нарушение режима (тусовки, ночные съёмки) переносит тяжело.",
+   "stress_on": {
+    "social_event": 6,
+    "camera": 3
+   },
+   "relief_on": {
+    "retreat": 4
+   }
   },
   {
    "id": "wrist_of_glass",
@@ -483,7 +601,9 @@
      "value": 2.5
     }
    ],
-   "hidden_until": "behaviour"
+   "hidden_until": "behaviour",
+   "rarity": "common",
+   "cons": "Сам по себе недостаток: травмы при перегрузе тяжелее."
   },
   {
    "id": "second_wind",
@@ -495,9 +615,16 @@
      "target": "comeback_once",
      "op": "add",
      "value": 1
+    },
+    {
+     "target": "burnout_gain",
+     "op": "mul",
+     "value": 1.2
     }
    ],
-   "hidden_until": "behaviour"
+   "hidden_until": "behaviour",
+   "rarity": "special",
+   "cons": "Чтобы вернуться, нужно сначала сломаться."
   },
   {
    "id": "nomad",
@@ -513,7 +640,9 @@
    ],
    "incompatible": [
     "homebody"
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Не привязывается к клубу, лояльность ниже."
   },
   {
    "id": "media_darling",
@@ -530,8 +659,26 @@
      "target": "sponsor_value",
      "op": "mul",
      "value": 1.3
+    },
+    {
+     "target": "pressure_penalty",
+     "op": "mul",
+     "value": 1.25,
+     "when": {
+      "playoffs": true
+     }
     }
-   ]
+   ],
+   "rarity": "special",
+   "cons": "Все камеры на нём: давление в плей-офф выше, а неудачные интервью бьют сильнее.",
+   "stress_on": {
+    "public_criticism": 8
+   },
+   "relief_on": {
+    "promo_shoot": 4,
+    "camera": 4,
+    "social_event": 3
+   }
   },
   {
    "id": "sponsor_gold",
@@ -549,7 +696,13 @@
      "op": "mul",
      "value": 0.1
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Спонсоры привыкают к нему, без активностей теряет ценность.",
+   "relief_on": {
+    "promo_shoot": 4,
+    "show_off": 3
+   }
   },
   {
    "id": "unfiltered",
@@ -567,7 +720,15 @@
      "op": "mul",
      "value": 3.0
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Скандалы и штрафы случаются втрое чаще.",
+   "stress_on": {
+    "make_excuses": 3
+   },
+   "relief_on": {
+    "trash_talk": 6
+   }
   },
   {
    "id": "cult_hero",
@@ -580,7 +741,13 @@
      "op": "mul",
      "value": 1.5
     }
-   ]
+   ],
+   "rarity": "rare",
+   "cons": "Фанаты не простят клубу его продажу или скамейку.",
+   "relief_on": {
+    "charity": 4,
+    "social_event": 2
+   }
   },
   {
    "id": "camera_freeze",
@@ -596,7 +763,14 @@
       "playoffs": true
      }
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Сам по себе недостаток: камеры и шоу добавляют стресса.",
+   "stress_on": {
+    "camera": 10,
+    "promo_shoot": 6,
+    "show_off": 4
+   }
   },
   {
    "id": "streamer_brain",
@@ -614,7 +788,13 @@
      "op": "mul",
      "value": 0.8
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Стрим отнимает отдых.",
+   "relief_on": {
+    "camera": 4,
+    "promo_shoot": 2
+   }
   },
   {
    "id": "night_gamer",
@@ -633,7 +813,9 @@
      "value": 1.6
     }
    ],
-   "hidden_until": "behaviour"
+   "hidden_until": "behaviour",
+   "rarity": "common",
+   "cons": "Сон страдает."
   },
   {
    "id": "gym_rat",
@@ -656,7 +838,12 @@
      "op": "mul",
      "value": 0.9
     }
-   ]
+   ],
+   "rarity": "common",
+   "cons": "Зал отнимает время у разборов.",
+   "relief_on": {
+    "retreat": 4
+   }
   },
   {
    "id": "party_animal",
@@ -680,7 +867,15 @@
      "value": 0.85
     }
    ],
-   "hidden_until": "behaviour"
+   "hidden_until": "behaviour",
+   "rarity": "common",
+   "cons": "Растут риск скандала и усталость.",
+   "stress_on": {
+    "retreat": 3
+   },
+   "relief_on": {
+    "social_event": 10
+   }
   },
   {
    "id": "meditator",
@@ -698,7 +893,559 @@
      "op": "mul",
      "value": 0.8
     }
+   ],
+   "rarity": "common",
+   "cons": "Стресс уходит медленно.",
+   "stress_on": {
+    "social_event": 3
+   },
+   "relief_on": {
+    "retreat": 6
+   }
+  },
+  {
+   "id": "modest",
+   "name": "Скромник",
+   "family": "character",
+   "rarity": "rare",
+   "desc": "Скромный и надёжный: гасит конфликты, любят партнёры и фанаты.",
+   "cons": "Выпендрёж, дорогие вещи по контракту, трештолк и громкие обещания копят у него стресс.",
+   "effects": [
+    {
+     "target": "team_tilt_spread",
+     "op": "mul",
+     "value": 0.8
+    },
+    {
+     "target": "trust_gain",
+     "op": "mul",
+     "value": 1.2
+    }
+   ],
+   "stress_on": {
+    "show_off": 12,
+    "trash_talk": 8,
+    "big_promise": 6,
+    "silly_promo": 4,
+    "promo_shoot": 3
+   },
+   "relief_on": {
+    "charity": 6,
+    "retreat": 3
+   },
+   "incompatible": [
+    "narcissist",
+    "unfiltered"
    ]
+  },
+  {
+   "id": "narcissist",
+   "name": "Нарцисс",
+   "family": "character",
+   "rarity": "rare",
+   "desc": "Любит сцену: в больших матчах играет на публику и тянет фанатов.",
+   "cons": "Признать поражение, сесть в запас, выслушать публичную критику или играть вторым номером для него мука.",
+   "effects": [
+    {
+     "target": "fan_gain",
+     "op": "mul",
+     "value": 1.3
+    },
+    {
+     "target": "duel",
+     "op": "add",
+     "value": 1.5,
+     "when": {
+      "playoffs": true
+     }
+    }
+   ],
+   "stress_on": {
+    "admit_defeat": 14,
+    "public_criticism": 15,
+    "bench": 12,
+    "support_role": 8,
+    "charity": 2
+   },
+   "relief_on": {
+    "show_off": 8,
+    "promo_shoot": 4,
+    "camera": 4,
+    "trash_talk": 3
+   },
+   "incompatible": [
+    "modest"
+   ]
+  },
+  {
+   "id": "straight_shooter",
+   "name": "Честный",
+   "family": "character",
+   "rarity": "rare",
+   "desc": "Говорит как есть: ему верят тренеры, судьи и фанаты.",
+   "cons": "Оправдания, мутные спонсоры и любые договорённости за спиной бьют по нему сильнее всех.",
+   "effects": [
+    {
+     "target": "trust_gain",
+     "op": "mul",
+     "value": 1.3
+    }
+   ],
+   "stress_on": {
+    "make_excuses": 10,
+    "dirty_deal": 20,
+    "show_off": 3
+   },
+   "relief_on": {
+    "admit_defeat": 3,
+    "charity": 3
+   }
+  },
+  {
+   "id": "perfectionist",
+   "name": "Перфекционист",
+   "family": "character",
+   "rarity": "special",
+   "desc": "Доводит каждую раскидку до идеала: учится быстрее и реже ошибается.",
+   "cons": "Выгорает быстрее, глупая реклама и оправдания вместо работы его бесят.",
+   "effects": [
+    {
+     "target": "learning",
+     "op": "mul",
+     "value": 1.25
+    },
+    {
+     "target": "burnout_gain",
+     "op": "mul",
+     "value": 1.4
+    }
+   ],
+   "stress_on": {
+    "silly_promo": 8,
+    "make_excuses": 6,
+    "social_event": 3,
+    "admit_defeat": 4
+   },
+   "relief_on": {
+    "retreat": 2
+   }
+  },
+  {
+   "id": "slob",
+   "name": "Неряха",
+   "desc": "Перестал следить за собой: не моется, бардак на буткемпе.",
+   "cons": "Партнёры отдаляются каждую неделю, спонсоры морщатся.",
+   "effects": [
+    {
+     "target": "mates_friendship",
+     "op": "add",
+     "value": -1.2
+    },
+    {
+     "target": "sponsor_value",
+     "op": "mul",
+     "value": 0.85
+    }
+   ],
+   "acquire": {
+    "when": [
+     {
+      "state": "stress",
+      "gt": 52
+     },
+     {
+      "stat": "discipline",
+      "lt": 48
+     }
+    ],
+    "chance": 0.06
+   },
+   "lose": {
+    "when": [
+     {
+      "state": "stress",
+      "lt": 35
+     }
+    ],
+    "chance": 0.2
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
+  },
+  {
+   "id": "rude",
+   "name": "Грубиян",
+   "desc": "Срывается на партнёров, тренера и журналистов.",
+   "cons": "Чаще конфликты и скандалы, дружба в команде тает.",
+   "effects": [
+    {
+     "target": "conflict_risk",
+     "op": "add",
+     "value": 1.0
+    },
+    {
+     "target": "scandal_risk",
+     "op": "mul",
+     "value": 1.5
+    },
+    {
+     "target": "mates_friendship",
+     "op": "add",
+     "value": -0.6
+    }
+   ],
+   "acquire": {
+    "when": [
+     {
+      "state": "stress",
+      "gt": 52
+     },
+     {
+      "personality": "conflict",
+      "gt": 55
+     }
+    ],
+    "chance": 0.07
+   },
+   "lose": {
+    "when": [
+     {
+      "state": "stress",
+      "lt": 30
+     }
+    ],
+    "chance": 0.15
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
+  },
+  {
+   "id": "insomniac",
+   "name": "Бессонница",
+   "desc": "Не может нормально спать.",
+   "cons": "Сон ломается в полтора раза сильнее.",
+   "effects": [
+    {
+     "target": "sleep_loss",
+     "op": "mul",
+     "value": 1.5
+    }
+   ],
+   "acquire": {
+    "when": [
+     {
+      "any": [
+       {
+        "state": "sleep",
+        "lt": 45
+       },
+       {
+        "state": "stress",
+        "gt": 60
+       }
+      ]
+     }
+    ],
+    "chance": 0.06
+   },
+   "lose": {
+    "when": [
+     {
+      "state": "sleep",
+      "gt": 65
+     },
+     {
+      "state": "stress",
+      "lt": 40
+     }
+    ],
+    "chance": 0.2
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
+  },
+  {
+   "id": "burned_out",
+   "name": "Выгорание",
+   "desc": "Игра больше не радует.",
+   "cons": "Хуже стреляет и почти перестаёт учиться.",
+   "effects": [
+    {
+     "target": "duel",
+     "op": "add",
+     "value": -2.5
+    },
+    {
+     "target": "learning",
+     "op": "mul",
+     "value": 0.6
+    }
+   ],
+   "acquire": {
+    "when": [
+     {
+      "state": "burnout",
+      "gt": 65
+     }
+    ],
+    "chance": 0.25
+   },
+   "lose": {
+    "when": [
+     {
+      "state": "burnout",
+      "lt": 30
+     }
+    ],
+    "chance": 0.25
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
+  },
+  {
+   "id": "star_sickness",
+   "name": "Звёздная болезнь",
+   "desc": "Поверил в свою исключительность.",
+   "cons": "Требует внимания, ссорится с партнёрами, чаще попадает в скандалы. Зато фанаты его обожают.",
+   "effects": [
+    {
+     "target": "fan_gain",
+     "op": "mul",
+     "value": 1.2
+    },
+    {
+     "target": "scandal_risk",
+     "op": "mul",
+     "value": 1.4
+    },
+    {
+     "target": "mates_friendship",
+     "op": "add",
+     "value": -0.5
+    },
+    {
+     "target": "role_hunger",
+     "op": "add",
+     "value": 0.5
+    }
+   ],
+   "acquire": {
+    "when": [
+     {
+      "fame": "",
+      "gt": 45
+     },
+     {
+      "personality": "ego",
+      "gt": 55
+     }
+    ],
+    "chance": 0.12
+   },
+   "lose": {
+    "when": [
+     {
+      "fame": "",
+      "lt": 25
+     }
+    ],
+    "chance": 0.2
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
+  },
+  {
+   "id": "toxic_chat",
+   "name": "Токсик в чате",
+   "desc": "Пишет гадости соперникам и фанатам.",
+   "cons": "Фанаты уходят, тильт в команде распространяется быстрее.",
+   "effects": [
+    {
+     "target": "fan_gain",
+     "op": "mul",
+     "value": 0.85
+    },
+    {
+     "target": "scandal_risk",
+     "op": "mul",
+     "value": 1.6
+    },
+    {
+     "target": "team_tilt_spread",
+     "op": "mul",
+     "value": 1.3
+    }
+   ],
+   "acquire": {
+    "when": [
+     {
+      "state": "stress",
+      "gt": 48
+     },
+     {
+      "any": [
+       {
+        "trait": "unfiltered"
+       },
+       {
+        "personality": "conflict",
+        "gt": 65
+       }
+      ]
+     }
+    ],
+    "chance": 0.08
+   },
+   "lose": {
+    "when": [
+     {
+      "state": "stress",
+      "lt": 30
+     }
+    ],
+    "chance": 0.1
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
+  },
+  {
+   "id": "workaholic",
+   "name": "Трудоголик",
+   "desc": "Живёт на сервере: растёт быстрее всех.",
+   "cons": "Выгорает быстрее, отпуска и тусовки его раздражают.",
+   "effects": [
+    {
+     "target": "learning",
+     "op": "mul",
+     "value": 1.2
+    },
+    {
+     "target": "burnout_gain",
+     "op": "mul",
+     "value": 1.3
+    }
+   ],
+   "stress_on": {
+    "social_event": 4,
+    "retreat": 3
+   },
+   "acquire": {
+    "when": [
+     {
+      "state": "motivation",
+      "gt": 85
+     },
+     {
+      "stat": "discipline",
+      "gt": 70
+     },
+     {
+      "personality": "ambition",
+      "gt": 65
+     }
+    ],
+    "chance": 0.015
+   },
+   "lose": {
+    "when": [
+     {
+      "any": [
+       {
+        "state": "burnout",
+        "gt": 60
+       },
+       {
+        "state": "motivation",
+        "lt": 55
+       }
+      ]
+     }
+    ],
+    "chance": 0.2
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
+  },
+  {
+   "id": "ice_veteran",
+   "name": "Хладнокровный ветеран",
+   "desc": "Видел всё: большие сцены его не пугают.",
+   "cons": "Почти не меняется: учится медленнее.",
+   "effects": [
+    {
+     "target": "pressure_penalty",
+     "op": "mul",
+     "value": 0.7
+    },
+    {
+     "target": "learning",
+     "op": "mul",
+     "value": 0.9
+    }
+   ],
+   "acquire": {
+    "when": [
+     {
+      "age": "",
+      "gt": 26
+     },
+     {
+      "fame": "",
+      "gt": 30
+     }
+    ],
+    "chance": 0.05
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
+  },
+  {
+   "id": "superstitious",
+   "name": "Суеверный",
+   "desc": "Талисманы, одна и та же футболка, правая нога на сцену.",
+   "cons": "Без ритуала нервничает: в плей-офф чуть больше давления.",
+   "effects": [
+    {
+     "target": "pressure_penalty",
+     "op": "mul",
+     "value": 1.1,
+     "when": {
+      "playoffs": true
+     }
+    }
+   ],
+   "relief_on": {
+    "retreat": 2
+   },
+   "acquire": {
+    "when": [
+     {
+      "state": "stress",
+      "gt": 50
+     }
+    ],
+    "chance": 0.01
+   },
+   "lose": {
+    "when": [
+     {
+      "state": "stress",
+      "lt": 20
+     }
+    ],
+    "chance": 0.05
+   },
+   "family": "acquired",
+   "rarity": "acquired",
+   "acquired": true
   }
  ]
 }

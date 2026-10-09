@@ -31,6 +31,7 @@ SPONSOR_CATEGORIES = {
     "telecom": {"mul": 1.2, "rep": 0.0},
     "bank": {"mul": 1.3, "rep": 0.0},
     "auto": {"mul": 1.4, "rep": 0.0},
+    "luxury": {"mul": 1.6, "rep": 0.0},     # watches and cars: players must wear and show them
     "crypto": {"mul": 1.8, "rep": -2.0},
     "betting": {"mul": 2.5, "rep": -4.0},
 }

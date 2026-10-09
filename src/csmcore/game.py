@@ -182,11 +182,35 @@ class Game:
                 self.sysm.owners[c.name].objectives = []
         if self.sysm.stories:
             self.sysm.stories.last_fired = {k: w for k, w in self.sysm.stories.last_fired.items() if w > start - 104}
+        lines += self._world_changes(start, rng)
         self.run = season_begin(self.clubs, self._season_seed(), self.sysm, self.season, start)
         owner = self.desk.owner
         if owner and owner.objectives:
             lines.append("Цели владельца: " + "; ".join(o.text for o in owner.objectives))
         return lines
+
+    def _world_changes(self, week: int, rng: random.Random) -> list[str]:
+        """Closures, investor rebrands, the superteam, wonderkids: see worldlife.py."""
+        from . import worldlife
+        from .season import rerank
+        names = {p.name for c in self.clubs for p in c.roster + c.former}
+        if self.sysm.market:
+            names |= {p.name for p in self.sysm.market.free_agents}
+        if self.sysm.legacy:
+            names |= {r.player.name for r in self.sysm.legacy.retired}
+        nick = worldgen.Nicknames(rng, reserved=names)
+        notes = worldlife.close_bankrupt(self.clubs, self.sysm, week, rng, nick, self.club_name)
+        notes += worldlife.investor_rebrand(self.clubs, self.sysm, week, rng, self.club_name)
+        notes += worldlife.superteam(self.clubs, self.sysm, self.season, week, rng, nick, self.club_name)
+        rerank(self.clubs)
+        if self.sysm.legacy:
+            fresh = sorted(self.sysm.legacy.born[-self.sysm.talents_per_season:], key=lambda q: -q.potential)
+            for p in [q for q in fresh if q.potential >= 84][:2]:   # only the real wonderkids make the news
+                notes.append(f"Появился вундеркинд {p.name} ({p.age} лет, {p.role}): скауты в восторге")
+        if self.sysm.chronicle:
+            for n in notes:
+                self.sysm.chronicle.add(self.season, week, "board", n)
+        return [f"мир: {n}" for n in notes]
 
     # ---- manager career ----
     @property

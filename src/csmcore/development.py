@@ -12,6 +12,7 @@ import random
 from .economy import Club
 from .player import STATS, Player
 
+SOFT_CAP = 86.0
 MECHANICS = ("aim", "reaction", "movement", "weapon_control")
 MENTAL = ("game_sense", "positioning", "timing", "map_awareness", "utility_iq", "tactical_discipline",
           "adaptability", "analytical", "communication", "leadership")
@@ -60,4 +61,19 @@ def season_end(players: list[Player]) -> None:
 def roll_potential(level: float, age: int, rng: random.Random) -> float:
     """Young players get wider, more uncertain ceilings."""
     spread = max(2.0, (24 - age) * 2.5)
-    return min(100.0, max(level, level + abs(rng.gauss(spread * 0.6, spread))))
+    pot = level + abs(rng.gauss(spread * 0.6, spread))
+    if pot > SOFT_CAP:   # 90+ (a star) must stay rare: ceilings above 86 are squeezed
+        pot = SOFT_CAP + (pot - SOFT_CAP) * 0.35
+    return min(100.0, max(level, pot))
+
+
+def breakthrough(p: Player, rng: random.Random) -> bool:
+    """Character can beat the ceiling: a young, hungry, disciplined player at his limit may
+    push it up a notch. This is how an unknown NPC can grow into a star."""
+    if p.age > 25 or p.potential - p.overall() > 1.0:
+        return False
+    drive = (p.p("ambition") - 60) / 40 + (p.stat("discipline") - 60) / 40 + ("workaholic" in p.traits) * 0.5
+    if drive <= 0 or rng.random() >= 0.05 * drive:
+        return False
+    p.potential = min(100.0, p.potential + rng.uniform(0.5, 1.5))
+    return True
