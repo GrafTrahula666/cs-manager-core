@@ -1,0 +1,28 @@
+{
+ "deck": {
+  "deck_bootcamp_abroad": "art/deck_bootcamp_abroad.webp",
+  "deck_cardboard_statue": "art/deck_cardboard_statue.webp",
+  "deck_cat": "art/deck_cat.webp",
+  "deck_charity_gala": "art/deck_charity_gala.webp",
+  "deck_documentary": "art/deck_documentary.webp",
+  "deck_energy_costume": "art/deck_energy_costume.webp",
+  "deck_fixer": "art/deck_fixer.webp",
+  "deck_hospital_match": "art/deck_hospital_match.webp",
+  "deck_jersey": "art/deck_jersey.webp",
+  "deck_journalist_bait": "art/deck_journalist_bait.webp",
+  "deck_lottery": "art/deck_lottery.webp",
+  "deck_retreat": "art/deck_retreat.webp",
+  "deck_shady_sponsor": "art/deck_shady_sponsor.webp",
+  "deck_streamer_collab": "art/deck_streamer_collab.webp",
+  "deck_watch_ad": "art/deck_watch_ad.webp"
+ },
+ "role": {
+  "awp": "art/role_awp.webp",
+  "entry": "art/role_entry.webp",
+  "igl": "art/role_igl.webp",
+  "rifler": "art/role_rifler.webp",
+  "support": "art/role_support.webp"
+ },
+ "logo": "art/logo.webp",
+ "start": "art/start.webp"
+}
