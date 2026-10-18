@@ -1,0 +1,28 @@
+name: World simulation laboratory
+
+on:
+  push:
+    branches:
+      - analysis/world-simulation-lab
+  pull_request:
+    branches:
+      - claude/core-world-economy
+
+permissions:
+  contents: read
+
+jobs:
+  lab-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install development dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Quick diagnostic and observer parity tests
+        run: python -m pytest -q tests/test_world_sim_lab.py -m "not slow"
+      - name: One real simulated season
+        run: python -m pytest -q tests/test_world_sim_lab.py -m "slow"
