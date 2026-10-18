@@ -11,7 +11,9 @@ import io
 import pickle
 
 MAGIC = b"CSMSAVE"
-VERSION = 1
+VERSION = 2
+# Version history: 1 = before the emergent world engine; 2 = sysm.emergent (facts, minds, press).
+SUPPORTED = (1, 2)
 
 
 def dumps(game) -> bytes:
@@ -25,10 +27,24 @@ def loads(data: bytes):
     if not data.startswith(MAGIC):
         raise ValueError("это не сохранение CS MENEDGER")
     version = data[len(MAGIC)]
-    if version != VERSION:
-        raise ValueError(f"сохранение версии {version}, игра понимает {VERSION}")
+    if version not in SUPPORTED:
+        raise ValueError(f"сохранение версии {version}, игра понимает {', '.join(map(str, SUPPORTED))}")
     with gzip.GzipFile(fileobj=io.BytesIO(data[len(MAGIC) + 1:])) as f:
-        return pickle.load(f)
+        game = pickle.load(f)
+    return migrate(game, version)
+
+
+def migrate(game, version: int):
+    """Bring an older save up to date without losing anything it had.
+
+    1 -> 2: the world gets an emergent engine. Nothing happened in it before the save, so the
+    engine starts with empty memories and looks at the world from the next week on (its first
+    look only records who plays where, it does not invent transfers)."""
+    if version < 2 and getattr(game.sysm, "emergent", None) is None:
+        from .emergent import EmergentWorld
+        regions = tuple(sorted({c.region for c in game.clubs}))
+        game.sysm.emergent = EmergentWorld(game.seed, regions)
+    return game
 
 
 def save(game, path: str) -> int:

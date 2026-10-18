@@ -54,6 +54,7 @@ def state() -> dict:
                     "titles": m.titles if m else 0},
         "sacked": g.sacked, "patch": g.sysm.meta.patch["name"] if g.sysm.meta else "",
         "facilities": {FACILITIES[k]: v for k, v in c.facilities.items() if k in FACILITIES},
+        "situations": len(g.situations()),
     }
 
 
@@ -315,3 +316,94 @@ def load_b64(data: str) -> dict:
 
 def meta_info() -> dict:
     return {"tones": {t: TONE_RU[t] for t in TONES}, "facilities": FACILITIES, "press": press_options()}
+
+
+# ---------- the emergent world: what the manager knows and why things happened ----------
+SITUATION_RU = {"conflict": "конфликт", "complaint": "жалоба", "leak": "утечка в прессу"}
+
+
+def _ew():
+    ew = getattr(_g().sysm, "emergent", None)
+    if ew is None:
+        raise RuntimeError("в этом мире нет причинного движка")
+    return ew
+
+
+def situations() -> list[dict]:
+    """Open situations first, then the last few resolved ones."""
+    g = _g()
+    items = sorted(g.situations(open_only=False), key=lambda s: (s.choice is not None, -s.week))[:8]
+    return [{"id": s.id, "week": (s.week - 1) % economy.WEEKS_PER_YEAR + 1, "kind": SITUATION_RU.get(s.kind, s.kind),
+             "text": s.text, "how": s.how, "fact": s.fact, "open": s.choice is None,
+             "options": s.options, "choice": s.choice, "outcome": s.outcome, "by": s.by} for s in items]
+
+
+def answer_situation(sid: int, key: str) -> list[str]:
+    return _g().answer_situation(sid, key)
+
+
+def reports(n: int = 20) -> list[dict]:
+    """What reached your staff, and how. The club's version can be wrong; the UI cannot tell."""
+    g = _g()
+    rs = _ew().reports.get(g.club_name, [])[-n:]
+    return [{"week": (r.week - 1) % economy.WEEKS_PER_YEAR + 1, "text": r.text, "how": r.how, "fact": r.fact}
+            for r in reversed(rs)]
+
+
+def world_feed(n: int = 20, min_salience: float = 12.0) -> list[dict]:
+    """Public news of the whole world: what anyone could read."""
+    ew = _ew()
+    out = []
+    for f in reversed(list(ew.facts.facts.values())):
+        if f.visibility == "public" and f.salience >= min_salience and f.kind not in ("series",):
+            out.append({"fact": f.id, "season": f.season, "week": (f.week - 1) % economy.WEEKS_PER_YEAR + 1,
+                        "kind": f.kind, "text": f.text})
+            if len(out) >= n:
+                break
+    return out
+
+
+def why(fid: int, god: bool = False, depth: int = 6) -> dict:
+    """Causal tree of a fact as your club sees it: facts you do not know stay hidden and the
+    hidden numbers behind people's choices are shown only in god mode (for debugging and demos)."""
+    g, ew = _g(), _ew()
+    holder = f"club:{g.club_name}"
+
+    def mask(node):
+        f = ew.facts.get(node["id"])
+        known = god or f is None or f.known_by(holder)
+        if not known:
+            return {"id": node["id"], "text": "что-то, о чём вы не знаете", "causes": [], "reasons": [], "hidden": True}
+        out = dict(node)
+        if f is not None and not god:
+            seen = f.believed(holder)
+            out["text"] = seen["text"] or out["text"]
+            out["how"] = f.knowers.get(holder, f.knowers.get("*", (0, "")))[1]
+            out["reasons"] = []
+        out["causes"] = [mask(c) for c in node.get("causes", [])]
+        return out
+    return mask(ew.why(fid, depth))
+
+
+def legends(n: int = 8) -> list[dict]:
+    from .emergent.history import legends as top
+    return [{"name": name, "score": round(sc)} for name, sc in top(_ew(), n, 60.0)]
+
+
+def retrospective(name: str) -> dict:
+    from .emergent.history import retrospective as retro
+    g = _g()
+    r = retro(_ew(), name, g.season)
+    r["sources"] = [list(x) for x in r["sources"]]
+    return r
+
+
+def person(name: str) -> dict:
+    """A word with one of your players: what he says, not what he hides."""
+    from .emergent.narrate import Narrator
+    g, ew = _g(), _ew()
+    p = next((q for q in g.club.roster if q.name == name), None)
+    if p is None:
+        return {"name": name, "says": "Это не ваш игрок."}
+    narr = ew.narrator or Narrator()
+    return {"name": name, "says": narr.dialogue(p, ew.minds.of(name))}

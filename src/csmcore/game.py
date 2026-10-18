@@ -124,6 +124,10 @@ class Game:
                     (f": {'; '.join(f.outcome[:2])}" if f.outcome else "")
                 out.append(f"история: {f.title}{tail}")
         out += [f"клуб: {m}" for m in log.management[m0:] if me in m]
+        ew = getattr(self.sysm, "emergent", None)
+        if ew is not None:
+            out += [f"закулисье: {r.text} ({r.how})" for r in ew.reports.get(me, []) if r.week == self.week]
+            out += [f"решение: {s.text} — ждёт вашего решения" for s in self.situations() if s.week == self.week]
         if self.sysm.chronicle:
             out += [f"клуб: {e.text}" for e in self.sysm.chronicle.entries[c0:]
                     if e.kind in ("title", "rivalry") and me in e.text]
@@ -154,7 +158,33 @@ class Game:
                 for r in riv.clubs.values():
                     r.memories = r.memories[-6:]
 
+    # ---- the emergent world: situations the staff brought to you ----
+    def _desk_ctx(self):
+        ew = self.sysm.emergent
+        return ew.begin(self.clubs, self.graph, self.week, self.season, self.sysm, self.club_name, open_week=False)
+
+    def situations(self, open_only: bool = True) -> list:
+        ew = getattr(self.sysm, "emergent", None)
+        if ew is None:
+            return []
+        return [s for s in ew.situations if s.club == self.club_name and (s.choice is None or not open_only)]
+
+    def answer_situation(self, sid: int, key: str, by: str = "manager") -> list[str]:
+        from .emergent.manager_view import resolve
+        s = next((x for x in self.situations() if x.id == sid), None)
+        if s is None:
+            raise ValueError("нет такой ситуации")
+        if key not in {o["key"] for o in s.options}:
+            raise ValueError(f"нет такого варианта: {key}")
+        return resolve(self.sysm.emergent, self._desk_ctx(), s, key, by=by)
+
     def _assistant_decides(self) -> None:
+        for sit in self.situations():
+            if self.week - sit.week >= PATIENCE_WEEKS:
+                from .emergent.manager_view import ai_resolve
+                ai_resolve(self.sysm.emergent, self._desk_ctx(), sit)
+                sit.by = "assistant"
+                sit.outcome.insert(0, "решил ассистент")
         st, mk = self.sysm.stories, self.sysm.market
         if st:
             for f in list(st.pending):
