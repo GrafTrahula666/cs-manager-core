@@ -26,6 +26,7 @@ class Action:
     label = ""
     tone = SELF
     public = False        # needs a media opportunity (press day, match week)
+    cooldown = 8          # weeks before the same person does this to the same target again
 
     def candidates(self, ew, ctx, a, club, mind):
         return []
@@ -216,6 +217,7 @@ class Mentor(Action):
 
 class PraisePublicly(Action):
     name, label, tone, public = "praise_publicly", "публично похвалил", POS, True
+    cooldown = 26         # praise answered by praise every two months reads as a loop, not a friendship
 
     def candidates(self, ew, ctx, a, club, mind):
         return [(t, None) for t in _felt_targets(mind, ("gratitude",), 10)]
@@ -315,6 +317,7 @@ class SideWith(Action):
 
 class Reconcile(Action):
     name, label, tone = "reconcile", "пошёл на примирение", POS
+    cooldown = 20
 
     def candidates(self, ew, ctx, a, club, mind):
         mates = {q.name for q in _mates(club, a)}
@@ -339,6 +342,10 @@ class Reconcile(Action):
             for u, v in ((a.name, t), (t, a.name)):
                 ew.rel(ctx, u, v, "resentment", -15), ew.rel(ctx, u, v, "irritation", -12), ew.rel(ctx, u, v, "friendship", 5)
             tm.emotions.pop(f"anger|{a.name}", None)
+            for m, other in ((ew.minds.of(a.name), t), (tm, a.name)):    # forgiven, not forgotten
+                for mem in m.memories:
+                    if mem.about == other and mem.valence < 0:
+                        mem.valence *= 0.4
             imp = {f"club:{club.name}": {"harmony": 4}, t: {"belonging": 3, "pride": 2}, a.name: {"belonging": 3}}
             text = f"{a.name} и {t} помирились"
         else:

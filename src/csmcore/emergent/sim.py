@@ -38,7 +38,6 @@ NEG_PER_WINDOW = 3          # three in NEG_WINDOW weeks,
 NEG_WINDOW = 6
 NEG_PER_TARGET = 2          # and nobody takes more than two hits in that window
 ACTOR_NEG_REST = 3          # weeks a person needs before another harmful act
-COOLDOWN = 8                # weeks before the same act at the same person
 CRISIS_TENSION = 16.0       # above this a club is tired of fighting
 AROUSAL = 12.0              # emotion needed to start weighing actions
 FACTS_PER_CLUB_WEEK = 6     # hard safety cap for engine-made facts
@@ -159,11 +158,11 @@ class EmergentWorld:
 
     def st(self, p, key: str, delta: float) -> None:
         p.state[key] = max(0.0, min(100.0, p.s(key) + delta))
-        self._pend.append(f"s|{p.name}|{key}")
+        self._pend.append(f"s|{p.name}|{key}|{'+' if delta > 0 else '-'}")
 
     def rel(self, ctx: WeekCtx, a: str, b: str, dim: str, delta: float) -> None:
         ctx.graph.nudge(a, b, dim, delta)
-        self._pend.append(f"r|{a}|{b}|{dim}")
+        self._pend.append(f"r|{a}|{b}|{dim}|{'+' if delta > 0 else '-'}")
 
     def fame(self, p, delta: float) -> None:
         p.fame = max(0.0, p.fame + delta)
@@ -193,9 +192,12 @@ class EmergentWorld:
         return best
 
     def prov_causes(self, keys) -> list[int]:
+        """Facts that last pushed these values. A key ends in "|+" or "|-" for the direction that
+        explains the effect (low morale is not caused by praise); without one, either counts."""
         out = []
         for k in keys:
-            out += [i for i in self.prov.get(k, []) if i in self.facts.facts]
+            for kk in ((k,) if k.endswith(("|+", "|-")) else (k + "|+", k + "|-")):
+                out += [i for i in self.prov.get(kk, []) if i in self.facts.facts]
         return sorted(set(out))[-4:]
 
     def open_situation(self, club: str, a: str | None, b: str | None) -> Situation | None:
@@ -398,7 +400,7 @@ class EmergentWorld:
         if e.kind == "conflict" and len(e.who) == 2:
             a, b = e.who
             club = self.club_name(ctx, a)
-            causes = self.prov_causes([f"r|{a}|{b}|irritation", f"r|{a}|{b}|resentment", f"r|{b}|{a}|resentment"])
+            causes = self.prov_causes([f"r|{a}|{b}|irritation|+", f"r|{a}|{b}|resentment|+", f"r|{b}|{a}|resentment|+"])
             m = self.minds.of(a)
             causes += m.causes_of("anger", b) + m.causes_of("envy", b) + m.causes_of("threat", b)
             hit = ctx.index.get(a)
@@ -409,7 +411,7 @@ class EmergentWorld:
         elif e.kind == "transfer_request" and e.who:
             a = e.who[0]
             club = self.club_name(ctx, a)
-            causes = self.prov_causes([f"s|{a}|role_satisfaction", f"s|{a}|morale", f"s|{a}|coach_trust"])
+            causes = self.prov_causes([f"s|{a}|role_satisfaction|-", f"s|{a}|morale|-", f"s|{a}|coach_trust|-"])
             causes += [m.fact for m in self.minds.of(a).grudges(-25)][:2]
             hit = ctx.index.get(a)
             self.emit(ctx, "transfer_request", actor=a, club=club, causes=causes, reasons=e.causes[:4],
@@ -426,10 +428,11 @@ class EmergentWorld:
         keys = []
         for c in ev.get("when", []):
             who = b if c.get("who") == "b" else a
+            sign = "|+" if "gt" in c else "|-" if "lt" in c else ""
             if who and "state" in c:
-                keys.append(f"s|{who}|{c['state']}")
+                keys.append(f"s|{who}|{c['state']}{sign}")
             if a and b and "rel" in c:
-                keys.append(f"r|{a}|{b}|{c['rel']}")
+                keys.append(f"r|{a}|{b}|{c['rel']}{sign}")
         causes = self.prov_causes(keys)
         if a and "продолжение цепочки" in fired.why:
             prev = [f.id for f in self.facts.of_person(a, ("story",)) if f.week >= ctx.week - 30]
@@ -739,7 +742,7 @@ class EmergentWorld:
 
     def _do(self, ctx: WeekCtx, a, club, mind, act, t, x, why, causes):
         mind.last_action = ctx.week
-        mind.cooldowns[f"{act.name}|{t}"] = ctx.week + COOLDOWN
+        mind.cooldowns[f"{act.name}|{t}"] = ctx.week + act.cooldown
         if len(mind.cooldowns) > 12:
             mind.cooldowns = {k: w for k, w in mind.cooldowns.items() if w > ctx.week}
         if act.tone == A.NEG:

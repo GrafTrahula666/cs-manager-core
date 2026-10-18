@@ -16,7 +16,7 @@ from csmcore.emergent.history import chains, mermaid, render_tree  # noqa: E402
 from csmcore.game import Game  # noqa: E402
 
 ENDINGS = ("ask_to_leave", "article", "beat_former_club", "transfer", "reconcile", "public_jab", "leak",
-           "freeze_out", "mediate", "side_with", "manager_decision", "changed_mind", "complain", "retrospective")
+           "freeze_out", "mediate", "side_with", "manager_decision", "retrospective")
 
 
 def story_score(ew, f) -> float:
