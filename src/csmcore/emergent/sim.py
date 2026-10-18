@@ -456,7 +456,9 @@ class EmergentWorld:
             for p in line:
                 st = p.__dict__.get("season_stats")
                 k = st["kills"] if st else 0
-                deltas[p.name] = k - self.kills.get(p.name, 0)
+                before = self.kills.get(p.name)
+                # season stats reset each season; a newcomer's count may come from his old club
+                deltas[p.name] = 0 if before is None else k if k < before else k - before
                 self.kills[p.name] = k
             avg = sum(deltas.values()) / max(1, len(deltas))
             best = max(line, key=lambda p: (deltas[p.name], p.name))

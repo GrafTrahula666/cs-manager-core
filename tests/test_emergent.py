@@ -245,3 +245,21 @@ def test_pruned_knowers_take_their_false_beliefs_with_them():
     ew.facts.prune(1 + 60)
     assert f.id in ew.facts.facts and other.name not in f.knowers
     assert set(f.misbelief) <= set(f.knowers)
+
+
+def test_a_new_season_or_a_new_signing_does_not_fake_a_standout():
+    clubs, graph, sysm, ew = world(10)
+    a, b = clubs[0], clubs[1]
+    t = economy.Tournament("Cup", "A", 100_000, [0.6, 0.4])
+    for p in a.lineup() + b.lineup():
+        p.season_stats = {"kills": 200}            # a newcomer to the engine, kills from elsewhere
+    ctx = ew.begin(clubs, graph, 1, 1, sysm, None)
+    ew.on_series(ctx, t, "group", a, b, a, "2:0")
+    for p in a.lineup() + b.lineup():
+        p.season_stats = {"kills": 20}             # the season rolled over
+    a.lineup()[0].season_stats = {"kills": 45}
+    ew.on_series(ctx, t, "group", a, b, a, "2:0")
+    ew.week(ctx)
+    outs = [f for f in ew.facts.facts.values() if f.kind == "standout"]
+    assert [f.actor for f in outs] == [a.lineup()[0].name]
+    assert "при среднем по команде 25" in outs[0].reasons[0]

@@ -446,8 +446,8 @@ class LeakToPress(Action):
 
     def utility(self, ew, ctx, a, club, mind, t, x):
         mgr = ew.manager_id(ctx, club)
-        u = mind.emotion("anger", t) / 30 * _p(a, "media") * (1.2 - _p(a, "loyalty")) \
-            + (0.4 if mind.opinion(mgr) < -20 else 0.0) - (1 - _p(a, "risk")) * 0.5 - 0.1
+        u = mind.emotion("anger", t) / 20 * _p(a, "media") * (1.2 - _p(a, "loyalty")) \
+            + (0.4 if mind.opinion(mgr) < -20 else 0.0) - (1 - _p(a, "risk")) * 0.4 - 0.1
         return u, [f"злость на {t}: {mind.emotion('anger', t):.0f}", f"лояльность {a.p('loyalty'):.0f}",
                    f"склонность к риску {a.p('risk'):.0f}"]
 
