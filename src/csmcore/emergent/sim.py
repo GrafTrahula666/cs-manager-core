@@ -689,6 +689,8 @@ class EmergentWorld:
             for t, x in act.candidates(self, ctx, a, club, mind):
                 if t == a.name or x == a.name:
                     continue
+                if t and ":" not in t and self.player(ctx, t) is None:
+                    continue    # feelings outlive people: the one they are about has retired
                 if act.tone == A.NEG and not self._budget_ok(ctx, club, t):
                     continue
                 if mind.cooldowns.get(f"{act.name}|{t}", -1) > ctx.week:

@@ -221,3 +221,27 @@ def test_same_seed_same_story():
             tick(ew, clubs, graph, sysm, w, spotlight(ew, club, y, {2, 4}))
         return [(f.kind, f.actor, f.target, f.week) for f in ew.facts.facts.values()]
     assert run() == run()
+
+
+def test_feelings_about_someone_who_left_the_game_do_not_break_the_week():
+    clubs, graph, sysm, ew = world(8)
+    p = clubs[0].roster[0]
+    m = ew.minds.of(p.name)
+    for k in ("gratitude", "anger", "envy"):
+        m.feel(k, "retired_legend", 60)
+    for w in range(1, 6):
+        tick(ew, clubs, graph, sysm, w)
+    assert not [f for f in ew.facts.facts.values() if "retired_legend" in (f.target, f.third)]
+
+
+def test_pruned_knowers_take_their_false_beliefs_with_them():
+    clubs, graph, sysm, ew = world(9)
+    club = clubs[0]
+    a, b, c = club.roster[0], club.roster[1], club.roster[2]
+    other = clubs[1].roster[0]
+    ctx = ew.begin(clubs, graph, 1, 1, sysm, None)
+    f = ew.emit(ctx, "freeze_out", actor=a.name, target=b.name, club=club.name, salience=40, text="x")   # historic: kept
+    ew.facts.learn(other.name, f.id, 1, "слух", {"actor": c.name})
+    ew.facts.prune(1 + 60)
+    assert f.id in ew.facts.facts and other.name not in f.knowers
+    assert set(f.misbelief) <= set(f.knowers)

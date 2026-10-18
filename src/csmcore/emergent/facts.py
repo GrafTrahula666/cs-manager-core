@@ -151,6 +151,7 @@ class FactLog:
             if f.week < now_week - KEEP_WEEKS and len(f.knowers) > 1 and PUBLIC not in f.knowers:
                 keep = {k: v for k, v in f.knowers.items() if k.startswith("club:") or k in f.people()}
                 f.knowers = keep
+                f.misbelief = {k: v for k, v in f.misbelief.items() if k in keep}
         self.pruned += len(old)
         return len(old)
 
