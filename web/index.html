@@ -130,6 +130,12 @@ main { padding-block: 18px; display: grid; gap: 16px; }
 .pill.world { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
 .event { border-left: 3px solid var(--ct); padding: 2px 0 2px 12px; display: grid; gap: 6px; }
 .event b { font-weight: 600; }
+.sitopts { display: grid; gap: 6px; }
+.sitopt { display: grid; grid-template-columns: minmax(0, max-content) 1fr; gap: 8px; align-items: baseline; }
+@media (max-width: 520px) { .sitopt { grid-template-columns: 1fr; } }
+.tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+.tree ul { margin-left: 8px; padding-left: 12px; border-left: 1px solid var(--line); }
+.tree li { margin: 6px 0; overflow-wrap: anywhere; }
 .event .opts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
 .event.deck { border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); border-left: 3px solid var(--accent); border-radius: 4px; padding: 0; overflow: hidden; background: linear-gradient(180deg, var(--glow), transparent 60%); }
 .event.deck .body { display: grid; gap: 8px; padding: 14px; }
@@ -427,11 +433,12 @@ async function advance(n) {
   busy(false);
   $("nextBtn").disabled = $("next4Btn").disabled = false;
   if (s.pending_events || s.offers) tab = "office";
+  else if (s.situations) tab = "backstage";
   render(s);
   if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
 }
 
-const TABS = [["office", "Сводка"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+const TABS = [["office", "Сводка"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
   ["table", "Рейтинг"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
 
 function render(s) {
@@ -448,15 +455,15 @@ function render(s) {
   $("kOwner").textContent = s.owner_confidence + "/100";
   $("kOwner").className = s.owner_confidence < 35 ? "money-neg" : "";
   $("kRep").textContent = s.manager.reputation;
-  const due = s.pending_events + s.offers;
-  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}</button>`).join("");
-  const views = { office: viewOffice, squad: viewSquad, market: viewMarket, money: viewMoney, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
+  const due = s.pending_events + s.offers, sits = s.situations || 0;
+  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
+  const views = { office: viewOffice, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
   $("main").innerHTML = views[tab](s);
 }
 
 function kind(line) {
   const k = line.split(":")[0];
-  return { "матч": "match", "история": "story", "клуб": "club", "мир": "world" }[k] || "";
+  return { "матч": "match", "история": "story", "клуб": "club", "мир": "world", "закулисье": "story", "решение": "club" }[k] || "";
 }
 function newsHtml() {
   if (!log.length) return `<p class="muted">Новостей пока нет. Нажмите «Следующая неделя».</p>`;
@@ -605,6 +612,50 @@ function viewHistory() {
   </div>`;
 }
 
+function treeHtml(n) {
+  const when = n.season ? `<span class="num muted">С${n.season} Н${(n.week - 1) % 52 + 1}</span> ` : "";
+  return `<li><span class="${n.hidden ? "muted" : ""}">${when}${esc(n.text)}${n.ref ? ` <span class="muted">(см. выше)</span>` : ""}</span>` +
+    (n.how ? ` <span class="pill">${esc(n.how)}</span>` : "") +
+    (n.reasons && n.reasons.length ? `<div class="why">${esc(n.reasons.join("; "))}</div>` : "") +
+    (n.causes && n.causes.length ? `<ul>${n.causes.map(treeHtml).join("")}</ul>` : "") + `</li>`;
+}
+
+function viewBackstage() {
+  const sits = call("situations"), reps = call("reports", 15), feed = call("world_feed", 15), leg = call("legends", 6);
+  const team = call("roster");
+  const whyBtn = (fid) => `<button class="small" data-why="${fid}" title="Цепочка причин, насколько её знает клуб">почему?</button>`;
+  const open = sits.filter((x) => x.open).map((x) => `<div class="event">
+      <span class="pill story" style="justify-self:start">${esc(x.kind)}</span>
+      <b>${esc(x.text)}</b>
+      <span class="why">Откуда известно: ${esc(x.how)}. Нерешённое через 2 недели решит ассистент.</span>
+      <div class="sitopts">${x.options.map((o) => `<div class="sitopt"><button class="small" data-sit="${x.id}" data-key="${esc(o.key)}">${esc(o.label)}</button>
+        <span class="why">${o.risks.map(esc).join(" · ")}</span></div>`).join("")}</div>
+      <div>${whyBtn(x.fact)}</div></div>`).join("");
+  const done = sits.filter((x) => !x.open).slice(0, 4).map((x) => `<div class="line"><span class="pill">${esc(x.kind)}</span>
+      <span>${esc(x.text)} → ${esc(x.outcome.join("; "))}</span></div>`).join("");
+  const repHtml = reps.map((r) => `<div class="line"><span class="num muted">н${r.week}</span><span>${esc(r.text)} <span class="pill">${esc(r.how)}</span></span>${whyBtn(r.fact)}</div>`).join("");
+  const feedHtml = feed.map((f) => `<div class="line"><span class="num muted">С${f.season} Н${f.week}</span><span>${esc(f.text)}</span>${whyBtn(f.fact)}</div>`).join("");
+  const legHtml = leg.map((l) => `<button class="small" data-retro="${esc(l.name)}">${esc(l.name)}</button>`).join(" ");
+  const talk = team.map((p) => `<button class="small" data-person="${esc(p.name)}">${esc(p.name)}</button>`).join(" ");
+  return `<div class="grid2">
+    <section class="card"><h3>Ситуации в команде</h3>${open || `<p class="muted">Ничего не требует вмешательства. Вы узнаёте не всё: только то, что заметил штаб, рассказали игроки или написала пресса.</p>`}
+      ${done ? `<h3>Недавние решения</h3>${done}` : ""}
+      ${lastResults.sit ? `<div class="result">${esc(lastResults.sit)}</div>` : ""}</section>
+    <section class="card"><h3>Почему это случилось</h3>
+      ${lastResults.why ? `<ul class="tree">${lastResults.why}</ul>` : `<p class="muted">Нажмите «почему?» у любой новости: появится цепочка причин. То, чего клуб не знает, останется скрытым.</p>`}</section>
+  </div>
+  <div class="grid2">
+    <section class="card"><h3>Донесения штаба</h3><div class="feed">${repHtml || `<p class="muted">Пока тихо.</p>`}</div></section>
+    <section class="card"><h3>Что пишут о мире</h3><div class="feed">${feedHtml || `<p class="muted">Мир только начинает жить.</p>`}</div></section>
+  </div>
+  <div class="grid2">
+    <section class="card"><h3>Разговор с игроком</h3><div class="controls">${talk}</div>
+      ${lastResults.person ? `<div class="result">${esc(lastResults.person)}</div>` : ""}</section>
+    <section class="card"><h3>Легенды этого мира</h3><div class="controls">${legHtml || `<span class="muted">Легенды появятся, когда у мира будет история.</span>`}</div>
+      ${lastResults.retro ? `<div class="result">${lastResults.retro}</div>` : ""}</section>
+  </div>`;
+}
+
 function viewTraits() {
   const all = call("traits_all");
   const groups = [["special", "Особые: сильнее всех, но и последствия тяжелее (стресс ×1,6)"], ["rare", "Редкие (стресс ×1,25)"],
@@ -645,6 +696,15 @@ document.addEventListener("click", async (ev) => {
     if (d.press) { const [q, a] = d.press.split("|"); lastResults.office = call("press", q, a, null).map(esc).join("<br>") || "Без последствий"; return render(); }
     if (b.id === "planBtn") { const p = call("plan", +$("pHours").value, +$("pRest").value, false, +$("pComm").value); lastResults.office = `План на неделю: ${p.practice_hours} ч тренировок, выходных ${p.rest_days}, спонсорских дней ${p.commercial_days}`; return render(); }
     if (d.trait) { lastResults.trait = traitCard(call("trait", d.trait)); return render(); }
+    if (d.sit) { lastResults.sit = call("answer_situation", +d.sit, d.key).join("; "); return render(); }
+    if (d.why) { lastResults.why = treeHtml(call("why", +d.why)); return render(); }
+    if (d.person) { lastResults.person = call("person", d.person).says; return render(); }
+    if (d.retro) {
+      const r = call("retrospective", d.retro);
+      lastResults.retro = `<b>${esc(r.headline)}</b>${r.lead ? `<div class="muted">${esc(r.lead)}</div>` : ""}` +
+        r.paragraphs.map((p, i) => `<p>${esc(p)} <button class="small" data-why="${r.sources[i][0]}">почему?</button></p>`).join("");
+      return render();
+    }
     if (d.bench) { lastResults.squad = call("toggle_bench", d.bench); return render(); }
     if (d.release) {
       if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "точно?"; return; }

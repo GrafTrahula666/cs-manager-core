@@ -278,7 +278,8 @@ def advance(weeks: int = 1) -> list[dict]:
     for _ in range(weeks):
         n = g.advance()
         out.append({"season": n.season, "week": (n.week - 1) % economy.WEEKS_PER_YEAR + 1, "lines": n.lines})
-        if g.sacked or (g.sysm.stories and g.sysm.stories.pending) or (g.sysm.market and g.sysm.market.offers):
+        if g.sacked or (g.sysm.stories and g.sysm.stories.pending) or (g.sysm.market and g.sysm.market.offers) \
+                or g.situations():
             break
     return out
 
