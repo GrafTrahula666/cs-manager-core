@@ -35,7 +35,11 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `web/index.html` + `scripts/build_web.py` – browser prototype running the core in Pyodide
 - `src/csmcore/engine.py` – seeded duel -> round -> map engine (pistol/eco, pressure, chemistry)
 - `scripts/demo_season.py` – one season of an 8-club world, prints money, results, events
-- `scripts/parse_demo.py` – demo -> compact table (untested skeleton, needs `pip install -e ".[data]"`)
+- `src/csmcore/emergent/` – Emergent World Engine: facts with knowers and false beliefs, minds, typed actions, causal graph (`docs/emergent-world.md`)
+- `src/csmcore/matchstats.py`, `src/csmcore/demo_records.py` – the same match metrics for simulated maps and parsed demos
+- `scripts/demo_analysis.py` – local CS2 demos -> round records (needs `pip install -e ".[data]"`; not yet run on a real demo)
+- `scripts/compare_sim_real.py` – simulation vs. demo records, side by side (`docs/match-engine-plan.md`)
+- `scripts/soak_world.py` – many seasons of the whole world: time, memory, save size, invariants
 - `tests/` – determinism and sanity tests (`pytest`)
 
 ## Status
