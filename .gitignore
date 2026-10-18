@@ -8,3 +8,6 @@ data/demos/
 data/raw/
 data/*.parquet
 web/dist/
+# local generated world simulation reports
+world-lab-output/
+world-lab-smoke/
