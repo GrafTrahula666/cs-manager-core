@@ -23,6 +23,7 @@ from .relations import RelationGraph
 from .rivalry import Rivalries
 from .secrets import Secrets
 from .season import Systems
+from .emergent import EmergentWorld
 from .storylets import StoryEngine
 
 # Region share of clubs and the countries players come from (fictional clubs, real countries).
@@ -165,6 +166,7 @@ def generate(seed: int = 1, n_clubs: int = 120, director: str = "cassandra"):
         owners={c.name: _owner(c, rng) for c in clubs},
         rivalries=Rivalries(), meta=Meta(), chronicle=Chronicle(), legacy=Legacy(),
         secrets=Secrets(), careers=Careers(), talents_per_season=max(6, n_clubs // 3),
+        emergent=EmergentWorld(seed, tuple(REGIONS)),
     )
     return clubs, graph, calendar(), systems, home.name
 
