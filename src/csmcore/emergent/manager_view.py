@@ -107,6 +107,12 @@ def options(kind: str, a, b, club) -> list[dict]:
     ]
 
 
+def _left(s: Situation, club, a, b) -> bool:
+    """A player of the situation retired or moved on while it waited for an answer."""
+    gone = lambda p: p is None or p not in club.roster   # noqa: E731
+    return gone(a) or (s.kind != "leak" and gone(b))
+
+
 def ai_resolve(ew, ctx, s: Situation) -> list[str]:
     """An AI manager decides by his habits: back the more influential player, sometimes mediate."""
     from ..squad import influence
@@ -114,12 +120,15 @@ def ai_resolve(ew, ctx, s: Situation) -> list[str]:
     careers = getattr(ctx.sysm, "careers", None)
     rep = careers.managers[club.name].reputation if careers and club.name in careers.managers else 40.0
     keys = [o["key"] for o in s.options]
+    if _left(s, club, ew.player(ctx, s.a), ew.player(ctx, s.b)):   # someone left while it waited
+        return resolve(ew, ctx, s, "ignore", by="ai")
+    a, b = ew.player(ctx, s.a), ew.player(ctx, s.b)
     w = []
     for k in keys:
         if k == "back_a":
-            w.append(1.0 + influence(ew.player(ctx, s.a), club, ctx.week) / 60)
+            w.append(1.0 + influence(a, club, ctx.week) / 60)
         elif k == "back_b":
-            w.append(1.0 + influence(ew.player(ctx, s.b), club, ctx.week) / 60)
+            w.append(1.0 + influence(b, club, ctx.week) / 60)
         elif k == "mediate":
             w.append(0.6 + rep / 50)
         elif k in ("discipline", "deny"):
@@ -140,7 +149,7 @@ def resolve(ew, ctx, s: Situation, key: str, by: str = "manager") -> list[str]:
     imp: dict = {}
     text = ""
     data = {"situation": s.id, "choice": key}
-    if a is None or (s.kind != "leak" and b is None):
+    if _left(s, club, a, b):
         s.outcome = ["участник уже не в клубе, ситуация закрыта"]
         return s.outcome
     if key in ("back_a", "back_b"):

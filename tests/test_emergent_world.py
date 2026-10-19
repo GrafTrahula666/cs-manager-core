@@ -107,3 +107,20 @@ def test_api_shows_what_the_club_knows():
     data = api.save_b64()
     api.load_b64(data)
     assert api.state()["club"] == st["club"]
+
+
+def test_assistant_closes_a_situation_whose_player_already_left():
+    """Found by the world simulation lab: a player sold while the conflict waited for an answer."""
+    from csmcore.emergent.manager_view import Situation, options
+    g = Game.new(seed=8, n_clubs=24)
+    g.advance()
+    ew, club = g.sysm.emergent, g.club
+    a, b = club.roster[0], club.roster[1]
+    s = Situation(ew.next_situation, g.week - 3, club.name, "conflict", 0, a.name, b.name, "ссора", "из раздевалки",
+                  options("conflict", a, b, club))
+    ew.next_situation += 1
+    ew.situations.append(s)
+    club.roster.remove(b)
+    g.sysm.market.free_agents.append(b)
+    g.advance()
+    assert s.choice == "ignore" and s.by == "assistant" and "не в клубе" in " ".join(s.outcome)
