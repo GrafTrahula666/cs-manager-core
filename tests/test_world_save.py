@@ -21,7 +21,7 @@ def test_regional_events_invite_only_their_region():
     clubs, _, cal, _, _ = generate(3, 120)
     eu = next(t for t in cal[4] if t.region == "EU")
     invited = [c for c in clubs if eu.invited(c)]
-    assert invited and all(c.region == "EU" and c.rank >= 17 for c in invited)
+    assert invited and all(c.region == "EU" and c.division >= 2 for c in invited)
 
 
 def test_save_load_continues_identically(tmp_path):

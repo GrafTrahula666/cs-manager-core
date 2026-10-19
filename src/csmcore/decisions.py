@@ -25,8 +25,9 @@ def _logistic(x: float) -> float:
 
 
 def contract_acceptance(player: Player, offer: Contract, expected_salary: float, buyer: Club,
-                        current: Club | None = None, relocation: bool = False) -> Verdict:
-    """Will the player sign? Money vs wins, ambition vs club prestige, loyalty, home attachment."""
+                        current: Club | None = None, relocation: bool = False, free_weeks: float = 0.0) -> Verdict:
+    """Will the player sign? Money vs wins, ambition vs club prestige, loyalty, home attachment.
+    A free agent's pride fades with every week without a team: after ~8 months he takes a small club."""
     reasons: list[str] = []
     money_ratio = offer.salary_month / max(1.0, expected_salary)
     money = (money_ratio - 1) * 4 * (0.5 + player.p("money_focus") / 100)
@@ -35,6 +36,9 @@ def contract_acceptance(player: Player, offer: Contract, expected_salary: float,
     prestige_gap = TIER_PRESTIGE[buyer.tier] - player.p("ambition")
     ambition = prestige_gap / 25 + max(0, 30 - buyer.rank) / 30
     reasons.append(f"амбиции {player.p('ambition'):.0f} vs уровень клуба {TIER_PRESTIGE[buyer.tier]}")
+    if free_weeks > 0 and ambition < 0:
+        ambition *= max(0.2, 1 - free_weeks / 36)
+        reasons.append(f"без клуба {free_weeks:.0f} нед.")
 
     loyalty = 0.0
     if current is not None and current is not buyer:

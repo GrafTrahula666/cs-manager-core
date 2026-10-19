@@ -83,6 +83,8 @@ class Club:
     fans: int = 50_000
     rank: int = 50           # world ranking position (VRS-like)
     rating_points: float = 0.0
+    division: int = 4        # league: 1 = Тир 1, 2 = Тир 2, 3 = Тир 3, 4 = остальные (see circuit.py)
+    season_points: float = 0.0   # points won this season: the league table, promotion and relegation
     roster: list[Player] = field(default_factory=list)
     contracts: dict[str, Contract] = field(default_factory=dict)
     sponsors: list[Sponsor] = field(default_factory=list)
@@ -196,10 +198,17 @@ class Tournament:
     major: bool = False
     travel_cost: float = 0.0
     sticker_revenue: float = 0.0  # total token revenue if major
+    divisions: tuple[int, ...] | None = None  # leagues invited; None = by rank as above
+    slots: int = 0              # field size cap (0 = as many as the bracket takes)
+    seed_by_season: bool = False  # take the best of the season table, not of the ranking
+    qualifies_to: str = ""      # a qualifier: its top `qualify_top` play that event
+    qualify_top: int = 0
 
     def invited(self, club: Club) -> bool:
         if self.region is not None and club.region != self.region:
             return False
+        if self.divisions is not None:
+            return club.division in self.divisions or f"qual:{self.name}" in club.flags
         return self.min_rank_invite <= club.rank <= self.max_rank_invite
 
 

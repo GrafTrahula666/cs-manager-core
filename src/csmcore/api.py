@@ -7,9 +7,9 @@ from __future__ import annotations
 
 import base64
 
-from . import economy, save as save_mod
+from . import circuit, economy, save as save_mod
 from .game import Game
-from .market import expected_salary
+from .market import asking, expected_salary
 from .talks import PRESS, TONES
 from .traits import library
 
@@ -54,6 +54,9 @@ def state() -> dict:
                     "titles": m.titles if m else 0},
         "sacked": g.sacked, "patch": g.sysm.meta.patch["name"] if g.sysm.meta else "",
         "facilities": {FACILITIES[k]: v for k, v in c.facilities.items() if k in FACILITIES},
+        "situations": len(g.situations()),
+        "division": circuit.name(c.division), "division_place": circuit.standings(g.clubs, c.division).index(c) + 1,
+        "season_points": round(c.season_points), "hltw_rank": g.sysm.hltw.place(c.name) if g.sysm.hltw else None,
     }
 
 
@@ -74,9 +77,15 @@ def roster() -> list[dict]:
             "salary": _money(k.salary_month) if k else 0, "contract_end": k.end_week if k else None,
             "value": _money(economy.market_value(p)), "lineup": p.name in lineup,
             "benched": "benched" in p.flags, "wants_out": "transfer_requested" in p.flags,
-            "fame": round(p.fame), "history": p.history[-4:],
+            "fame": round(p.fame), "history": p.history[-4:], **_haceit_card(p.name),
         })
     return out
+
+
+def _haceit_card(name: str) -> dict:
+    hc = _g().sysm.haceit
+    card = hc.card(name) if hc else {}
+    return {"elo": card.get("elo"), "level": card.get("level"), "hpl": card.get("hpl", False)}
 
 
 def _season_stats(p) -> dict:
@@ -110,7 +119,9 @@ def table(limit: int = 30, region: str | None = None) -> list[dict]:
     g = _g()
     rows = sorted((c for c in g.clubs if region is None or c.region == region), key=lambda c: c.rank)[:limit]
     titles = g.sysm.chronicle.titles if g.sysm.chronicle else {}
+    hl = g.sysm.hltw
     return [{"rank": c.rank, "club": c.name, "tier": c.tier, "region": c.region, "points": round(c.rating_points),
+             "division": circuit.name(c.division), "hltw": hl.place(c.name) if hl else None,
              "titles": len(titles.get(c.name, [])), "me": c.name == g.club_name,
              "superteam": any(f.startswith("superteam_until:") for f in c.flags),
              "stars": sum("star" in p.flags for p in c.roster),
@@ -158,7 +169,7 @@ def market(limit: int = 40) -> list[dict]:
     """Free agents and players who asked to leave, seen through your scouts (ranges, not truth)."""
     g = _g()
     out, lib = [], library()
-    for p, seller in g.sysm.market.listed(g.clubs):
+    for p, seller in g.sysm.market.listed(g.clubs, g.week):
         if seller is g.club:
             continue
         rep = g.desk.scouting.report(p)
@@ -169,9 +180,10 @@ def market(limit: int = 40) -> list[dict]:
         ask = 0 if seller is None else min(economy.market_value(p) * 0.9, k.buyout if k else float("inf"))
         out.append({"name": p.name, "role": p.role, "age": p.age, "club": seller.name if seller else None,
                     "star": "star" in p.flags,
-                    "ovr_range": [round(lo), round(hi)], "salary_wish": _money(expected_salary(p)),
+                    "ovr_range": [round(lo), round(hi)], "salary_wish": _money(asking(p, g.week) if seller is None else expected_salary(p)),
                     "fee": _money(ask), "known": round(g.desk.scouting.knowledge.get(p.name, 0)),
-                    "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib]})
+                    "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib],
+                    **_haceit_card(p.name)})
     return sorted(out, key=lambda r: -sum(r["ovr_range"]))[:limit]   # by the scouts' estimate, not truth
 
 
@@ -277,7 +289,8 @@ def advance(weeks: int = 1) -> list[dict]:
     for _ in range(weeks):
         n = g.advance()
         out.append({"season": n.season, "week": (n.week - 1) % economy.WEEKS_PER_YEAR + 1, "lines": n.lines})
-        if g.sacked or (g.sysm.stories and g.sysm.stories.pending) or (g.sysm.market and g.sysm.market.offers):
+        if g.sacked or (g.sysm.stories and g.sysm.stories.pending) or (g.sysm.market and g.sysm.market.offers) \
+                or g.situations():
             break
     return out
 
@@ -315,3 +328,142 @@ def load_b64(data: str) -> dict:
 
 def meta_info() -> dict:
     return {"tones": {t: TONE_RU[t] for t in TONES}, "facilities": FACILITIES, "press": press_options()}
+
+
+# ---------- the emergent world: what the manager knows and why things happened ----------
+SITUATION_RU = {"conflict": "конфликт", "complaint": "жалоба", "leak": "утечка в прессу"}
+
+
+def _ew():
+    ew = getattr(_g().sysm, "emergent", None)
+    if ew is None:
+        raise RuntimeError("в этом мире нет причинного движка")
+    return ew
+
+
+def situations() -> list[dict]:
+    """Open situations first, then the last few resolved ones."""
+    g = _g()
+    items = sorted(g.situations(open_only=False), key=lambda s: (s.choice is not None, -s.week))[:8]
+    return [{"id": s.id, "week": (s.week - 1) % economy.WEEKS_PER_YEAR + 1, "kind": SITUATION_RU.get(s.kind, s.kind),
+             "text": s.text, "how": s.how, "fact": s.fact, "open": s.choice is None,
+             "options": s.options, "choice": s.choice, "outcome": s.outcome, "by": s.by} for s in items]
+
+
+def answer_situation(sid: int, key: str) -> list[str]:
+    return _g().answer_situation(sid, key)
+
+
+def reports(n: int = 20) -> list[dict]:
+    """What reached your staff, and how. The club's version can be wrong; the UI cannot tell."""
+    g = _g()
+    rs = _ew().reports.get(g.club_name, [])[-n:]
+    return [{"week": (r.week - 1) % economy.WEEKS_PER_YEAR + 1, "text": r.text, "how": r.how, "fact": r.fact}
+            for r in reversed(rs)]
+
+
+def world_feed(n: int = 20, min_salience: float = 12.0) -> list[dict]:
+    """Public news of the whole world: what anyone could read."""
+    ew = _ew()
+    out = []
+    for f in reversed(list(ew.facts.facts.values())):
+        if f.visibility == "public" and f.salience >= min_salience and f.kind not in ("series",):
+            out.append({"fact": f.id, "season": f.season, "week": (f.week - 1) % economy.WEEKS_PER_YEAR + 1,
+                        "kind": f.kind, "text": f.text})
+            if len(out) >= n:
+                break
+    return out
+
+
+def why(fid: int, god: bool = False, depth: int = 6) -> dict:
+    """Causal tree of a fact as your club sees it: facts you do not know stay hidden and the
+    hidden numbers behind people's choices are shown only in god mode (for debugging and demos)."""
+    g, ew = _g(), _ew()
+    holder = f"club:{g.club_name}"
+
+    def mask(node):
+        f = ew.facts.get(node["id"])
+        known = god or f is None or f.known_by(holder)
+        if not known:
+            return {"id": node["id"], "text": "что-то, о чём вы не знаете", "causes": [], "reasons": [], "hidden": True}
+        out = dict(node)
+        if f is not None and not god:
+            seen = f.believed(holder)
+            out["text"] = seen["text"] or out["text"]
+            out["how"] = f.knowers.get(holder, f.knowers.get("*", (0, "")))[1]
+            out["reasons"] = []
+        out["causes"] = [mask(c) for c in node.get("causes", [])]
+        return out
+    return mask(ew.why(fid, depth))
+
+
+def legends(n: int = 8) -> list[dict]:
+    from .emergent.history import legends as top
+    return [{"name": name, "score": round(sc)} for name, sc in top(_ew(), n, 60.0)]
+
+
+def retrospective(name: str) -> dict:
+    from .emergent.history import retrospective as retro
+    g = _g()
+    r = retro(_ew(), name, g.season)
+    r["sources"] = [list(x) for x in r["sources"]]
+    return r
+
+
+def person(name: str) -> dict:
+    """A word with one of your players: what he says, not what he hides."""
+    from .emergent.narrate import Narrator
+    g, ew = _g(), _ew()
+    p = next((q for q in g.club.roster if q.name == name), None)
+    if p is None:
+        return {"name": name, "says": "Это не ваш игрок."}
+    narr = ew.narrator or Narrator()
+    return {"name": name, "says": narr.dialogue(p, ew.minds.of(name))}
+
+
+# ---- leagues, HACEIT and HLTW ----
+def leagues(division: int | None = None) -> dict:
+    """A league table: season points decide who goes up and who goes down at the end."""
+    g = _g()
+    k = division or g.club.division
+    rows = circuit.standings(g.clubs, k)
+    up = circuit.SWAPS.get(k - 1, 0) if k > 1 else 0
+    down = circuit.SWAPS.get(k, 0) if k < 4 else 0
+    out = []
+    for i, c in enumerate(rows, 1):
+        zone = "up" if i <= up else "down" if down and i > len(rows) - down else ""
+        out.append({"place": i, "club": c.name, "region": c.region, "points": round(c.season_points),
+                    "rank": c.rank, "me": c.name == g.club_name, "zone": zone})
+    return {"division": k, "name": circuit.name(k), "names": circuit.NAMES, "rows": out,
+            "invites": [t.name for ts in g.calendar.values() for t in (ts if isinstance(ts, list) else [ts])
+                        if t.divisions and k in t.divisions and t.region in (None, g.club.region)]}
+
+
+def hltw(n: int = 30) -> dict:
+    """HLTW: its own ranking (beside the official one), MVPs and the Top 20 of past seasons."""
+    g = _g()
+    hl = g.sysm.hltw
+    if hl is None:
+        return {"ranking": [], "mvps": [], "top20": {}}
+    by = {c.name: c for c in g.clubs}
+    return {"ranking": [{"place": i, "club": name, "points": round(hl.points[name]), "official": by[name].rank,
+                         "division": circuit.name(by[name].division), "me": name == g.club_name}
+                        for i, name in enumerate(hl.ranking[:n], 1)],
+            "mvps": list(reversed(hl.mvps[-12:])), "top20": {str(k): v for k, v in hl.top20.items()}}
+
+
+def haceit(n: int = 25) -> dict:
+    """HACEIT: the Elo ladder, HPL and where your players stand."""
+    from .haceit import level
+    g = _g()
+    hc = g.sysm.haceit
+    if hc is None:
+        return {"ladder": [], "mine": [], "hpl": 0}
+    club_of = {p.name: c.name for c in g.clubs for p in c.roster}
+    ages = {p.name: p.age for c in g.clubs for p in c.roster}
+    if g.sysm.market:
+        ages.update({p.name: p.age for p in g.sysm.market.free_agents})
+    ladder = [{"place": i, "player": name, "elo": round(e), "level": level(e), "club": club_of.get(name),
+               "age": ages.get(name), "hpl": name in hc.hpl} for i, (name, e) in enumerate(hc.ladder(n), 1)]
+    mine = [{"player": p.name, **hc.card(p.name)} for p in g.club.roster if p.name in hc.elo]
+    return {"ladder": ladder, "mine": mine, "hpl": len(hc.hpl)}

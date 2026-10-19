@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>CS MENEDGER</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,6 +131,12 @@ main { padding-block: 18px; display: grid; gap: 16px; }
 .pill.world { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
 .event { border-left: 3px solid var(--ct); padding: 2px 0 2px 12px; display: grid; gap: 6px; }
 .event b { font-weight: 600; }
+.sitopts { display: grid; gap: 6px; }
+.sitopt { display: grid; grid-template-columns: minmax(0, max-content) 1fr; gap: 8px; align-items: baseline; }
+@media (max-width: 520px) { .sitopt { grid-template-columns: 1fr; } }
+.tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+.tree ul { margin-left: 8px; padding-left: 12px; border-left: 1px solid var(--line); }
+.tree li { margin: 6px 0; overflow-wrap: anywhere; }
 .event .opts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
 .event.deck { border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); border-left: 3px solid var(--accent); border-radius: 4px; padding: 0; overflow: hidden; background: linear-gradient(180deg, var(--glow), transparent 60%); }
 .event.deck .body { display: grid; gap: 8px; padding: 14px; }
@@ -274,7 +281,7 @@ const money = (x) => {
   if (a >= 1e3) return s + "$" + Math.round(a / 1e3) + "k";
   return s + "$" + Math.round(a);
 };
-const TIER = { super: "суперклуб", tier1: "tier-1", tier2: "tier-2", tier3: "tier-3" };
+const TIER = { super: "суперклуб", tier1: "крупный клуб", tier2: "средний клуб", tier3: "малый клуб" };
 const ROLE = { igl: "капитан", awp: "AWP", entry: "entry", rifler: "rifler", support: "support", lurker: "lurker" };
 const ITEM = { salaries: "зарплаты", staff: "персонал", sponsors: "спонсоры", merch: "мерч и билеты", content: "контент",
   prizes: "призовые", stickers: "стикеры", travel: "перелёты", transfers_in: "покупки", transfers_out: "продажи",
@@ -427,12 +434,13 @@ async function advance(n) {
   busy(false);
   $("nextBtn").disabled = $("next4Btn").disabled = false;
   if (s.pending_events || s.offers) tab = "office";
+  else if (s.situations) tab = "backstage";
   render(s);
   if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
 }
 
-const TABS = [["office", "Сводка"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
-  ["table", "Рейтинг"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
+const TABS = [["office", "Сводка"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+  ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
 
 function render(s) {
   s = s || call("state");
@@ -440,7 +448,7 @@ function render(s) {
   $("clubCrest").innerHTML = crest(s.club, 42);
   $("seasonBar").innerHTML = `<i style="width:${(s.week / 52 * 100).toFixed(1)}%"></i>` +
     s.next_events.map((e) => `<b class="${e.invited ? "in" : ""}" style="left:${(e.week / 52 * 100).toFixed(1)}%" title="н${e.week} ${esc(e.name)}"></b>`).join("");
-  $("clubSub").textContent = `${TIER[s.tier]} · ${s.region} · бренд ${s.brand} · фанаты ${s.fans.toLocaleString("ru")}`;
+  $("clubSub").textContent = `${s.division}, ${s.division_place}-е место · ${TIER[s.tier]} · ${s.region} · бренд ${s.brand} · фанаты ${s.fans.toLocaleString("ru")}`;
   $("kWeek").textContent = `${s.season} · ${s.week}/52`;
   $("kRank").textContent = "#" + s.rank;
   $("kCash").textContent = money(s.cash);
@@ -448,15 +456,15 @@ function render(s) {
   $("kOwner").textContent = s.owner_confidence + "/100";
   $("kOwner").className = s.owner_confidence < 35 ? "money-neg" : "";
   $("kRep").textContent = s.manager.reputation;
-  const due = s.pending_events + s.offers;
-  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}</button>`).join("");
-  const views = { office: viewOffice, squad: viewSquad, market: viewMarket, money: viewMoney, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
+  const due = s.pending_events + s.offers, sits = s.situations || 0;
+  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
+  const views = { office: viewOffice, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
   $("main").innerHTML = views[tab](s);
 }
 
 function kind(line) {
   const k = line.split(":")[0];
-  return { "матч": "match", "история": "story", "клуб": "club", "мир": "world" }[k] || "";
+  return { "матч": "match", "история": "story", "клуб": "club", "мир": "world", "закулисье": "story", "решение": "club" }[k] || "";
 }
 function newsHtml() {
   if (!log.length) return `<p class="muted">Новостей пока нет. Нажмите «Следующая неделя».</p>`;
@@ -532,6 +540,7 @@ function traitCard(t) {
     ${t.stress_on.length ? `<span class="why">Стресс от: ${esc(t.stress_on.join(", "))}</span>` : ""}
     ${t.relief_on.length ? `<span class="why">Успокаивает: ${esc(t.relief_on.join(", "))}</span>` : ""}</div>`;
 }
+const eloCell = (p) => p.elo == null ? "—" : `<span style="white-space:nowrap"><span class="num">${p.elo}</span> <span class="muted">ур.${p.level}</span>${p.hpl ? ` <span class="pill club" title="в HPL, лиге лучших по Elo">HPL</span>` : ""}</span>`;
 const STAR = (on) => on ? `<span class="star" title="Звезда: уровень 90+">★</span> ` : "";
 function viewSquad() {
   const r = call("roster");
@@ -539,7 +548,7 @@ function viewSquad() {
       <td><div class="pl">${ava(p)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span></span>
         ${p.wants_out ? `<div class="flag">просит трансфер</div>` : ""}
         ${traitChips(p.traits)}</div></div></td>
-      <td class="r">${OVR(p.ovr)}</td><td class="r">${p.stats.kd ?? "—"}</td><td>${stateBar(p.form)}</td><td>${stateBar(p.morale)}</td><td>${stateBar(p.stress, true)}</td>
+      <td class="r">${OVR(p.ovr)}</td><td class="r">${p.stats.kd ?? "—"}</td><td class="r">${eloCell(p)}</td><td>${stateBar(p.form)}</td><td>${stateBar(p.morale)}</td><td>${stateBar(p.stress, true)}</td>
       <td class="r">${money(p.salary)}</td><td class="r">н${p.contract_end}</td><td class="r">${money(p.value)}</td>
       <td><button class="small" data-bench="${esc(p.name)}">${p.benched ? "в состав" : "в запас"}</button>
         <button class="small" data-release="${esc(p.name)}">отпустить</button></td></tr>`).join("");
@@ -547,7 +556,7 @@ function viewSquad() {
     <p class="muted">Играют пятеро лучших по форме дня, кроме тех, кого вы посадили в запас. Отпустить игрока стоит трёх его зарплат. Нажмите на черту, чтобы узнать плюсы, минусы и что вызывает у игрока стресс. ★ — звезда, уровень 90+.</p>
     ${lastResults.squad ? `<div class="result">${esc(lastResults.squad)}</div>` : ""}
     ${lastResults.trait ? `<div class="result">${lastResults.trait}</div>` : ""}
-    <div class="tablebox"><table><thead><tr><th>Игрок</th><th class="r">Ур.</th><th class="r" title="Убийства к смертям за сезон">K/D</th><th>Форма</th><th>Мораль</th><th>Стресс</th><th class="r">З/п</th><th class="r">До</th><th class="r">Цена</th><th></th></tr></thead>
+    <div class="tablebox"><table><thead><tr><th>Игрок</th><th class="r">Ур.</th><th class="r" title="Убийства к смертям за сезон">K/D</th><th class="r" title="Elo и уровень на HACEIT">HACEIT</th><th>Форма</th><th>Мораль</th><th>Стресс</th><th class="r">З/п</th><th class="r">До</th><th class="r">Цена</th><th></th></tr></thead>
     <tbody>${rows}</tbody></table></div></section>`;
 }
 
@@ -557,15 +566,15 @@ function viewMarket() {
       <td><div class="pl">${ava(p)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span></span>
         ${traitChips(p.traits)}</div></div></td>
       <td>${p.club ? CL(p.club, 20) : `<span class="pill club">свободен</span>`}</td>
-      <td class="r range">${p.ovr_range[0]}–${p.ovr_range[1]}</td><td class="r">${p.known}%</td><td>${esc(p.potential)}</td>
+      <td class="r range">${p.ovr_range[0]}–${p.ovr_range[1]}</td><td class="r">${p.known}%</td><td class="r">${eloCell(p)}</td><td>${esc(p.potential)}</td>
       <td class="r">${money(p.salary_wish)}</td><td class="r">${p.fee ? money(p.fee) : "—"}</td>
       <td><button class="small" data-scout="${esc(p.name)}">скаут</button>
         <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"}</button></td></tr>`).join("");
   return `<section class="card"><h2>Рынок</h2>
     <p class="muted">Свободные агенты и игроки, которые просят трансфер. Уровень виден диапазоном: чем дольше смотрят скауты, тем он точнее. Предложение идёт по запрошенной цене и желаемой зарплате, решает сам игрок.</p>
     ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}
-    <div class="tablebox"><table><thead><tr><th>Игрок</th><th>Клуб</th><th class="r">Уровень</th><th class="r">Изучен</th><th>Потенциал</th><th class="r">Хочет/мес</th><th class="r">Цена</th><th></th></tr></thead>
-    <tbody>${rows || `<tr><td colspan="8" class="muted">Рынок пуст</td></tr>`}</tbody></table></div></section>`;
+    <div class="tablebox"><table><thead><tr><th>Игрок</th><th>Клуб</th><th class="r">Уровень</th><th class="r">Изучен</th><th class="r" title="Публичный сигнал: Elo не равно уровню">HACEIT</th><th>Потенциал</th><th class="r">Хочет/мес</th><th class="r">Цена</th><th></th></tr></thead>
+    <tbody>${rows || `<tr><td colspan="9" class="muted">Рынок пуст</td></tr>`}</tbody></table></div></section>`;
 }
 
 function moneyRows(obj) {
@@ -591,9 +600,40 @@ let tableRegion = "";
 function viewTable(s) {
   const t = call("table", 40, tableRegion || null);
   const opts = ["", "EU", "CIS", "NA", "SA", "Asia", "OCE"].map((r) => `<option value="${r}" ${r === tableRegion ? "selected" : ""}>${r || "Весь мир"}</option>`).join("");
-  return `<section class="card"><div class="controls"><h2>Мировой рейтинг</h2><select id="regionSel" aria-label="Регион">${opts}</select></div>
-    <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Уровень клуба</th><th>Регион</th><th class="r">Сила состава</th><th class="r">Очки</th><th class="r">Титулы</th></tr></thead>
-    <tbody>${t.map((c) => `<tr class="${c.me ? "me" : ""} ${c.superteam ? "super" : ""}"><td class="r"><span class="rk ${c.rank <= 3 ? "g" + c.rank : ""}">${c.rank}</span></td><td>${CL(c.club, 22)}${c.superteam ? ` <span class="pill story">суперсостав</span>` : ""}${c.stars ? ` <span class="star">${"★".repeat(c.stars)}</span>` : ""}</td><td>${TIER[c.tier]}</td><td>${c.region}</td><td class="r">${c.ovr}</td><td class="r">${c.points}</td><td class="r">${c.titles}</td></tr>`).join("")}</tbody></table></div></section>`;
+  return `<section class="card"><div class="controls"><h2>Официальный рейтинг</h2><select id="regionSel" aria-label="Регион">${opts}</select></div>
+    <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Лига</th><th>Уровень клуба</th><th>Регион</th><th class="r">Сила состава</th><th class="r">Очки</th><th class="r" title="Место в рейтинге HLTW">HLTW</th><th class="r">Титулы</th></tr></thead>
+    <tbody>${t.map((c) => `<tr class="${c.me ? "me" : ""} ${c.superteam ? "super" : ""}"><td class="r"><span class="rk ${c.rank <= 3 ? "g" + c.rank : ""}">${c.rank}</span></td><td>${CL(c.club, 22)}${c.superteam ? ` <span class="pill story">суперсостав</span>` : ""}${c.stars ? ` <span class="star">${"★".repeat(c.stars)}</span>` : ""}</td><td>${c.division}</td><td>${TIER[c.tier]}</td><td>${c.region}</td><td class="r">${c.ovr}</td><td class="r">${c.points}</td><td class="r">${c.hltw ?? "—"}</td><td class="r">${c.titles}</td></tr>`).join("")}</tbody></table></div></section>`;
+}
+
+let leagueSel = 0;
+function viewLeagues(s) {
+  const L = call("leagues", leagueSel || null);
+  const opts = Object.entries(L.names).map(([k, n]) => `<option value="${k}" ${+k === L.division ? "selected" : ""}>${n}</option>`).join("");
+  const zone = { up: `<span class="pill club">вверх</span>`, down: `<span class="pill world">вниз</span>` };
+  return `<section class="card"><div class="controls"><h2>Лиги</h2><select id="leagueSel" aria-label="Лига">${opts}</select></div>
+    <p class="muted">Лига на весь сезон решает, куда клуб получает инвайт. Тир 1 играет Masters, Major и World Final по прямому инвайту, Тир 2 Pro Series, квалификацию HACEIT на Major (два места) и лиги HACEIT, Тир 3 и остальные лиги и открытые кубки HACEIT. Очки сезона дают все турниры. В конце сезона худшие вылетают, лучшие лиги ниже поднимаются.</p>
+    <p class="muted">Инвайты этой лиги: ${esc(L.invites.join(", ")) || "—"}</p>
+    <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Регион</th><th class="r">Очки сезона</th><th class="r">Рейтинг</th><th></th></tr></thead>
+    <tbody>${L.rows.map((c) => `<tr class="${c.me ? "me" : ""}"><td class="r">${c.place}</td><td>${CL(c.club, 22)}</td><td>${c.region}</td><td class="r">${c.points}</td><td class="r">#${c.rank}</td><td>${zone[c.zone] || ""}</td></tr>`).join("")}</tbody></table></div></section>`;
+}
+
+function viewMedia() {
+  const H = call("hltw", 30), F = call("haceit", 25);
+  const seasons = Object.keys(H.top20);
+  const top = seasons.length ? H.top20[seasons[seasons.length - 1]] : [];
+  return `<div class="grid2" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr))">
+    <section class="card"><h3>Рейтинг HLTW</h3>
+      <p class="muted">Медиа, а не официальный рейтинг: год результатов, свежие весят больше, важен уровень турнира, а не призовые. Инвайтов не даёт, но высокое место поднимает бренд.</p>
+      <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Лига</th><th class="r">Очки</th><th class="r">Офиц.</th></tr></thead>
+      <tbody>${H.ranking.map((c) => `<tr class="${c.me ? "me" : ""}"><td class="r">${c.place}</td><td>${CL(c.club, 20)}</td><td>${c.division}</td><td class="r">${c.points}</td><td class="r">#${c.official}</td></tr>`).join("") || `<tr><td colspan="5" class="muted">Рейтинг выйдет после первых турниров</td></tr>`}</tbody></table></div></section>
+    <section class="card"><h3>MVP турниров</h3>${H.mvps.map((m) => `<div class="line"><span class="num muted">С${m.season}</span><span><b>${esc(m.player)}</b> (${esc(m.club)}), ${esc(m.event)}</span><span class="num">${m.rating.toFixed(2)}</span></div>`).join("") || `<p class="muted">Пока никого. MVP выбирают на турнирах уровня S и A.</p>`}
+      <h3>Топ-20 игроков ${seasons.length ? "сезона " + seasons[seasons.length - 1] : ""}</h3>${top.map((p) => `<div class="line"><span class="num muted">${p.rank}</span><span><b>${esc(p.player)}</b> (${esc(p.club)})${p.mvps ? ` <span class="pill story">MVP×${p.mvps}</span>` : ""}</span><span class="num">${p.rating.toFixed(2)}</span></div>`).join("") || `<p class="muted">Выходит в конце сезона.</p>`}</section>
+    <section class="card"><h3>HACEIT: лестница Elo</h3>
+      <p class="muted">Платформа, где сцена играет вне официальных матчей. Elo публичный и шумный, скаутинг видит глубже. Раз в месяц лучшие ${F.hpl || 40} получают инвайт в HPL. Новый сезон частично сбрасывает Elo.</p>
+      <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Игрок</th><th>Клуб</th><th class="r">Elo</th></tr></thead>
+      <tbody>${F.ladder.map((p) => `<tr><td class="r">${p.place}</td><td><b>${esc(p.player)}</b> <span class="muted">${p.age ?? ""}</span>${p.hpl ? ` <span class="pill club">HPL</span>` : ""}</td><td>${p.club ? CL(p.club, 18) : `<span class="pill club">свободен</span>`}</td><td class="r">${p.elo} <span class="muted">ур.${p.level}</span></td></tr>`).join("")}</tbody></table></div></section>
+    <section class="card"><h3>Ваши игроки на HACEIT</h3>${F.mine.map((p) => `<div class="line"><span><b>${esc(p.player)}</b></span><span class="num">${p.elo}</span><span class="muted">ур.${p.level}, пик ${p.peak}</span>${p.hpl ? `<span class="pill club">HPL</span>` : ""}</div>`).join("")}</section>
+  </div>`;
 }
 
 function viewHistory() {
@@ -602,6 +642,50 @@ function viewHistory() {
     <section class="card"><h3>Летопись мира</h3><div class="feed">${ch.map((l) => `<div>${esc(l)}</div>`).join("") || `<p class="muted">История только начинается.</p>`}</div></section>
     <section class="card"><h3>Соперничества</h3>${rv.filter((r) => r.score > 0).map((r) => `<div><b>${esc(r.clubs.join(" — "))}</b> <span class="num">${r.score}/100</span>
       <div class="muted">встреч ${r.meetings}: ${Object.entries(r.wins).map(([k, v]) => esc(k) + " " + v).join(", ")}</div></div>`).join("") || `<p class="muted">Пока никто никого не ненавидит.</p>`}</section>
+  </div>`;
+}
+
+function treeHtml(n) {
+  const when = n.season ? `<span class="num muted">С${n.season} Н${(n.week - 1) % 52 + 1}</span> ` : "";
+  return `<li><span class="${n.hidden ? "muted" : ""}">${when}${esc(n.text)}${n.ref ? ` <span class="muted">(см. выше)</span>` : ""}</span>` +
+    (n.how ? ` <span class="pill">${esc(n.how)}</span>` : "") +
+    (n.reasons && n.reasons.length ? `<div class="why">${esc(n.reasons.join("; "))}</div>` : "") +
+    (n.causes && n.causes.length ? `<ul>${n.causes.map(treeHtml).join("")}</ul>` : "") + `</li>`;
+}
+
+function viewBackstage() {
+  const sits = call("situations"), reps = call("reports", 15), feed = call("world_feed", 15), leg = call("legends", 6);
+  const team = call("roster");
+  const whyBtn = (fid) => `<button class="small" data-why="${fid}" title="Цепочка причин, насколько её знает клуб">почему?</button>`;
+  const open = sits.filter((x) => x.open).map((x) => `<div class="event">
+      <span class="pill story" style="justify-self:start">${esc(x.kind)}</span>
+      <b>${esc(x.text)}</b>
+      <span class="why">Откуда известно: ${esc(x.how)}. Нерешённое через 2 недели решит ассистент.</span>
+      <div class="sitopts">${x.options.map((o) => `<div class="sitopt"><button class="small" data-sit="${x.id}" data-key="${esc(o.key)}">${esc(o.label)}</button>
+        <span class="why">${o.risks.map(esc).join(" · ")}</span></div>`).join("")}</div>
+      <div>${whyBtn(x.fact)}</div></div>`).join("");
+  const done = sits.filter((x) => !x.open).slice(0, 4).map((x) => `<div class="line"><span class="pill">${esc(x.kind)}</span>
+      <span>${esc(x.text)} → ${esc(x.outcome.join("; "))}</span></div>`).join("");
+  const repHtml = reps.map((r) => `<div class="line"><span class="num muted">н${r.week}</span><span>${esc(r.text)} <span class="pill">${esc(r.how)}</span></span>${whyBtn(r.fact)}</div>`).join("");
+  const feedHtml = feed.map((f) => `<div class="line"><span class="num muted">С${f.season} Н${f.week}</span><span>${esc(f.text)}</span>${whyBtn(f.fact)}</div>`).join("");
+  const legHtml = leg.map((l) => `<button class="small" data-retro="${esc(l.name)}">${esc(l.name)}</button>`).join(" ");
+  const talk = team.map((p) => `<button class="small" data-person="${esc(p.name)}">${esc(p.name)}</button>`).join(" ");
+  return `<div class="grid2">
+    <section class="card"><h3>Ситуации в команде</h3>${open || `<p class="muted">Ничего не требует вмешательства. Вы узнаёте не всё: только то, что заметил штаб, рассказали игроки или написала пресса.</p>`}
+      ${done ? `<h3>Недавние решения</h3>${done}` : ""}
+      ${lastResults.sit ? `<div class="result">${esc(lastResults.sit)}</div>` : ""}</section>
+    <section class="card"><h3>Почему это случилось</h3>
+      ${lastResults.why ? `<ul class="tree">${lastResults.why}</ul>` : `<p class="muted">Нажмите «почему?» у любой новости: появится цепочка причин. То, чего клуб не знает, останется скрытым.</p>`}</section>
+  </div>
+  <div class="grid2">
+    <section class="card"><h3>Донесения штаба</h3><div class="feed">${repHtml || `<p class="muted">Пока тихо.</p>`}</div></section>
+    <section class="card"><h3>Что пишут о мире</h3><div class="feed">${feedHtml || `<p class="muted">Мир только начинает жить.</p>`}</div></section>
+  </div>
+  <div class="grid2">
+    <section class="card"><h3>Разговор с игроком</h3><div class="controls">${talk}</div>
+      ${lastResults.person ? `<div class="result">${esc(lastResults.person)}</div>` : ""}</section>
+    <section class="card"><h3>Легенды этого мира</h3><div class="controls">${legHtml || `<span class="muted">Легенды появятся, когда у мира будет история.</span>`}</div>
+      ${lastResults.retro ? `<div class="result">${lastResults.retro}</div>` : ""}</section>
   </div>`;
 }
 
@@ -645,6 +729,15 @@ document.addEventListener("click", async (ev) => {
     if (d.press) { const [q, a] = d.press.split("|"); lastResults.office = call("press", q, a, null).map(esc).join("<br>") || "Без последствий"; return render(); }
     if (b.id === "planBtn") { const p = call("plan", +$("pHours").value, +$("pRest").value, false, +$("pComm").value); lastResults.office = `План на неделю: ${p.practice_hours} ч тренировок, выходных ${p.rest_days}, спонсорских дней ${p.commercial_days}`; return render(); }
     if (d.trait) { lastResults.trait = traitCard(call("trait", d.trait)); return render(); }
+    if (d.sit) { lastResults.sit = call("answer_situation", +d.sit, d.key).join("; "); return render(); }
+    if (d.why) { lastResults.why = treeHtml(call("why", +d.why)); return render(); }
+    if (d.person) { lastResults.person = call("person", d.person).says; return render(); }
+    if (d.retro) {
+      const r = call("retrospective", d.retro);
+      lastResults.retro = `<b>${esc(r.headline)}</b>${r.lead ? `<div class="muted">${esc(r.lead)}</div>` : ""}` +
+        r.paragraphs.map((p, i) => `<p>${esc(p)} <button class="small" data-why="${r.sources[i][0]}">почему?</button></p>`).join("");
+      return render();
+    }
     if (d.bench) { lastResults.squad = call("toggle_bench", d.bench); return render(); }
     if (d.release) {
       if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "точно?"; return; }
@@ -672,6 +765,7 @@ document.addEventListener("click", async (ev) => {
 });
 document.addEventListener("change", (ev) => {
   if (ev.target.id === "regionSel") { tableRegion = ev.target.value; render(); }
+  if (ev.target.id === "leagueSel") { leagueSel = +ev.target.value; render(); }
 });
 boot();
 </script>

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-KINDS = ("title", "final", "transfer", "story", "rivalry", "retirement", "patch", "board", "record")
+KINDS = ("title", "final", "transfer", "story", "rivalry", "retirement", "patch", "board", "record", "media")
 
 
 @dataclass
