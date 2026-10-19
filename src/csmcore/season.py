@@ -44,6 +44,8 @@ class Systems:
     secrets: Secrets | None = None
     careers: Careers | None = None
     emergent: object | None = None              # emergent.EmergentWorld: facts, minds, causal graph
+    haceit: object | None = None                # haceit.Haceit: Elo, HPL
+    hltw: object | None = None                  # hltw.Hltw: media ranking, player rating, MVP, Top 20
     talents_per_season: int = 6
     patch_every: int = 13
 
@@ -143,6 +145,9 @@ def run_tournament(t: Tournament, clubs: list[Club], graph: RelationGraph, week:
     field_ = invited[:size]
     for c in invited:
         c.flags.discard(qual)
+    hl = getattr(sysm, "hltw", None) if sysm else None
+    if hl is not None:
+        hl.event_start(t, field_)
     if len(field_) < 2:
         return field_
     order: list[Club] = []
@@ -180,6 +185,11 @@ def run_tournament(t: Tournament, clubs: list[Club], graph: RelationGraph, week:
         gain = t.prize_pool / 10_000 * max(0, len(order) - place + 1)
         c.rating_points += gain
         c.season_points += gain
+    if hl is not None:
+        for line in hl.event_end(t, order, week, season):
+            log.management.append(line)
+            if sysm.chronicle:
+                sysm.chronicle.add(season, week, "media", line)
     if t.qualifies_to:
         for c in order[:t.qualify_top]:
             c.flags.add(f"qual:{t.qualifies_to}")
@@ -309,8 +319,24 @@ def season_week(run: SeasonRun, clubs: list[Club], graph: RelationGraph, calenda
         run_tournament(t, clubs, graph, week, rng, log, sysm, season)
     if events:
         rerank(clubs)
+    _platforms_week(clubs, sysm, log, season, week)
     if ectx is not None:
         _emergent_week(ew, ectx, wevents, sysm, log, season, wk)
+
+
+def _platforms_week(clubs: list[Club], sysm: Systems, log: SeasonLog, season: int, week: int) -> None:
+    """HACEIT matchmaking and HLTW's weekly ranking; their headlines go to the news and history."""
+    lines: list[str] = []
+    hc = getattr(sysm, "haceit", None)
+    if hc is not None:
+        lines += hc.week(clubs, sysm.market.free_agents if sysm.market else [], week)
+    hl = getattr(sysm, "hltw", None)
+    if hl is not None:
+        lines += hl.week(clubs, week)
+    log.management += lines
+    if sysm.chronicle:
+        for line in lines:
+            sysm.chronicle.add(season, week, "media", line)
 
 
 def _emergent_week(ew, ectx, wevents, sysm: Systems, log: SeasonLog, season: int, wk: int) -> None:
@@ -352,6 +378,19 @@ def season_finish(run: SeasonRun, clubs: list[Club], sysm: Systems) -> None:
         talents = sysm.legacy.new_talents(sysm.talents_per_season, mgmt_rng, season, taken)
         if sysm.market is not None:
             sysm.market.free_agents += talents
+    hl = getattr(sysm, "hltw", None)
+    if hl is not None:
+        for line in hl.season_end(clubs, season, end_week):
+            log.management.append(line)
+            if sysm.chronicle:
+                sysm.chronicle.add(season, end_week, "media", line)
+    hc = getattr(sysm, "haceit", None)
+    if hc is not None:
+        alive = {p.name for c in clubs for p in c.roster}
+        if sysm.market is not None:
+            alive |= {p.name for p in sysm.market.free_agents}
+        hc.forget(alive)
+        hc.season_reset()
     for c in clubs:
         for p in c.roster:
             if "season_stats" in p.__dict__:

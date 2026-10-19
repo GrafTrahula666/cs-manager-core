@@ -61,7 +61,7 @@ def season_end(clubs: list[Club]) -> list[str]:
         down, up = tables[k][-n:], tables[k + 1][:n]
         moves += [(c, k + 1) for c in down] + [(c, k) for c in up]
         lines.append(f"{name(k)}: вылетели {', '.join(c.name for c in down)}; "
-                     f"поднялись из {name(k + 1)}: {', '.join(c.name for c in up)}")
+                     f"поднялись: {', '.join(c.name for c in up)}")
     for c, k in moves:
         c.division = k
     for c in clubs:

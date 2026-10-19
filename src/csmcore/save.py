@@ -54,8 +54,11 @@ def _to_leagues(game) -> None:
     """2 -> 3: leagues by the current ranking and the league calendar from the next week on;
     the season table starts empty."""
     from . import circuit, worldgen
+    from .haceit import Haceit
+    from .hltw import Hltw
     circuit.assign(game.clubs)
     game.calendar = worldgen.calendar()
+    game.sysm.haceit, game.sysm.hltw = Haceit(game.seed), Hltw()
 
 
 def save(game, path: str) -> int:

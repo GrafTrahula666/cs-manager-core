@@ -15,6 +15,8 @@ from .development import roll_potential
 from .director import Director
 from .economy import Club, Contract, Sponsor, Tournament
 from .generate import SUFFIX, SYL, Nicknames, concept_examples, make_player  # noqa: F401
+from .haceit import Haceit
+from .hltw import Hltw
 from .legacy import Legacy
 from .manager import Careers
 from .market import Market
@@ -173,7 +175,7 @@ def generate(seed: int = 1, n_clubs: int = 120, director: str = "cassandra"):
         owners={c.name: _owner(c, rng) for c in clubs},
         rivalries=Rivalries(), meta=Meta(), chronicle=Chronicle(), legacy=Legacy(),
         secrets=Secrets(), careers=Careers(), talents_per_season=max(6, n_clubs // 3),
-        emergent=EmergentWorld(seed, tuple(REGIONS)),
+        emergent=EmergentWorld(seed, tuple(REGIONS)), haceit=Haceit(seed), hltw=Hltw(),
     )
     return clubs, graph, calendar(), systems, home.name
 
