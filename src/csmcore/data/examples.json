@@ -1,0 +1,32 @@
+{
+  "_doc": "Three example players from the concept doc (section 10). Stats not listed in the doc default to 50-ish values chosen to fit the description; personality axes follow the doc's text.",
+  "players": [
+    {"name": "vanta", "full_name": "Marek Nowak", "age": 18, "country": "PL", "role": "entry",
+     "stats": {"aim": 91, "reaction": 89, "movement": 87, "weapon_control": 86, "game_sense": 74, "positioning": 70,
+               "timing": 78, "map_awareness": 68, "utility_iq": 62, "tactical_discipline": 55,
+               "adaptability": 82, "analytical": 60, "learning_speed": 85,
+               "stress_resistance": 84, "tilt_control": 62, "confidence_stability": 70,
+               "discipline": 68, "teamwork": 61, "communication": 66, "leadership": 43},
+     "personality": {"ambition": 88, "ego": 82, "loyalty": 35, "money_focus": 50, "risk": 70, "criticism": 68,
+                     "social_need": 45, "home_attachment": 40, "media": 70, "conflict": 55},
+     "traits": ["hunter_of_giants", "role_thief"]},
+    {"name": "north", "full_name": "Elias Berg", "age": 26, "country": "SE", "role": "igl",
+     "stats": {"aim": 69, "reaction": 67, "movement": 70, "weapon_control": 68, "game_sense": 92, "positioning": 84,
+               "timing": 82, "map_awareness": 90, "utility_iq": 88, "tactical_discipline": 90,
+               "adaptability": 90, "analytical": 92, "learning_speed": 80,
+               "stress_resistance": 88, "tilt_control": 86, "confidence_stability": 85,
+               "discipline": 91, "teamwork": 95, "communication": 94, "leadership": 96},
+     "personality": {"ambition": 60, "ego": 20, "loyalty": 85, "money_focus": 40, "risk": 50, "criticism": 20,
+                     "social_need": 60, "home_attachment": 55, "media": 40, "conflict": 20},
+     "traits": ["atmosphere_stabilizer", "pattern_thief", "mentor_magnet"]},
+    {"name": "sable", "full_name": "Diego Costa", "age": 21, "country": "BR", "role": "awp",
+     "stats": {"aim": 88, "reaction": 94, "movement": 72, "weapon_control": 75, "game_sense": 81, "positioning": 78,
+               "timing": 74, "map_awareness": 72, "utility_iq": 60, "tactical_discipline": 62,
+               "adaptability": 75, "analytical": 65, "learning_speed": 72,
+               "stress_resistance": 58, "tilt_control": 60, "confidence_stability": 55,
+               "discipline": 54, "teamwork": 70, "communication": 72, "leadership": 38},
+     "personality": {"ambition": 92, "ego": 55, "loyalty": 50, "money_focus": 55, "risk": 60, "criticism": 45,
+                     "social_need": 55, "home_attachment": 20, "media": 35, "conflict": 25},
+     "traits": ["awp_magnet", "camera_freeze"]}
+  ]
+}
