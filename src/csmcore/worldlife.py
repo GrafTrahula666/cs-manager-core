@@ -53,7 +53,8 @@ def close_bankrupt(clubs: list[Club], sysm, week: int, rng: random.Random, nick,
         c = clubs[i]
         owner = sysm.owners.get(c.name) if sysm.owners is not None else None
         if n >= MAX_CLOSURES or (owner is not None and rng.random() < owner.ambition / 200):
-            c.cash = economy.TIERS[c.tier]["budget"][0] * 0.1   # the owner pays the debts, once more
+            c.book(week, "owner_bailout", economy.TIERS[c.tier]["budget"][0] * 0.1 - c.cash,
+                   "владелец закрыл долги")   # the owner pays the debts, once more
             c.weeks_negative = 0
             continue
         _free(c, sysm.market, week)
@@ -83,7 +84,7 @@ def investor_rebrand(clubs: list[Club], sysm, week: int, rng: random.Random, kee
     old = c.name
     c.name = _new_name(rng, {x.name for x in clubs})
     c.tier = "tier2"
-    c.cash += rng.uniform(500_000, 1_500_000)
+    c.book(week, "investment", rng.uniform(500_000, 1_500_000), f"инвестор купил {old}")
     c.brand = min(100.0, c.brand + 10)
     c.staff_month = economy.TIERS["tier2"]["salary"][1] * 2
     for p in c.roster:

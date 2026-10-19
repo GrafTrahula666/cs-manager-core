@@ -74,6 +74,9 @@ class LedgerLine:
     why: str = ""
 
 
+MONEY_SEASONS_KEEP = 10
+
+
 @dataclass
 class Club:
     name: str
@@ -100,10 +103,20 @@ class Club:
     weeks_negative: int = 0
     flags: set[str] = field(default_factory=set)
     former: list[Player] = field(default_factory=list)  # released/sold players chains can still reach
+    money_season: dict[str, float] = field(default_factory=dict)    # item -> total this season
+    money_history: list[dict[str, float]] = field(default_factory=list)  # past seasons, newest last
 
     def book(self, week: int, item: str, amount: float, why: str = "") -> None:
         self.cash += amount
         self.ledger.append(LedgerLine(week, item, round(amount, 2), why))
+        self.money_season[item] = self.money_season.get(item, 0.0) + amount
+
+    def close_money_season(self) -> dict[str, float]:
+        """The ledger keeps only recent lines; the season's totals by item are kept for MONEY_SEASONS_KEEP."""
+        done, self.money_season = self.money_season, {}
+        self.money_history.append(done)
+        del self.money_history[:-MONEY_SEASONS_KEEP]
+        return done
 
     def balance(self, since_week: int = 0) -> dict[str, float]:
         out: dict[str, float] = {}

@@ -47,3 +47,19 @@ def test_a_version_4_save_gets_the_world_scale():
     assert m2.level_shift == pytest.approx(world_level(g2.clubs) - m2.level_ref)
     for _ in range(3):
         g2.advance()
+
+
+def test_season_money_totals_survive_the_ledger_trim():
+    from csmcore import api
+    g = Game.new(seed=3, n_clubs=40)
+    ai = next(c for c in g.clubs if c.name != g.club_name)
+    cash0 = ai.cash
+    for _ in range(53):
+        g.advance()
+    assert len(ai.money_history) == 1 and ai.money_season
+    year = ai.money_history[0]
+    assert year["salaries"] < 0 and year["staff"] < 0
+    assert min(x.week for x in ai.ledger) > 26   # the ledger itself keeps only recent lines
+    assert cash0 + sum(year.values()) + sum(ai.money_season.values()) == pytest.approx(ai.cash, abs=1.0)
+    api.G = g
+    assert api.finances()["past_seasons"]

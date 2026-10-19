@@ -147,6 +147,7 @@ def finances() -> dict:
                       "kpi_rank": s.kpi_max_rank} for s in c.sponsors],
         "wages_month": _money(sum(k.salary_month for k in c.contracts.values())),
         "staff_month": _money(c.staff_month),
+        "past_seasons": [{k: _money(v) for k, v in sorted(h.items(), key=lambda kv: kv[1])} for h in c.money_history],
     }
 
 
