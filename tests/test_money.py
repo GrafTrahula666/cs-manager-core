@@ -65,3 +65,15 @@ def test_season_money_totals_survive_the_ledger_trim():
     assert cash0 + sum(year.values()) + sum(ai.money_season.values()) == pytest.approx(ai.cash, abs=1.0)
     api.G = g
     assert api.finances()["past_seasons"]
+
+
+def test_a_fairly_paid_player_of_a_small_club_mostly_extends_and_an_underpaid_one_leaves():
+    from csmcore.decisions import contract_acceptance
+    from csmcore.economy import Contract
+    small = Club("Small", tier="tier3", rank=90)
+    p = Player("mid", {s: 52 for s in STATS}, age=24)
+    p.personality["ambition"], p.personality["loyalty"] = 50.0, 50.0
+    fair = contract_acceptance(p, Contract("mid", 1_000, 104, 0.0), 1_000, small, staying=True)
+    low = contract_acceptance(p, Contract("mid", 600, 104, 0.0), 1_000, small, staying=True)
+    assert fair.p > 0.7 and low.p < 0.4
+    assert any("лучшего предложения нет" in r for r in fair.reasons)

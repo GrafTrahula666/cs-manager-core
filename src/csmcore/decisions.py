@@ -13,6 +13,9 @@ TIER_PRESTIGE = {"tier3": 10, "tier2": 35, "tier1": 70, "super": 90}
 # extension offers were refused, mostly by average players of small clubs).
 STAY_FAMILIAR = 0.5
 STAY_FAIR_PAY_AMBITION = 0.3
+# Paid what he is worth by a club that can pay it, he has no better offer waiting: leaving would
+# mean no club at all. With salaries on the world's scale (P1) ~half of such players still left.
+STAY_NOWHERE_BETTER = 0.8
 
 
 @dataclass
@@ -53,9 +56,11 @@ def contract_acceptance(player: Player, offer: Contract, expected_salary: float,
     if staying:   # an extension: he knows the people, the city and the project
         loyalty = STAY_FAMILIAR + (player.p("loyalty") - 40) / 100 * 1.5
         reasons.append(f"продление: лояльность {player.p('loyalty'):.0f}")
-        if ambition < 0 and money_ratio >= 0.95:
-            ambition *= STAY_FAIR_PAY_AMBITION   # paid what he is worth: a bigger club is a wish, not a plan
-            reasons.append("клуб платит по его уровню")
+        if money_ratio >= 0.95:
+            loyalty += STAY_NOWHERE_BETTER
+            if ambition < 0:
+                ambition *= STAY_FAIR_PAY_AMBITION   # paid what he is worth: a bigger club is a wish, not a plan
+            reasons.append("клуб платит по его уровню, лучшего предложения нет")
         if "transfer_requested" in player.flags:
             loyalty -= 1.5
             reasons.append("сам просил трансфер")
