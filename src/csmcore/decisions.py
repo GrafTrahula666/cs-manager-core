@@ -9,6 +9,10 @@ from .economy import Club, Contract
 from .player import Player
 
 TIER_PRESTIGE = {"tier3": 10, "tier2": 35, "tier1": 70, "super": 90}
+# Extensions (game hypotheses, tuned on the 20x10 lab: with the plain signing rule ~87% of
+# extension offers were refused, mostly by average players of small clubs).
+STAY_FAMILIAR = 0.5
+STAY_FAIR_PAY_AMBITION = 0.3
 
 
 @dataclass
@@ -47,8 +51,11 @@ def contract_acceptance(player: Player, offer: Contract, expected_salary: float,
         reasons.append(f"лояльность текущему клубу {player.p('loyalty'):.0f}")
 
     if staying:   # an extension: he knows the people, the city and the project
-        loyalty = (player.p("loyalty") - 40) / 100 * 1.5
+        loyalty = STAY_FAMILIAR + (player.p("loyalty") - 40) / 100 * 1.5
         reasons.append(f"продление: лояльность {player.p('loyalty'):.0f}")
+        if ambition < 0 and money_ratio >= 0.95:
+            ambition *= STAY_FAIR_PAY_AMBITION   # paid what he is worth: a bigger club is a wish, not a plan
+            reasons.append("клуб платит по его уровню")
         if "transfer_requested" in player.flags:
             loyalty -= 1.5
             reasons.append("сам просил трансфер")
