@@ -155,6 +155,28 @@ def test_a_club_that_lost_its_core_declines_the_invite_and_the_next_one_plays():
     assert "Masters" not in run.invites
 
 
+def test_a_version_3_save_keeps_its_players_and_gets_contracts_that_end():
+    from csmcore import save
+    g = Game.new(seed=6, n_clubs=40)
+    for _ in range(3):
+        g.advance()
+    m = g.sysm.market
+    for k in ("journal", "stats", "next_contract_id", "short_since"):   # a pickle from before contracts end
+        m.__dict__.pop(k, None)
+    del g.run.__dict__["invites"]
+    victim = next(iter(g.clubs[3].contracts.values()))
+    victim.end_week = 1
+    raw = save.dumps(g)
+    g2 = save.loads(raw[:len(save.MAGIC)] + bytes([3]) + raw[len(save.MAGIC) + 1:])
+    k = g2.clubs[3].contracts[victim.player]
+    assert g2.week + 4 <= k.end_week <= g2.week + 52 and k.contract_id > 0
+    assert g2.sysm.market.journal == [] and g2.run.invites == {}
+    players = sum(len(c.roster) for c in g2.clubs)
+    for _ in range(3):
+        g2.advance()
+    assert sum(len(c.roster) for c in g2.clubs) >= players - 3
+
+
 def test_same_seed_same_contract_history():
     a, b = Game.new(seed=8, n_clubs=40), Game.new(seed=8, n_clubs=40)
     for _ in range(40):

@@ -11,10 +11,11 @@ import io
 import pickle
 
 MAGIC = b"CSMSAVE"
-VERSION = 3
+VERSION = 4
 # Version history: 1 = before the emergent world engine; 2 = sysm.emergent (facts, minds, press);
-# 3 = leagues (Тир 1-3 and the rest), HACEIT and HLTW.
-SUPPORTED = (1, 2, 3)
+# 3 = leagues (Тир 1-3 and the rest), HACEIT and HLTW; 4 = contracts that end, the hiring journal,
+# the roster-core rule for invites.
+SUPPORTED = (1, 2, 3, 4)
 
 
 def dumps(game) -> bytes:
@@ -47,7 +48,36 @@ def migrate(game, version: int):
         game.sysm.emergent = EmergentWorld(game.seed, regions)
     if version < 3:
         _to_leagues(game)
+    if version < 4:
+        _to_contracts(game)
     return game
+
+
+def _to_contracts(game) -> None:
+    """3 -> 4: contracts start to end. In an old save many have already run out while the player
+    stayed for free; letting all of them go in one week would empty half the world, so each gets
+    a few more months (4-52 weeks, from the save's seed) and normal talks from then on."""
+    import random
+    from collections import Counter
+    m = game.sysm.market
+    if m is not None:
+        m.__dict__.setdefault("journal", [])
+        m.__dict__.setdefault("stats", Counter())
+        m.__dict__.setdefault("next_contract_id", 0)
+        m.__dict__.setdefault("short_since", {})
+    rng = random.Random(game.seed * 7919 + game.week)
+    for c in game.clubs:
+        for p in sorted(c.roster, key=lambda q: q.name):
+            k = c.contracts.get(p.name)
+            if k is None:
+                continue
+            if k.end_week < game.week + 4:
+                k.end_week = game.week + rng.randint(4, 52)
+            if m is not None and not k.contract_id:
+                m.next_contract_id += 1
+                k.contract_id = m.next_contract_id
+    if game.run is not None and not hasattr(game.run, "invites"):
+        game.run.invites = {}
 
 
 def _to_leagues(game) -> None:
