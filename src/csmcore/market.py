@@ -20,12 +20,39 @@ ASK_DROP_MONTH = 0.06   # a free agent asks 6% less for every month without a cl
 ASK_FLOOR = 0.45        # ...down to 45% of what he thinks he is worth
 
 
+# What a player expects per month at his level (on the world's starting scale). Anchors: the median
+# level of each tier's rosters in a new 120-club world (51, 60, 69, 74) and the mean salary that
+# world pays that tier (economy.TIERS ranges: 1250, 4000, 45000, 85000). Between anchors the
+# salary is exponential in level; above the last one it grows slower, so the best of the world
+# reach the superteam cap (130k) around 81. Not calibrated on real salaries: it keeps a player's
+# expectations consistent with what the clubs of the world pay.
+SALARY_CURVE = ((51.0, 1_250.0), (60.0, 4_000.0), (69.0, 45_000.0), (74.0, 85_000.0))
+SALARY_TOP_SLOPE = 1 / 17   # log-salary per level above the last anchor
+
+
+def _curve_log(level: float) -> float:
+    pts = SALARY_CURVE
+    if level >= pts[-1][0]:
+        return math.log(pts[-1][1]) + (level - pts[-1][0]) * SALARY_TOP_SLOPE
+    i = next(j for j in range(len(pts) - 1) if level < pts[j + 1][0])   # below the first anchor: its slope
+    (a, x), (b, y) = pts[i], pts[i + 1]
+    return math.log(x) + (level - a) * (math.log(y) - math.log(x)) / (b - a)
+
+
+def level_for_salary(salary: float) -> float:
+    """The inverse of the curve, without hype: the level that expects `salary`."""
+    lo, hi = 0.0, 100.0
+    for _ in range(40):
+        mid = (lo + hi) / 2
+        lo, hi = (mid, hi) if _curve_log(mid) < math.log(salary) else (lo, mid)
+    return (lo + hi) / 2
+
+
 def expected_salary(p: Player, scale: LevelScale | None = None) -> float:
-    """What a player thinks he is worth per month: exponential in level, like real salaries
-    (tier-3 ~$1k, solid tier-1 ~$20-40k, superstar ~$100k+). With the market's `scale` the level
-    is his place in the world (economy.LevelScale): when everybody gets better, pay stays."""
+    """What a player thinks he is worth per month (SALARY_CURVE). With the market's `scale` the
+    level is his place in the world (economy.LevelScale): when everybody gets better, pay stays."""
     hype = p.mod("fan_gain")[1]
-    return 600 * math.exp((scaled_level(p, scale) - 45) / 7.5) * (0.85 + 0.15 * hype)
+    return math.exp(_curve_log(scaled_level(p, scale))) * (0.85 + 0.15 * hype)
 
 
 def world_quantiles(clubs: list[Club]) -> list[float]:

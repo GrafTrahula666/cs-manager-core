@@ -162,14 +162,12 @@ ACADEMY_AFTER = 2   # weeks a club stays short with nobody it can afford before 
 def academy_signing(club: Club, clubs: list[Club], market, week: int, rng: random.Random) -> str:
     """The fallback when the market has nobody a short club can pay or persuade: a junior from its
     own academy or the local scene, at a level the club's wage cap can hold (research p.47, P0)."""
-    import math
-
     from .development import roll_potential
     from .generate import make_player
-    from .market import TIER_SALARY_CAP, expected_salary
+    from .market import TIER_SALARY_CAP, expected_salary, level_for_salary
     from .worldgen import REGIONS, ROLES, Nicknames
     cap = TIER_SALARY_CAP[club.tier]
-    affordable = 45 + 7.5 * math.log(cap * 0.8 / 600)          # inverse of market.expected_salary...
+    affordable = level_for_salary(cap * 0.8)                   # inverse of market.expected_salary...
     if market.level_scale is not None:                          # ...in today's levels
         affordable = market.level_scale.today(affordable)
     real = [p.overall() for p in club.roster]
