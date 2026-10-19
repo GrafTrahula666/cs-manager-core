@@ -37,6 +37,7 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `scripts/demo_season.py` – one season of an 8-club world, prints money, results, events
 - `src/csmcore/emergent/` – Emergent World Engine: facts with knowers and false beliefs, minds, typed actions, causal graph (`docs/emergent-world.md`)
 - `src/csmcore/circuit.py`, `haceit.py`, `hltw.py` – leagues Тир 1–3 and the rest with promotion and relegation; HACEIT (Elo, HPL, lower leagues, Major qualifier); HLTW (media ranking, player rating, MVP, Top 20) (`docs/leagues-and-media.md`)
+- `src/csmcore/match/` – versioned competition rules with the source of every number (Premier, Major) and an exact in-map money ledger; not wired into the engine yet (`docs/match-rules.md`)
 - `src/csmcore/matchstats.py`, `src/csmcore/demo_records.py` – the same match metrics for simulated maps and parsed demos
 - `scripts/demo_analysis.py` – local CS2 demos -> round records (needs `pip install -e ".[data]"`; not yet run on a real demo)
 - `scripts/compare_sim_real.py` – simulation vs. demo records, side by side (`docs/match-engine-plan.md`)
