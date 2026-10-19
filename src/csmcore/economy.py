@@ -6,6 +6,7 @@ Time unit: one week. Currency: USD-like game dollars.
 """
 from __future__ import annotations
 
+import bisect
 import math
 from dataclasses import dataclass, field
 
@@ -259,10 +260,55 @@ def award(club: Club, t: Tournament, place: int, week: int, field_size: int) -> 
     return kept
 
 
-def market_value(p: Player, shift: float = 0.0) -> float:
+LEVEL_QUANTILES = 21   # 0%, 5%, ... 100% of rostered players
+
+
+def level_quantiles(levels: list[float], n: int = LEVEL_QUANTILES) -> list[float]:
+    lv = sorted(levels)
+    if not lv:
+        return []
+    return [lv[min(len(lv) - 1, round(i * (len(lv) - 1) / (n - 1)))] for i in range(n)]
+
+
+@dataclass
+class LevelScale:
+    """Prices follow a player's place in the world, not his absolute level. Player levels in a
+    120-club world rise over the seasons (the best sixth by ~10 in ten seasons, the median by ~6),
+    and salaries and fees are exponential in level: priced on the absolute scale, most players
+    soon want more than any club of their tier can pay. A LevelScale maps a level today to the
+    level at the same place in the world when it was made."""
+    ref: list[float]   # level quantiles when the world was made, low to high
+    now: list[float]   # the same quantiles today
+
+    def __call__(self, level: float) -> float:
+        return self._map(level, self.now, self.ref)
+
+    def today(self, ref_level: float) -> float:
+        """The inverse: today's level at the place `ref_level` had when the world was made."""
+        return self._map(ref_level, self.ref, self.now)
+
+    @staticmethod
+    def _map(level: float, now: list[float], ref: list[float]) -> float:
+        if len(now) < 2:
+            return level
+        if level <= now[0]:
+            return ref[0] + level - now[0]
+        if level >= now[-1]:
+            return ref[-1] + level - now[-1]
+        i = bisect.bisect_right(now, level) - 1
+        lo, hi = now[i], now[i + 1]
+        t = 0.0 if hi == lo else (level - lo) / (hi - lo)
+        return ref[i] + t * (ref[i + 1] - ref[i])
+
+
+def scaled_level(p: Player, scale: LevelScale | None = None) -> float:
+    return p.overall() if scale is None else scale(p.overall())
+
+
+def market_value(p: Player, scale: LevelScale | None = None) -> float:
     """Transfer value. Peaks at 19-24, scales steeply with level and hype (fan_gain traits).
-    `shift`: the world's level rise (Market.level_shift), as in market.expected_salary."""
-    level = p.overall() - shift
+    `scale`: the market's LevelScale (Market.level_scale), as in market.expected_salary."""
+    level = scaled_level(p, scale)
     age_mul = 1.0 if 19 <= p.age <= 24 else max(0.3, 1 - 0.12 * abs(p.age - (19 if p.age < 19 else 24)))
     form_mul = 0.8 + 0.4 * p.s("form") / 100
     hype = p.mod("fan_gain")[1]

@@ -145,11 +145,11 @@ class ManagerDesk:
         """AI seller accepts at or above 90% of market value (or the buyout); then the player decides."""
         from .market import Offer
         c = seller.contracts.get(p.name)
-        shift = self.market.level_shift if self.market else 0.0
-        ask = min(economy.market_value(p, shift) * 0.9, c.buyout if c else float("inf"))
+        scale = self.market.level_scale if self.market else None
+        ask = min(economy.market_value(p, scale) * 0.9, c.buyout if c else float("inf"))
         if c is not None and c.status == "leaving":   # he will leave on a free: the seller takes what it can
             from .contracts import sale_fee
-            ask = min(ask, sale_fee(seller, p, week, shift) * 0.9)
+            ask = min(ask, sale_fee(seller, p, week, scale) * 0.9)
         if fee < ask:
             return f"{seller.name} отклонил {fee:,.0f} за {p.name} (хотят от {ask:,.0f})"
         return self.market.complete(Offer(week, self.club, seller, p, fee, salary), week, self.rng)
@@ -158,7 +158,7 @@ class ManagerDesk:
         return self.market.answer(self.market.offers[index], accept, week, self.rng)
 
     def expected_salary(self, p: Player) -> float:
-        return expected_salary(p, self.market.level_shift if self.market else 0.0)
+        return expected_salary(p, self.market.level_scale if self.market else None)
 
     # --- money ---
     def loan(self, amount: float, week: int) -> str:

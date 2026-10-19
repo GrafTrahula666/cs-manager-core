@@ -17,7 +17,9 @@ VERSION = 5
 # the roster-core rule for invites; 5 = season money totals per club,
 # salaries and prices follow the world's level scale.
 SUPPORTED = (1, 2, 3, 4, 5)
-WORLD_LEVEL_AT_START = 70.0   # see _to_money
+# Level quantiles (0%, 5% ... 100% of rostered players) of a new 120-club world, mean of seeds 1-10: see _to_money.
+WORLD_QUANTILES_AT_START = (44.7, 47.9, 48.8, 49.6, 50.3, 50.9, 51.6, 52.3, 53.1, 54.1, 55.3, 56.6, 57.8, 58.8,
+                            59.8, 60.8, 62.2, 64.8, 67.7, 70.2, 84.8)
 
 
 def dumps(game) -> bytes:
@@ -59,17 +61,16 @@ def migrate(game, version: int):
 
 def _to_money(game) -> None:
     """4 -> 5: clubs keep season money totals (from the next season on: the old ledger kept only
-    recent lines), and salaries and prices follow the world's level (Market.level_shift). An old
-    save does not know the level its world started at; generated worlds start with the best sixth
-    of players at ~70 (seeds 1-20 of the 120-club lab world), so that is taken as the start."""
-    from .market import world_level
+    recent lines), and salaries and prices follow a player's place in the world (Market.level_scale).
+    An old save does not know the levels its world started with, so it gets those of a new
+    120-club world."""
     for c in game.clubs:
         c.__dict__.setdefault("money_season", {})
         c.__dict__.setdefault("money_history", [])
     m = game.sysm.market
     if m is not None:
-        m.__dict__.setdefault("level_ref", min(WORLD_LEVEL_AT_START, world_level(game.clubs)))
-        m.__dict__.setdefault("level_shift", 0.0)
+        m.__dict__.setdefault("level_ref", list(WORLD_QUANTILES_AT_START))
+        m.__dict__.setdefault("level_scale", None)
         m.rescale(game.clubs)
 
 

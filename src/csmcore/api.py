@@ -36,9 +36,9 @@ def _money(x: float) -> int:
     return int(round(x))
 
 
-def _shift(g) -> float:
-    """The world's level rise: salaries and prices follow a player's place in the world."""
-    return g.sysm.market.level_shift if g.sysm.market is not None else 0.0
+def _scale(g):
+    """Salaries and prices follow a player's place in the world (economy.LevelScale)."""
+    return g.sysm.market.level_scale if g.sysm.market is not None else None
 
 
 def state() -> dict:
@@ -81,7 +81,7 @@ def roster() -> list[dict]:
             "star": "star" in p.flags, "stats": _season_stats(p),
             "salary": _money(k.salary_month) if k else 0, "contract_end": k.end_week if k else None,
             "contract_status": k.status if k else None,
-            "value": _money(economy.market_value(p, _shift(g))), "lineup": p.name in lineup,
+            "value": _money(economy.market_value(p, _scale(g))), "lineup": p.name in lineup,
             "benched": "benched" in p.flags, "wants_out": "transfer_requested" in p.flags,
             "fame": round(p.fame), "history": p.history[-4:], **_haceit_card(p.name),
         })
@@ -184,10 +184,10 @@ def market(limit: int = 40) -> list[dict]:
         half = sum(b - a for a, b in rep.stats.values()) / 2 / len(rep.stats) / 2.2   # 20 stats average out
         lo, hi = max(0.0, mid - half), min(100.0, mid + half)
         k = seller.contracts.get(p.name) if seller else None
-        ask = 0 if seller is None else min(economy.market_value(p, _shift(g)) * 0.9, k.buyout if k else float("inf"))
+        ask = 0 if seller is None else min(economy.market_value(p, _scale(g)) * 0.9, k.buyout if k else float("inf"))
         out.append({"name": p.name, "role": p.role, "age": p.age, "club": seller.name if seller else None,
                     "star": "star" in p.flags,
-                    "ovr_range": [round(lo), round(hi)], "salary_wish": _money(asking(p, g.week, _shift(g)) if seller is None else expected_salary(p, _shift(g))),
+                    "ovr_range": [round(lo), round(hi)], "salary_wish": _money(asking(p, g.week, _scale(g)) if seller is None else expected_salary(p, _scale(g))),
                     "fee": _money(ask), "known": round(g.desk.scouting.knowledge.get(p.name, 0)),
                     "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib],
                     **_haceit_card(p.name)})
@@ -247,7 +247,7 @@ def contracts() -> list[dict]:
             continue
         out.append({"name": p.name, "salary": _money(k.salary_month), "end_week": k.end_week,
                     "weeks_left": k.end_week - g.week, "status": k.status, "id": k.contract_id,
-                    "expected": _money(expected_salary(p, _shift(g))), "offer": _money(contracts_mod.offer_salary(g.club, p, _shift(g)))})
+                    "expected": _money(expected_salary(p, _scale(g))), "offer": _money(contracts_mod.offer_salary(g.club, p, _scale(g)))})
     return out
 
 
