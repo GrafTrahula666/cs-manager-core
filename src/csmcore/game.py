@@ -222,6 +222,8 @@ class Game:
         if self.sysm.stories:
             self.sysm.stories.last_fired = {k: w for k, w in self.sysm.stories.last_fired.items() if w > start - 104}
         lines += self._world_changes(start, rng)
+        if self.sysm.market is not None:   # off-season window: retirements left holes in the rosters
+            self.sysm.market.week(self.clubs, start, rng, self.club_name)
         self.run = season_begin(self.clubs, self._season_seed(), self.sysm, self.season, start)
         owner = self.desk.owner
         if owner and owner.objectives:

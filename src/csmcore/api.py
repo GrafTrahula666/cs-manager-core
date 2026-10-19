@@ -9,7 +9,7 @@ import base64
 
 from . import circuit, economy, save as save_mod
 from .game import Game
-from .market import expected_salary
+from .market import asking, expected_salary
 from .talks import PRESS, TONES
 from .traits import library
 
@@ -169,7 +169,7 @@ def market(limit: int = 40) -> list[dict]:
     """Free agents and players who asked to leave, seen through your scouts (ranges, not truth)."""
     g = _g()
     out, lib = [], library()
-    for p, seller in g.sysm.market.listed(g.clubs):
+    for p, seller in g.sysm.market.listed(g.clubs, g.week):
         if seller is g.club:
             continue
         rep = g.desk.scouting.report(p)
@@ -180,7 +180,7 @@ def market(limit: int = 40) -> list[dict]:
         ask = 0 if seller is None else min(economy.market_value(p) * 0.9, k.buyout if k else float("inf"))
         out.append({"name": p.name, "role": p.role, "age": p.age, "club": seller.name if seller else None,
                     "star": "star" in p.flags,
-                    "ovr_range": [round(lo), round(hi)], "salary_wish": _money(expected_salary(p)),
+                    "ovr_range": [round(lo), round(hi)], "salary_wish": _money(asking(p, g.week) if seller is None else expected_salary(p)),
                     "fee": _money(ask), "known": round(g.desk.scouting.knowledge.get(p.name, 0)),
                     "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib],
                     **_haceit_card(p.name)})
