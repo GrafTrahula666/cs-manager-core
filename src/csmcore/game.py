@@ -132,7 +132,7 @@ class Game:
             out += [f"клуб: {e.text}" for e in self.sysm.chronicle.entries[c0:]
                     if e.kind in ("title", "rivalry") and me in e.text]
             out += [f"мир: {e.text}" for e in self.sysm.chronicle.entries[c0:]
-                    if e.kind in ("title", "patch", "board") and me not in e.text
+                    if e.kind in ("title", "patch", "board", "media") and me not in e.text
                     and ("лига" not in e.text or self.club.region in e.text)][:6]
         return out
 

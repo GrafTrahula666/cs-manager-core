@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import base64
 
-from . import economy, save as save_mod
+from . import circuit, economy, save as save_mod
 from .game import Game
 from .market import expected_salary
 from .talks import PRESS, TONES
@@ -55,6 +55,8 @@ def state() -> dict:
         "sacked": g.sacked, "patch": g.sysm.meta.patch["name"] if g.sysm.meta else "",
         "facilities": {FACILITIES[k]: v for k, v in c.facilities.items() if k in FACILITIES},
         "situations": len(g.situations()),
+        "division": circuit.name(c.division), "division_place": circuit.standings(g.clubs, c.division).index(c) + 1,
+        "season_points": round(c.season_points), "hltw_rank": g.sysm.hltw.place(c.name) if g.sysm.hltw else None,
     }
 
 
@@ -75,9 +77,15 @@ def roster() -> list[dict]:
             "salary": _money(k.salary_month) if k else 0, "contract_end": k.end_week if k else None,
             "value": _money(economy.market_value(p)), "lineup": p.name in lineup,
             "benched": "benched" in p.flags, "wants_out": "transfer_requested" in p.flags,
-            "fame": round(p.fame), "history": p.history[-4:],
+            "fame": round(p.fame), "history": p.history[-4:], **_haceit_card(p.name),
         })
     return out
+
+
+def _haceit_card(name: str) -> dict:
+    hc = _g().sysm.haceit
+    card = hc.card(name) if hc else {}
+    return {"elo": card.get("elo"), "level": card.get("level"), "hpl": card.get("hpl", False)}
 
 
 def _season_stats(p) -> dict:
@@ -111,7 +119,9 @@ def table(limit: int = 30, region: str | None = None) -> list[dict]:
     g = _g()
     rows = sorted((c for c in g.clubs if region is None or c.region == region), key=lambda c: c.rank)[:limit]
     titles = g.sysm.chronicle.titles if g.sysm.chronicle else {}
+    hl = g.sysm.hltw
     return [{"rank": c.rank, "club": c.name, "tier": c.tier, "region": c.region, "points": round(c.rating_points),
+             "division": circuit.name(c.division), "hltw": hl.place(c.name) if hl else None,
              "titles": len(titles.get(c.name, [])), "me": c.name == g.club_name,
              "superteam": any(f.startswith("superteam_until:") for f in c.flags),
              "stars": sum("star" in p.flags for p in c.roster),
@@ -172,7 +182,8 @@ def market(limit: int = 40) -> list[dict]:
                     "star": "star" in p.flags,
                     "ovr_range": [round(lo), round(hi)], "salary_wish": _money(expected_salary(p)),
                     "fee": _money(ask), "known": round(g.desk.scouting.knowledge.get(p.name, 0)),
-                    "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib]})
+                    "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib],
+                    **_haceit_card(p.name)})
     return sorted(out, key=lambda r: -sum(r["ovr_range"]))[:limit]   # by the scouts' estimate, not truth
 
 
@@ -408,3 +419,51 @@ def person(name: str) -> dict:
         return {"name": name, "says": "Это не ваш игрок."}
     narr = ew.narrator or Narrator()
     return {"name": name, "says": narr.dialogue(p, ew.minds.of(name))}
+
+
+# ---- leagues, HACEIT and HLTW ----
+def leagues(division: int | None = None) -> dict:
+    """A league table: season points decide who goes up and who goes down at the end."""
+    g = _g()
+    k = division or g.club.division
+    rows = circuit.standings(g.clubs, k)
+    up = circuit.SWAPS.get(k - 1, 0) if k > 1 else 0
+    down = circuit.SWAPS.get(k, 0) if k < 4 else 0
+    out = []
+    for i, c in enumerate(rows, 1):
+        zone = "up" if i <= up else "down" if down and i > len(rows) - down else ""
+        out.append({"place": i, "club": c.name, "region": c.region, "points": round(c.season_points),
+                    "rank": c.rank, "me": c.name == g.club_name, "zone": zone})
+    return {"division": k, "name": circuit.name(k), "names": circuit.NAMES, "rows": out,
+            "invites": [t.name for ts in g.calendar.values() for t in (ts if isinstance(ts, list) else [ts])
+                        if t.divisions and k in t.divisions and t.region in (None, g.club.region)]}
+
+
+def hltw(n: int = 30) -> dict:
+    """HLTW: its own ranking (beside the official one), MVPs and the Top 20 of past seasons."""
+    g = _g()
+    hl = g.sysm.hltw
+    if hl is None:
+        return {"ranking": [], "mvps": [], "top20": {}}
+    by = {c.name: c for c in g.clubs}
+    return {"ranking": [{"place": i, "club": name, "points": round(hl.points[name]), "official": by[name].rank,
+                         "division": circuit.name(by[name].division), "me": name == g.club_name}
+                        for i, name in enumerate(hl.ranking[:n], 1)],
+            "mvps": list(reversed(hl.mvps[-12:])), "top20": {str(k): v for k, v in hl.top20.items()}}
+
+
+def haceit(n: int = 25) -> dict:
+    """HACEIT: the Elo ladder, HPL and where your players stand."""
+    from .haceit import level
+    g = _g()
+    hc = g.sysm.haceit
+    if hc is None:
+        return {"ladder": [], "mine": [], "hpl": 0}
+    club_of = {p.name: c.name for c in g.clubs for p in c.roster}
+    ages = {p.name: p.age for c in g.clubs for p in c.roster}
+    if g.sysm.market:
+        ages.update({p.name: p.age for p in g.sysm.market.free_agents})
+    ladder = [{"place": i, "player": name, "elo": round(e), "level": level(e), "club": club_of.get(name),
+               "age": ages.get(name), "hpl": name in hc.hpl} for i, (name, e) in enumerate(hc.ladder(n), 1)]
+    mine = [{"player": p.name, **hc.card(p.name)} for p in g.club.roster if p.name in hc.elo]
+    return {"ladder": ladder, "mine": mine, "hpl": len(hc.hpl)}

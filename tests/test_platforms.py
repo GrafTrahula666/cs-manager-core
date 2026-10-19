@@ -87,3 +87,20 @@ def test_a_season_has_mvps_a_top20_and_an_elo_for_everyone(season_game):
     assert sum(p.name in hc.elo for p in everyone) >= len(everyone) - 12   # but new signings of week 53
     texts = [e.text for e in g.sysm.chronicle.entries if e.kind == "media"]
     assert any(t.startswith("HLTW: игрок сезона 1") for t in texts)
+
+
+def test_api_shows_leagues_hltw_and_haceit():
+    from csmcore import api
+    api.new_game(4, 40)
+    for _ in range(16):
+        api.advance(1)
+    s = api.state()
+    assert s["division"] == "Тир 1" and s["division_place"] >= 1
+    lg = api.leagues()
+    assert len(lg["rows"]) == 16 and "Major" in lg["invites"]
+    assert sum(r["zone"] == "down" for r in lg["rows"]) == 4
+    assert len(api.leagues(2)["rows"]) == 16 and sum(r["zone"] == "up" for r in api.leagues(2)["rows"]) == 4
+    assert api.hltw()["ranking"] and api.hltw()["mvps"]
+    hc = api.haceit(10)
+    assert len(hc["ladder"]) == 10 and len(hc["mine"]) == 5
+    assert all("elo" in p for p in api.roster()) and all("division" in r for r in api.table(5))
