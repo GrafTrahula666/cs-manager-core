@@ -11,11 +11,15 @@ import io
 import pickle
 
 MAGIC = b"CSMSAVE"
-VERSION = 4
+VERSION = 5
 # Version history: 1 = before the emergent world engine; 2 = sysm.emergent (facts, minds, press);
 # 3 = leagues (Тир 1-3 and the rest), HACEIT and HLTW; 4 = contracts that end, the hiring journal,
-# the roster-core rule for invites.
-SUPPORTED = (1, 2, 3, 4)
+# the roster-core rule for invites; 5 = season money totals per club,
+# salaries and prices follow the world's level scale.
+SUPPORTED = (1, 2, 3, 4, 5)
+# Level quantiles (0%, 5% ... 100% of rostered players) of a new 120-club world, mean of seeds 1-10: see _to_money.
+WORLD_QUANTILES_AT_START = (44.7, 47.9, 48.8, 49.6, 50.3, 50.9, 51.6, 52.3, 53.1, 54.1, 55.3, 56.6, 57.8, 58.8,
+                            59.8, 60.8, 62.2, 64.8, 67.7, 70.2, 84.8)
 
 
 def dumps(game) -> bytes:
@@ -50,7 +54,24 @@ def migrate(game, version: int):
         _to_leagues(game)
     if version < 4:
         _to_contracts(game)
+    if version < 5:
+        _to_money(game)
     return game
+
+
+def _to_money(game) -> None:
+    """4 -> 5: clubs keep season money totals (from the next season on: the old ledger kept only
+    recent lines), and salaries and prices follow a player's place in the world (Market.level_scale).
+    An old save does not know the levels its world started with, so it gets those of a new
+    120-club world."""
+    for c in game.clubs:
+        c.__dict__.setdefault("money_season", {})
+        c.__dict__.setdefault("money_history", [])
+    m = game.sysm.market
+    if m is not None:
+        m.__dict__.setdefault("level_ref", list(WORLD_QUANTILES_AT_START))
+        m.__dict__.setdefault("level_scale", None)
+        m.rescale(game.clubs)
 
 
 def _to_contracts(game) -> None:

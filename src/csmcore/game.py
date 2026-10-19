@@ -197,8 +197,8 @@ class Game:
                     mk.answer(o, False, self.week, self.rng)
 
     def _new_season(self) -> list[str]:
-        """Season rollover: ranking points decay, expired sponsors are replaced, owners set new
-        targets, old ledger lines are trimmed."""
+        """Season rollover: the season's money totals are closed, ranking points decay, expired
+        sponsors are replaced, owners set new targets, old ledger lines are trimmed."""
         was = self.club.division
         lines = [f"Сезон {self.season} завершён. {self.club_name}: место {self.club.rank}, "
                  f"{circuit.name(was)}, {circuit.standings(self.clubs, was).index(self.club) + 1}-е в таблице лиги"]
@@ -213,6 +213,7 @@ class Game:
         start = self.run.start_week + self.run.wk
         rng = random.Random(self._season_seed() + 77)
         for c in self.clubs:
+            c.close_money_season()
             c.rating_points *= 0.5
             c.sponsors = [s for s in c.sponsors if s.end_week > start]
             if len(c.sponsors) < 2:

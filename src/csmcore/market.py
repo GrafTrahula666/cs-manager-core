@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 
 from . import contracts, economy
 from .decisions import contract_acceptance
-from .economy import Club, Contract
+from .economy import Club, Contract, LevelScale, scaled_level
 from .player import Player
 
 TIER_SALARY_CAP = {t: v["salary"][1] for t, v in economy.TIERS.items()}
@@ -20,11 +20,43 @@ ASK_DROP_MONTH = 0.06   # a free agent asks 6% less for every month without a cl
 ASK_FLOOR = 0.45        # ...down to 45% of what he thinks he is worth
 
 
-def expected_salary(p: Player) -> float:
-    """What a player thinks he is worth per month: exponential in level, like real salaries
-    (tier-3 ~$1k, solid tier-1 ~$20-40k, superstar ~$100k+)."""
+# What a player expects per month at his level (on the world's starting scale). Anchors: the median
+# level of each tier's rosters in a new 120-club world (51, 60, 69, 74) and the mean salary that
+# world pays that tier (economy.TIERS ranges: 1250, 4000, 45000, 85000). Between anchors the
+# salary is exponential in level; above the last one it grows slower, so the best of the world
+# reach the superteam cap (130k) around 81. Not calibrated on real salaries: it keeps a player's
+# expectations consistent with what the clubs of the world pay.
+SALARY_CURVE = ((51.0, 1_250.0), (60.0, 4_000.0), (69.0, 45_000.0), (74.0, 85_000.0))
+SALARY_TOP_SLOPE = 1 / 17   # log-salary per level above the last anchor
+
+
+def _curve_log(level: float) -> float:
+    pts = SALARY_CURVE
+    if level >= pts[-1][0]:
+        return math.log(pts[-1][1]) + (level - pts[-1][0]) * SALARY_TOP_SLOPE
+    i = next(j for j in range(len(pts) - 1) if level < pts[j + 1][0])   # below the first anchor: its slope
+    (a, x), (b, y) = pts[i], pts[i + 1]
+    return math.log(x) + (level - a) * (math.log(y) - math.log(x)) / (b - a)
+
+
+def level_for_salary(salary: float) -> float:
+    """The inverse of the curve, without hype: the level that expects `salary`."""
+    lo, hi = 0.0, 100.0
+    for _ in range(40):
+        mid = (lo + hi) / 2
+        lo, hi = (mid, hi) if _curve_log(mid) < math.log(salary) else (lo, mid)
+    return (lo + hi) / 2
+
+
+def expected_salary(p: Player, scale: LevelScale | None = None) -> float:
+    """What a player thinks he is worth per month (SALARY_CURVE). With the market's `scale` the
+    level is his place in the world (economy.LevelScale): when everybody gets better, pay stays."""
     hype = p.mod("fan_gain")[1]
-    return 600 * math.exp((p.overall() - 45) / 7.5) * (0.85 + 0.15 * hype)
+    return math.exp(_curve_log(scaled_level(p, scale))) * (0.85 + 0.15 * hype)
+
+
+def world_quantiles(clubs: list[Club]) -> list[float]:
+    return economy.level_quantiles([p.overall() for c in clubs for p in c.roster])
 
 
 def free_weeks(p: Player, week: int) -> float:
@@ -37,13 +69,13 @@ def free_weeks(p: Player, week: int) -> float:
     return weeks
 
 
-def asking(p: Player, week: int) -> float:
+def asking(p: Player, week: int, scale: LevelScale | None = None) -> float:
     """What a free agent settles for: months without a team lower his demands."""
     since = p.__dict__.get("free_since")
     if since is None:
-        return expected_salary(p)
+        return expected_salary(p, scale)
     months = max(0, week - since) / 4
-    return expected_salary(p) * max(ASK_FLOOR, 1 - ASK_DROP_MONTH * months)
+    return expected_salary(p, scale) * max(ASK_FLOOR, 1 - ASK_DROP_MONTH * months)
 
 
 @dataclass
@@ -67,6 +99,15 @@ class Market:
     stats: Counter = field(default_factory=Counter)      # outcome -> count, for the lab and the UI
     next_contract_id: int = 0
     short_since: dict[str, int] = field(default_factory=dict)   # club -> first week it had fewer than five
+    level_ref: list[float] | None = None   # world_quantiles() when the market first looked at the world
+    level_scale: LevelScale | None = None  # today's quantiles against level_ref: see expected_salary
+
+    def rescale(self, clubs: list[Club]) -> LevelScale:
+        now = world_quantiles(clubs)
+        if self.level_ref is None:
+            self.level_ref = now
+        self.level_scale = LevelScale(self.level_ref, now)
+        return self.level_scale
 
     def listed(self, clubs: list[Club], week: int = 0) -> list[tuple[Player, Club | None]]:
         out: list[tuple[Player, Club | None]] = [(p, None) for p in self.free_agents]
@@ -96,6 +137,7 @@ class Market:
         """AI clubs act every 4 weeks, at most one deal each; a club without five players looks
         every week and goes first. Clubs over ROSTER_MAX release their weakest bench player."""
         window = week % 4 == 0
+        self.rescale(clubs)
         notes = self._trim_rosters(clubs, week, manager_club) if window else []
         short = [c for c in clubs if contracts.staying(c) < 5 and c.name != manager_club]
         for name in [n for n in self.short_since if n not in {c.name for c in short}]:
@@ -126,12 +168,12 @@ class Market:
                 if week - self.refused.get((p.name, buyer.name), -999) < 26:
                     why["refused_recently"] += 1
                     continue  # he said no recently
-                ask = asking(p, week) if seller is None else expected_salary(p)
+                ask = asking(p, week, self.level_scale) if seller is None else expected_salary(p, self.level_scale)
                 if ask > TIER_SALARY_CAP[buyer.tier] * 1.1:
                     why["wage_gap"] += 1
                     continue  # cannot pay what he wants: do not waste an offer
                 salary = min(ask * rng.uniform(0.9, 1.15), TIER_SALARY_CAP[buyer.tier])
-                fee = 0.0 if seller is None else contracts.sale_fee(seller, p, week)
+                fee = 0.0 if seller is None else contracts.sale_fee(seller, p, week, self.level_scale)
                 if fee + salary * (6 if contracts.staying(buyer) >= 5 else 2) > buyer.cash:
                     why["cash"] += 1
                     continue  # a club short of players signs on two months of wages
@@ -191,7 +233,7 @@ class Market:
         """Seller agreed (or free agent); now the player decides."""
         p = o.player
         contract = contracts.make(self, p.name, o.salary, week, rng.choice(contracts.TERMS))
-        v = contract_acceptance(p, contract, asking(p, week) if o.seller is None else expected_salary(p), o.buyer, o.seller,
+        v = contract_acceptance(p, contract, asking(p, week, self.level_scale) if o.seller is None else expected_salary(p, self.level_scale), o.buyer, o.seller,
                                 free_weeks=free_weeks(p, week) if o.seller is None else 0.0,
                                 relocation=bool(o.seller and o.seller.name != o.buyer.name))
         if not v.decide(rng.random()):
