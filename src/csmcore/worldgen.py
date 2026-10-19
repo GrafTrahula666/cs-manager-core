@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import random
 
-from . import economy
+from . import circuit, economy
 from .board import Owner
 from .chronicle import Chronicle
 from .development import roll_potential
@@ -70,8 +70,10 @@ def _dist(n: int) -> list[float]:
 
 
 def calendar(regions=REGIONS) -> dict[int, list[Tournament]]:
-    """A season for 100-150 clubs: elite S/A events for the top 16, pro events for the top 32,
-    regional leagues for everyone outside the elite, open online cups for ranks 33+."""
+    """A season for 100-150 clubs, invites by league (circuit.py): Тир 1 plays the Masters, the
+    Major and the World Final by direct invite; Тир 1-2 the Pro Series; HACEIT runs the regional
+    leagues for everyone outside Тир 1, the open cups for Тир 3 and below, and the Major
+    qualifier that gives two Тир 2 clubs a place at the Major."""
     cal: dict[int, list[Tournament]] = {}
 
     def add(week: int, t: Tournament) -> None:
@@ -79,16 +81,20 @@ def calendar(regions=REGIONS) -> dict[int, list[Tournament]]:
 
     for w, name in ((4, "Зимняя лига"), (20, "Весенняя лига"), (40, "Осенняя лига")):
         for r in regions:
-            add(w, Tournament(f"{name} {r}", "B", 120_000, _dist(8), min_rank_invite=17, region=r, lan=False))
+            add(w, Tournament(f"HACEIT {name} {r}", "B", 120_000, _dist(8), region=r, lan=False,
+                              divisions=(2, 3, 4)))
     for w, name in ((8, "Pro Series I"), (30, "Pro Series II")):
-        add(w, Tournament(name, "A", 300_000, _dist(8), max_rank_invite=32, lan=True, travel_cost=20_000))
-    for w, name in ((10, "Open Cup I"), (28, "Open Cup II"), (50, "Open Cup III")):
-        add(w, Tournament(name, "C", 60_000, _dist(8), min_rank_invite=33, lan=False))
-    add(14, Tournament("Spring Masters", "A", 500_000, _dist(8), max_rank_invite=16, lan=True, travel_cost=30_000))
-    add(24, Tournament("Major", "S", 1_250_000, _dist(16), max_rank_invite=16, lan=True, major=True,
-                       sticker_revenue=8_000_000, travel_cost=40_000))
-    add(36, Tournament("Autumn Masters", "A", 500_000, _dist(8), max_rank_invite=16, lan=True, travel_cost=30_000))
-    add(46, Tournament("World Final", "S", 1_000_000, _dist(8), max_rank_invite=8, lan=True, travel_cost=40_000))
+        add(w, Tournament(name, "A", 300_000, _dist(8), lan=True, travel_cost=20_000, divisions=(1, 2)))
+    for w, name in ((10, "HACEIT Open Cup I"), (28, "HACEIT Open Cup II"), (50, "HACEIT Open Cup III")):
+        add(w, Tournament(name, "C", 60_000, _dist(8), lan=False, divisions=(3, 4)))
+    add(14, Tournament("Spring Masters", "A", 500_000, _dist(8), lan=True, travel_cost=30_000, divisions=(1,)))
+    add(22, Tournament("HACEIT Major Qualifier", "B", 80_000, _dist(8), lan=False, divisions=(2,), slots=16,
+                       qualifies_to="Major", qualify_top=2))
+    add(24, Tournament("Major", "S", 1_250_000, _dist(16), lan=True, major=True, sticker_revenue=8_000_000,
+                       travel_cost=40_000, divisions=(1,), slots=16))
+    add(36, Tournament("Autumn Masters", "A", 500_000, _dist(8), lan=True, travel_cost=30_000, divisions=(1,)))
+    add(46, Tournament("World Final", "S", 1_000_000, _dist(8), lan=True, travel_cost=40_000, divisions=(1,),
+                       slots=8, seed_by_season=True))
     return cal
 
 
@@ -157,6 +163,7 @@ def generate(seed: int = 1, n_clubs: int = 120, director: str = "cassandra"):
             _contracts(club, roster[:3], rng)
         clubs.append(club)
 
+    circuit.assign(clubs)
     free_agents = [make_player(nick(), rng.uniform(46, 64), rng, ROLES[i % 5]) for i in range(n_clubs // 3)]
     for p in free_agents:
         p.potential = roll_potential(p.overall(), p.age, rng)

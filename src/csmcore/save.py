@@ -11,9 +11,10 @@ import io
 import pickle
 
 MAGIC = b"CSMSAVE"
-VERSION = 2
-# Version history: 1 = before the emergent world engine; 2 = sysm.emergent (facts, minds, press).
-SUPPORTED = (1, 2)
+VERSION = 3
+# Version history: 1 = before the emergent world engine; 2 = sysm.emergent (facts, minds, press);
+# 3 = leagues (Тир 1-3 and the rest), HACEIT and HLTW.
+SUPPORTED = (1, 2, 3)
 
 
 def dumps(game) -> bytes:
@@ -44,7 +45,17 @@ def migrate(game, version: int):
         from .emergent import EmergentWorld
         regions = tuple(sorted({c.region for c in game.clubs}))
         game.sysm.emergent = EmergentWorld(game.seed, regions)
+    if version < 3:
+        _to_leagues(game)
     return game
+
+
+def _to_leagues(game) -> None:
+    """2 -> 3: leagues by the current ranking and the league calendar from the next week on;
+    the season table starts empty."""
+    from . import circuit, worldgen
+    circuit.assign(game.clubs)
+    game.calendar = worldgen.calendar()
 
 
 def save(game, path: str) -> int:

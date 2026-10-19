@@ -13,7 +13,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from . import economy, worldgen
+from . import circuit, economy, worldgen
 from .economy import Club
 from .manager import ManagerDesk
 from .season import SeasonRun, Systems, season_begin, season_finish, season_week
@@ -199,7 +199,16 @@ class Game:
     def _new_season(self) -> list[str]:
         """Season rollover: ranking points decay, expired sponsors are replaced, owners set new
         targets, old ledger lines are trimmed."""
-        lines = [f"Сезон {self.season} завершён. {self.club_name}: место {self.club.rank}"]
+        was = self.club.division
+        lines = [f"Сезон {self.season} завершён. {self.club_name}: место {self.club.rank}, "
+                 f"{circuit.name(was)}, {circuit.standings(self.clubs, was).index(self.club) + 1}-е в таблице лиги"]
+        moves = circuit.season_end(self.clubs)
+        if self.sysm.chronicle:
+            for m in moves:
+                self.sysm.chronicle.add(self.season, self.run.start_week + self.run.wk, "board", m)
+        if self.club.division != was:
+            up = self.club.division < was
+            lines.append(f"{self.club_name} {'поднимается' if up else 'вылетает'} в {circuit.name(self.club.division)}")
         self.season += 1
         start = self.run.start_week + self.run.wk
         rng = random.Random(self._season_seed() + 77)
@@ -233,6 +242,7 @@ class Game:
         notes += worldlife.investor_rebrand(self.clubs, self.sysm, week, rng, self.club_name)
         notes += worldlife.superteam(self.clubs, self.sysm, self.season, week, rng, nick, self.club_name)
         rerank(self.clubs)
+        circuit.rebalance(self.clubs)
         if self.sysm.legacy:
             fresh = sorted(self.sysm.legacy.born[-self.sysm.talents_per_season:], key=lambda q: -q.potential)
             for p in [q for q in fresh if q.potential >= 84][:2]:   # only the real wonderkids make the news

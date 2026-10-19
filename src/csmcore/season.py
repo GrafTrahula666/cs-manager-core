@@ -131,11 +131,18 @@ def play_series(a: Club, b: Club, graph: RelationGraph, seed: int, ctx: dict, ma
 def run_tournament(t: Tournament, clubs: list[Club], graph: RelationGraph, week: int, rng: random.Random,
                    log: SeasonLog, sysm: "Systems | None" = None, season: int = 1) -> list[Club]:
     """Single elimination among invited clubs (top by rank, power of two). Returns final order."""
-    invited = sorted([c for c in clubs if t.invited(c)], key=lambda c: c.rank)
+    qual = f"qual:{t.name}"
+    if t.seed_by_season:
+        key = lambda c: (-c.season_points, c.rank)   # noqa: E731
+    else:   # qualifiers keep their places, the lowest-ranked direct invites make room
+        key = lambda c: (qual not in c.flags, c.rank)   # noqa: E731
+    invited = sorted([c for c in clubs if t.invited(c)], key=key)
     size = 1
-    while size * 2 <= len(invited):
+    while size * 2 <= len(invited) and (not t.slots or size * 2 <= t.slots):
         size *= 2
     field_ = invited[:size]
+    for c in invited:
+        c.flags.discard(qual)
     if len(field_) < 2:
         return field_
     order: list[Club] = []
@@ -170,7 +177,13 @@ def run_tournament(t: Tournament, clubs: list[Club], graph: RelationGraph, week:
         ew.on_title(ew.ctx, t, alive[0])
     for place, c in enumerate(order, 1):
         economy.award(c, t, place, week, len(order))
-        c.rating_points += t.prize_pool / 10_000 * max(0, len(order) - place + 1)
+        gain = t.prize_pool / 10_000 * max(0, len(order) - place + 1)
+        c.rating_points += gain
+        c.season_points += gain
+    if t.qualifies_to:
+        for c in order[:t.qualify_top]:
+            c.flags.add(f"qual:{t.qualifies_to}")
+            log.results.append(f"week {week} {t.name}: {c.name} квалифицировался на {t.qualifies_to}")
     return order
 
 
