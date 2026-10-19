@@ -39,6 +39,7 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `src/csmcore/circuit.py`, `haceit.py`, `hltw.py` – leagues Тир 1–3 and the rest with promotion and relegation; HACEIT (Elo, HPL, lower leagues, Major qualifier); HLTW (media ranking, player rating, MVP, Top 20) (`docs/leagues-and-media.md`)
 - `src/csmcore/contracts.py` – contracts that end: extension talks, free transfers, a journal of every contract and hiring decision with its reasons, the academy fallback; the roster-core rule for invites is in `season.py` (`docs/contracts.md`, research vs. code: `docs/research-matrix.md`)
 - `economy.LevelScale`, `market.SALARY_CURVE`, `Club.money_history` – salaries and prices by a player's place in the world, season money totals per club (`docs/money.md`)
+- `src/csmcore/match/` – versioned competition rules with the source of every number (Premier, Major) and an exact in-map money ledger; not wired into the engine yet (`docs/match-rules.md`)
 - `src/csmcore/matchstats.py`, `src/csmcore/demo_records.py` – the same match metrics for simulated maps and parsed demos
 - `scripts/demo_analysis.py` – local CS2 demos -> round records (needs `pip install -e ".[data]"`; not yet run on a real demo)
 - `scripts/compare_sim_real.py` – simulation vs. demo records, side by side (`docs/match-engine-plan.md`)
