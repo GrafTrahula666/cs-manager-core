@@ -5,10 +5,18 @@ import random
 import pytest
 
 from csmcore import contracts
-from csmcore.economy import Club, Contract
+from csmcore.economy import Club, Contract, Tournament
 from csmcore.game import Game
 from csmcore.market import Market
 from csmcore.player import STATS, Player
+from csmcore.relations import RelationGraph
+from csmcore.season import (
+    SeasonLog,
+    SeasonRun,
+    Systems,
+    run_tournament,
+    snapshot_invites,
+)
 
 
 def pl(name, level=60, age=25, loyalty=50.0, ambition=50.0):
@@ -123,6 +131,28 @@ def test_wages_do_not_vanish_after_two_seasons(two_seasons):
     g = two_seasons
     paid = [k for c in g.clubs for k in c.contracts.values() if k.end_week >= g.week]
     assert len(paid) >= 0.97 * sum(len(c.contracts) for c in g.clubs)
+
+
+def test_a_club_that_lost_its_core_declines_the_invite_and_the_next_one_plays():
+    rng = random.Random(1)
+    clubs = [club_with(f"C{i}", [pl(f"c{i}p{j}", 70 - i) for j in range(5)], rank=i + 1) for i in range(5)]
+    for i, c in enumerate(clubs):
+        c.division = 1 if i < 4 else 2
+    t = Tournament("Masters", "A", 100_000, [0.6, 0.4], divisions=(1,))
+    run = SeasonRun(1, 0, rng, rng, rng, rng, SeasonLog(), {})
+    snapshot_invites(run, clubs, {14: [t]}, 14 - 4)
+    assert set(run.invites["Masters"]) == {"C0", "C1", "C2", "C3"}
+    broken = clubs[0]                     # three of the five leave before the event
+    for p in broken.roster[:3]:
+        p.flags.add("benched")
+    for j in range(3):
+        broken.roster.append(pl(f"new{j}", 75))
+    log = SeasonLog()
+    order = run_tournament(t, clubs, RelationGraph(), 14, rng, log, Systems(development=False), 1, run.invites)
+    names = {c.name for c in order}
+    assert "C0" not in names and "C4" in names and len(order) == 4
+    assert any("C0 не может принять инвайт" in x and "в составе 2" in x for x in log.management)
+    assert "Masters" not in run.invites
 
 
 def test_same_seed_same_contract_history():
