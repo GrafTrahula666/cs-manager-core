@@ -49,6 +49,25 @@ class Legacy:
         }
         return max(options, key=options.get)
 
+    def quit_chance(self, p: Player, week: int) -> float:
+        """A free agent nobody signs for a year starts to leave the scene: a job, studies, streams."""
+        since = p.__dict__.get("free_since")
+        idle = 0 if since is None else week - since
+        return max(self.retirement_chance(p), min(0.9, max(0.0, (idle - 26) / 104)))
+
+    def free_agents_end(self, market, week: int, rng: random.Random) -> list[str]:
+        """Free agents age and retire too; before this they stayed in the pool forever."""
+        gone = []
+        for p in sorted(market.free_agents, key=lambda q: q.name):
+            if rng.random() < self.quit_chance(p, week):
+                gone.append(p)
+                p.flags.discard("free_agent")
+                p.flags.add("retired")
+                p.history.append(f"week {week}: без клуба ушёл из киберспорта")
+                self.retired.append(Retired(p, week, "вне сцены"))
+        market.free_agents[:] = [p for p in market.free_agents if p not in gone]
+        return [f"Без клуба из киберспорта ушли {len(gone)} свободных агентов"] if gone else []
+
     def season_end(self, clubs: list[Club], week: int, rng: random.Random) -> list[str]:
         notes = []
         for club in clubs:

@@ -200,3 +200,20 @@ def test_api_shows_contracts_renews_and_explains_hiring():
     h = api.hiring()
     assert "journal" in h and "stats" in h
     assert "contract_status" in api.roster()[0]
+
+
+def test_a_free_agent_nobody_signs_leaves_the_scene():
+    from csmcore.legacy import Legacy
+    m = Market()
+    idle, fresh = pl("idle", age=22), pl("fresh", age=22)
+    idle.free_since, fresh.free_since = 0, 100
+    idle.flags.add("free_agent")
+    m.free_agents += [idle, fresh]
+    lg = Legacy()
+    assert lg.quit_chance(fresh, 104) == 0.0 and lg.quit_chance(idle, 104) > 0.7
+    class Half(random.Random):
+        def random(self):
+            return 0.5
+    lines = lg.free_agents_end(m, 104, Half())
+    assert idle not in m.free_agents and fresh in m.free_agents
+    assert "free_agent" not in idle.flags and lines and lg.retired[-1].player is idle

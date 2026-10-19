@@ -426,6 +426,8 @@ def season_finish(run: SeasonRun, clubs: list[Club], sysm: Systems) -> None:
             log.management.append(line)
             if sysm.chronicle:
                 sysm.chronicle.add(season, end_week, "retirement", line)
+        if sysm.market is not None:
+            log.management += sysm.legacy.free_agents_end(sysm.market, end_week, mgmt_rng)
         taken = {p.name for c in clubs for p in c.roster + c.former}
         if sysm.market is not None:
             taken |= {p.name for p in sysm.market.free_agents}
@@ -450,7 +452,8 @@ def season_finish(run: SeasonRun, clubs: list[Club], sysm: Systems) -> None:
             if "season_stats" in p.__dict__:
                 p.__dict__["last_season_stats"] = p.__dict__.pop("season_stats")
     if sysm.development:
-        development.season_end([p for c in clubs for p in c.roster])
+        development.season_end([p for c in clubs for p in c.roster]
+                               + (sysm.market.free_agents if sysm.market is not None else []))
 
 
 def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tournament], seed: int,
