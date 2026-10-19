@@ -1,0 +1,990 @@
+{"id": "V1-006", "cash_t": 5654, "cash_ct": 4262, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-007", "cash_t": 6463, "cash_ct": 4839, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-008", "cash_t": 7272, "cash_ct": 5416, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-009", "cash_t": 8081, "cash_ct": 5993, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-010", "cash_t": 8890, "cash_ct": 6570, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-011", "cash_t": 9699, "cash_ct": 7147, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-012", "cash_t": 10508, "cash_ct": 7724, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-013", "cash_t": 11317, "cash_ct": 8301, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-014", "cash_t": 12126, "cash_ct": 8878, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-015", "cash_t": 12935, "cash_ct": 9455, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-016", "cash_t": 1544, "cash_ct": 10032, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-017", "cash_t": 2353, "cash_ct": 10609, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-018", "cash_t": 3162, "cash_ct": 11186, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 36, "ct_kit": false, "series": "BO5"}
+{"id": "V1-019", "cash_t": 3971, "cash_ct": 11763, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 15, "ct_kit": true, "series": "BO5"}
+{"id": "V1-020", "cash_t": 4780, "cash_ct": 12340, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-021", "cash_t": 5589, "cash_ct": 12917, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 7, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-022", "cash_t": 6398, "cash_ct": 13494, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 20, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-023", "cash_t": 7207, "cash_ct": 1171, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 33, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-024", "cash_t": 8016, "cash_ct": 1748, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-025", "cash_t": 8825, "cash_ct": 2325, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 25, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-026", "cash_t": 9634, "cash_ct": 2902, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 38, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-027", "cash_t": 10443, "cash_ct": 3479, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 17, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-028", "cash_t": 11252, "cash_ct": 4056, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-029", "cash_t": 12061, "cash_ct": 4633, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 9, "ct_kit": true, "series": "BO1"}
+{"id": "V1-030", "cash_t": 12870, "cash_ct": 5210, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-031", "cash_t": 1479, "cash_ct": 5787, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-032", "cash_t": 2288, "cash_ct": 6364, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-033", "cash_t": 3097, "cash_ct": 6941, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-034", "cash_t": 3906, "cash_ct": 7518, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-035", "cash_t": 4715, "cash_ct": 8095, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-036", "cash_t": 5524, "cash_ct": 8672, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-037", "cash_t": 6333, "cash_ct": 9249, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-038", "cash_t": 7142, "cash_ct": 9826, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-039", "cash_t": 7951, "cash_ct": 10403, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-040", "cash_t": 8760, "cash_ct": 10980, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-041", "cash_t": 9569, "cash_ct": 11557, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-042", "cash_t": 10378, "cash_ct": 12134, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-043", "cash_t": 11187, "cash_ct": 12711, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-044", "cash_t": 11996, "cash_ct": 13288, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-045", "cash_t": 12805, "cash_ct": 965, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-046", "cash_t": 1414, "cash_ct": 1542, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-047", "cash_t": 2223, "cash_ct": 2119, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-048", "cash_t": 3032, "cash_ct": 2696, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-049", "cash_t": 3841, "cash_ct": 3273, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 31, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-050", "cash_t": 4650, "cash_ct": 3850, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 10, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-051", "cash_t": 5459, "cash_ct": 4427, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 23, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-052", "cash_t": 6268, "cash_ct": 5004, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-053", "cash_t": 7077, "cash_ct": 5581, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 15, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-054", "cash_t": 7886, "cash_ct": 6158, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 28, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-055", "cash_t": 8695, "cash_ct": 6735, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 7, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-056", "cash_t": 9504, "cash_ct": 7312, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-057", "cash_t": 10313, "cash_ct": 7889, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 33, "ct_kit": false, "series": "BO1"}
+{"id": "V1-058", "cash_t": 11122, "cash_ct": 8466, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 12, "ct_kit": true, "series": "BO1"}
+{"id": "V1-059", "cash_t": 11931, "cash_ct": 9043, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 25, "ct_kit": true, "series": "BO1"}
+{"id": "V1-060", "cash_t": 12740, "cash_ct": 9620, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-061", "cash_t": 1349, "cash_ct": 10197, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-062", "cash_t": 2158, "cash_ct": 10774, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-063", "cash_t": 2967, "cash_ct": 11351, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-064", "cash_t": 3776, "cash_ct": 11928, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-065", "cash_t": 4585, "cash_ct": 12505, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-066", "cash_t": 5394, "cash_ct": 13082, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-067", "cash_t": 6203, "cash_ct": 13659, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-068", "cash_t": 7012, "cash_ct": 1336, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-069", "cash_t": 7821, "cash_ct": 1913, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-070", "cash_t": 8630, "cash_ct": 2490, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-071", "cash_t": 9439, "cash_ct": 3067, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-072", "cash_t": 10248, "cash_ct": 3644, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-073", "cash_t": 11057, "cash_ct": 4221, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-074", "cash_t": 11866, "cash_ct": 4798, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-075", "cash_t": 12675, "cash_ct": 5375, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-076", "cash_t": 1284, "cash_ct": 5952, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-077", "cash_t": 2093, "cash_ct": 6529, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-078", "cash_t": 2902, "cash_ct": 7106, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 34, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-079", "cash_t": 3711, "cash_ct": 7683, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 13, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-080", "cash_t": 4520, "cash_ct": 8260, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-081", "cash_t": 5329, "cash_ct": 8837, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 39, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-082", "cash_t": 6138, "cash_ct": 9414, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 18, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-083", "cash_t": 6947, "cash_ct": 9991, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 31, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-084", "cash_t": 7756, "cash_ct": 10568, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-085", "cash_t": 8565, "cash_ct": 11145, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 23, "ct_kit": true, "series": "BO1"}
+{"id": "V1-086", "cash_t": 9374, "cash_ct": 11722, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 36, "ct_kit": true, "series": "BO1"}
+{"id": "V1-087", "cash_t": 10183, "cash_ct": 12299, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 15, "ct_kit": false, "series": "BO1"}
+{"id": "V1-088", "cash_t": 10992, "cash_ct": 12876, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-089", "cash_t": 11801, "cash_ct": 13453, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 7, "ct_kit": true, "series": "BO1"}
+{"id": "V1-090", "cash_t": 12610, "cash_ct": 1130, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-091", "cash_t": 1219, "cash_ct": 1707, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-092", "cash_t": 2028, "cash_ct": 2284, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-093", "cash_t": 2837, "cash_ct": 2861, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-094", "cash_t": 3646, "cash_ct": 3438, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-095", "cash_t": 4455, "cash_ct": 4015, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-096", "cash_t": 5264, "cash_ct": 4592, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-097", "cash_t": 6073, "cash_ct": 5169, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-098", "cash_t": 6882, "cash_ct": 5746, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-099", "cash_t": 7691, "cash_ct": 6323, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-100", "cash_t": 8500, "cash_ct": 6900, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-101", "cash_t": 9309, "cash_ct": 7477, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-102", "cash_t": 10118, "cash_ct": 8054, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-103", "cash_t": 10927, "cash_ct": 8631, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-104", "cash_t": 11736, "cash_ct": 9208, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-105", "cash_t": 12545, "cash_ct": 9785, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-106", "cash_t": 1154, "cash_ct": 10362, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-107", "cash_t": 1963, "cash_ct": 10939, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-108", "cash_t": 2772, "cash_ct": 11516, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-109", "cash_t": 3581, "cash_ct": 12093, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 29, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-110", "cash_t": 4390, "cash_ct": 12670, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 8, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-111", "cash_t": 5199, "cash_ct": 13247, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 21, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-112", "cash_t": 6008, "cash_ct": 924, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-113", "cash_t": 6817, "cash_ct": 1501, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 13, "ct_kit": true, "series": "BO1"}
+{"id": "V1-114", "cash_t": 7626, "cash_ct": 2078, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 26, "ct_kit": false, "series": "BO1"}
+{"id": "V1-115", "cash_t": 8435, "cash_ct": 2655, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 39, "ct_kit": true, "series": "BO1"}
+{"id": "V1-116", "cash_t": 9244, "cash_ct": 3232, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-117", "cash_t": 10053, "cash_ct": 3809, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 31, "ct_kit": false, "series": "BO1"}
+{"id": "V1-118", "cash_t": 10862, "cash_ct": 4386, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 10, "ct_kit": true, "series": "BO1"}
+{"id": "V1-119", "cash_t": 11671, "cash_ct": 4963, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 23, "ct_kit": true, "series": "BO3"}
+{"id": "V1-120", "cash_t": 12480, "cash_ct": 5540, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-121", "cash_t": 1089, "cash_ct": 6117, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-122", "cash_t": 1898, "cash_ct": 6694, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-123", "cash_t": 2707, "cash_ct": 7271, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-124", "cash_t": 3516, "cash_ct": 7848, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-125", "cash_t": 4325, "cash_ct": 8425, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-126", "cash_t": 5134, "cash_ct": 9002, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-127", "cash_t": 5943, "cash_ct": 9579, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-128", "cash_t": 6752, "cash_ct": 10156, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-129", "cash_t": 7561, "cash_ct": 10733, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-130", "cash_t": 8370, "cash_ct": 11310, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-131", "cash_t": 9179, "cash_ct": 11887, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-132", "cash_t": 9988, "cash_ct": 12464, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-133", "cash_t": 10797, "cash_ct": 13041, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-134", "cash_t": 11606, "cash_ct": 13618, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-135", "cash_t": 12415, "cash_ct": 1295, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-136", "cash_t": 1024, "cash_ct": 1872, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-137", "cash_t": 1833, "cash_ct": 2449, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-138", "cash_t": 2642, "cash_ct": 3026, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 32, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-139", "cash_t": 3451, "cash_ct": 3603, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 11, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-140", "cash_t": 4260, "cash_ct": 4180, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-141", "cash_t": 5069, "cash_ct": 4757, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 37, "ct_kit": false, "series": "BO1"}
+{"id": "V1-142", "cash_t": 5878, "cash_ct": 5334, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 16, "ct_kit": true, "series": "BO1"}
+{"id": "V1-143", "cash_t": 6687, "cash_ct": 5911, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 29, "ct_kit": true, "series": "BO1"}
+{"id": "V1-144", "cash_t": 7496, "cash_ct": 6488, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-145", "cash_t": 8305, "cash_ct": 7065, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 21, "ct_kit": true, "series": "BO1"}
+{"id": "V1-146", "cash_t": 9114, "cash_ct": 7642, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 34, "ct_kit": true, "series": "BO1"}
+{"id": "V1-147", "cash_t": 9923, "cash_ct": 8219, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 13, "ct_kit": false, "series": "BO3"}
+{"id": "V1-148", "cash_t": 10732, "cash_ct": 8796, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-149", "cash_t": 11541, "cash_ct": 9373, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 39, "ct_kit": true, "series": "BO3"}
+{"id": "V1-150", "cash_t": 12350, "cash_ct": 9950, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-151", "cash_t": 959, "cash_ct": 10527, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-152", "cash_t": 1768, "cash_ct": 11104, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-153", "cash_t": 2577, "cash_ct": 11681, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-154", "cash_t": 3386, "cash_ct": 12258, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-155", "cash_t": 4195, "cash_ct": 12835, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-156", "cash_t": 5004, "cash_ct": 13412, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-157", "cash_t": 5813, "cash_ct": 1089, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-158", "cash_t": 6622, "cash_ct": 1666, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-159", "cash_t": 7431, "cash_ct": 2243, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-160", "cash_t": 8240, "cash_ct": 2820, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-161", "cash_t": 9049, "cash_ct": 3397, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-162", "cash_t": 9858, "cash_ct": 3974, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-163", "cash_t": 10667, "cash_ct": 4551, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-164", "cash_t": 11476, "cash_ct": 5128, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-165", "cash_t": 12285, "cash_ct": 5705, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-166", "cash_t": 894, "cash_ct": 6282, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-167", "cash_t": 1703, "cash_ct": 6859, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-168", "cash_t": 2512, "cash_ct": 7436, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-169", "cash_t": 3321, "cash_ct": 8013, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 27, "ct_kit": true, "series": "BO1"}
+{"id": "V1-170", "cash_t": 4130, "cash_ct": 8590, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 6, "ct_kit": true, "series": "BO1"}
+{"id": "V1-171", "cash_t": 4939, "cash_ct": 9167, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 19, "ct_kit": false, "series": "BO1"}
+{"id": "V1-172", "cash_t": 5748, "cash_ct": 9744, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-173", "cash_t": 6557, "cash_ct": 10321, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 11, "ct_kit": true, "series": "BO1"}
+{"id": "V1-174", "cash_t": 7366, "cash_ct": 10898, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 24, "ct_kit": false, "series": "BO1"}
+{"id": "V1-175", "cash_t": 8175, "cash_ct": 11475, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 37, "ct_kit": true, "series": "BO3"}
+{"id": "V1-176", "cash_t": 8984, "cash_ct": 12052, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-177", "cash_t": 9793, "cash_ct": 12629, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 29, "ct_kit": false, "series": "BO3"}
+{"id": "V1-178", "cash_t": 10602, "cash_ct": 13206, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 8, "ct_kit": true, "series": "BO3"}
+{"id": "V1-179", "cash_t": 11411, "cash_ct": 883, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 21, "ct_kit": true, "series": "BO3"}
+{"id": "V1-180", "cash_t": 12220, "cash_ct": 1460, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-181", "cash_t": 829, "cash_ct": 2037, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-182", "cash_t": 1638, "cash_ct": 2614, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-183", "cash_t": 2447, "cash_ct": 3191, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-184", "cash_t": 3256, "cash_ct": 3768, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-185", "cash_t": 4065, "cash_ct": 4345, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-186", "cash_t": 4874, "cash_ct": 4922, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-187", "cash_t": 5683, "cash_ct": 5499, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-188", "cash_t": 6492, "cash_ct": 6076, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-189", "cash_t": 7301, "cash_ct": 6653, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-190", "cash_t": 8110, "cash_ct": 7230, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-191", "cash_t": 8919, "cash_ct": 7807, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-192", "cash_t": 9728, "cash_ct": 8384, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-193", "cash_t": 10537, "cash_ct": 8961, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-194", "cash_t": 11346, "cash_ct": 9538, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-195", "cash_t": 12155, "cash_ct": 10115, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-196", "cash_t": 12964, "cash_ct": 10692, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-197", "cash_t": 1573, "cash_ct": 11269, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-198", "cash_t": 2382, "cash_ct": 11846, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 30, "ct_kit": false, "series": "BO1"}
+{"id": "V1-199", "cash_t": 3191, "cash_ct": 12423, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 9, "ct_kit": true, "series": "BO1"}
+{"id": "V1-200", "cash_t": 4000, "cash_ct": 13000, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-201", "cash_t": 4809, "cash_ct": 13577, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 35, "ct_kit": false, "series": "BO1"}
+{"id": "V1-202", "cash_t": 5618, "cash_ct": 1254, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 14, "ct_kit": true, "series": "BO1"}
+{"id": "V1-203", "cash_t": 6427, "cash_ct": 1831, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 27, "ct_kit": true, "series": "BO3"}
+{"id": "V1-204", "cash_t": 7236, "cash_ct": 2408, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-205", "cash_t": 8045, "cash_ct": 2985, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 19, "ct_kit": true, "series": "BO3"}
+{"id": "V1-206", "cash_t": 8854, "cash_ct": 3562, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 32, "ct_kit": true, "series": "BO3"}
+{"id": "V1-207", "cash_t": 9663, "cash_ct": 4139, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 11, "ct_kit": false, "series": "BO3"}
+{"id": "V1-208", "cash_t": 10472, "cash_ct": 4716, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-209", "cash_t": 11281, "cash_ct": 5293, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 37, "ct_kit": true, "series": "BO3"}
+{"id": "V1-210", "cash_t": 12090, "cash_ct": 5870, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-211", "cash_t": 12899, "cash_ct": 6447, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-212", "cash_t": 1508, "cash_ct": 7024, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-213", "cash_t": 2317, "cash_ct": 7601, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-214", "cash_t": 3126, "cash_ct": 8178, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-215", "cash_t": 3935, "cash_ct": 8755, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-216", "cash_t": 4744, "cash_ct": 9332, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-217", "cash_t": 5553, "cash_ct": 9909, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-218", "cash_t": 6362, "cash_ct": 10486, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-219", "cash_t": 7171, "cash_ct": 11063, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-220", "cash_t": 7980, "cash_ct": 11640, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-221", "cash_t": 8789, "cash_ct": 12217, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-222", "cash_t": 9598, "cash_ct": 12794, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-223", "cash_t": 10407, "cash_ct": 13371, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-224", "cash_t": 11216, "cash_ct": 1048, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-225", "cash_t": 12025, "cash_ct": 1625, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-226", "cash_t": 12834, "cash_ct": 2202, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-227", "cash_t": 1443, "cash_ct": 2779, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-228", "cash_t": 2252, "cash_ct": 3356, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-229", "cash_t": 3061, "cash_ct": 3933, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 25, "ct_kit": true, "series": "BO1"}
+{"id": "V1-230", "cash_t": 3870, "cash_ct": 4510, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 38, "ct_kit": true, "series": "BO1"}
+{"id": "V1-231", "cash_t": 4679, "cash_ct": 5087, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 17, "ct_kit": false, "series": "BO3"}
+{"id": "V1-232", "cash_t": 5488, "cash_ct": 5664, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-233", "cash_t": 6297, "cash_ct": 6241, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 9, "ct_kit": true, "series": "BO3"}
+{"id": "V1-234", "cash_t": 7106, "cash_ct": 6818, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 22, "ct_kit": false, "series": "BO3"}
+{"id": "V1-235", "cash_t": 7915, "cash_ct": 7395, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 35, "ct_kit": true, "series": "BO3"}
+{"id": "V1-236", "cash_t": 8724, "cash_ct": 7972, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-237", "cash_t": 9533, "cash_ct": 8549, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 27, "ct_kit": false, "series": "BO3"}
+{"id": "V1-238", "cash_t": 10342, "cash_ct": 9126, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 6, "ct_kit": true, "series": "BO5"}
+{"id": "V1-239", "cash_t": 11151, "cash_ct": 9703, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 19, "ct_kit": true, "series": "BO5"}
+{"id": "V1-240", "cash_t": 11960, "cash_ct": 10280, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-241", "cash_t": 12769, "cash_ct": 10857, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-242", "cash_t": 1378, "cash_ct": 11434, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-243", "cash_t": 2187, "cash_ct": 12011, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-244", "cash_t": 2996, "cash_ct": 12588, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-245", "cash_t": 3805, "cash_ct": 13165, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-246", "cash_t": 4614, "cash_ct": 842, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-247", "cash_t": 5423, "cash_ct": 1419, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-248", "cash_t": 6232, "cash_ct": 1996, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-249", "cash_t": 7041, "cash_ct": 2573, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-250", "cash_t": 7850, "cash_ct": 3150, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-251", "cash_t": 8659, "cash_ct": 3727, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-252", "cash_t": 9468, "cash_ct": 4304, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-253", "cash_t": 10277, "cash_ct": 4881, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-254", "cash_t": 11086, "cash_ct": 5458, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-255", "cash_t": 11895, "cash_ct": 6035, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-256", "cash_t": 12704, "cash_ct": 6612, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-257", "cash_t": 1313, "cash_ct": 7189, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-258", "cash_t": 2122, "cash_ct": 7766, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 28, "ct_kit": false, "series": "BO1"}
+{"id": "V1-259", "cash_t": 2931, "cash_ct": 8343, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 7, "ct_kit": true, "series": "BO3"}
+{"id": "V1-260", "cash_t": 3740, "cash_ct": 8920, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-261", "cash_t": 4549, "cash_ct": 9497, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 33, "ct_kit": false, "series": "BO3"}
+{"id": "V1-262", "cash_t": 5358, "cash_ct": 10074, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 12, "ct_kit": true, "series": "BO3"}
+{"id": "V1-263", "cash_t": 6167, "cash_ct": 10651, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 25, "ct_kit": true, "series": "BO3"}
+{"id": "V1-264", "cash_t": 6976, "cash_ct": 11228, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-265", "cash_t": 7785, "cash_ct": 11805, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 17, "ct_kit": true, "series": "BO3"}
+{"id": "V1-266", "cash_t": 8594, "cash_ct": 12382, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 30, "ct_kit": true, "series": "BO5"}
+{"id": "V1-267", "cash_t": 9403, "cash_ct": 12959, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 9, "ct_kit": false, "series": "BO5"}
+{"id": "V1-268", "cash_t": 10212, "cash_ct": 13536, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-269", "cash_t": 11021, "cash_ct": 1213, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 35, "ct_kit": true, "series": "BO5"}
+{"id": "V1-270", "cash_t": 11830, "cash_ct": 1790, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-271", "cash_t": 12639, "cash_ct": 2367, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-272", "cash_t": 1248, "cash_ct": 2944, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-273", "cash_t": 2057, "cash_ct": 3521, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-274", "cash_t": 2866, "cash_ct": 4098, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-275", "cash_t": 3675, "cash_ct": 4675, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-276", "cash_t": 4484, "cash_ct": 5252, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-277", "cash_t": 5293, "cash_ct": 5829, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-278", "cash_t": 6102, "cash_ct": 6406, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-279", "cash_t": 6911, "cash_ct": 6983, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-280", "cash_t": 7720, "cash_ct": 7560, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-281", "cash_t": 8529, "cash_ct": 8137, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-282", "cash_t": 9338, "cash_ct": 8714, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-283", "cash_t": 10147, "cash_ct": 9291, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-284", "cash_t": 10956, "cash_ct": 9868, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-285", "cash_t": 11765, "cash_ct": 10445, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-286", "cash_t": 12574, "cash_ct": 11022, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-287", "cash_t": 1183, "cash_ct": 11599, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-288", "cash_t": 1992, "cash_ct": 12176, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-289", "cash_t": 2801, "cash_ct": 12753, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 23, "ct_kit": true, "series": "BO3"}
+{"id": "V1-290", "cash_t": 3610, "cash_ct": 13330, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 36, "ct_kit": true, "series": "BO3"}
+{"id": "V1-291", "cash_t": 4419, "cash_ct": 1007, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 15, "ct_kit": false, "series": "BO3"}
+{"id": "V1-292", "cash_t": 5228, "cash_ct": 1584, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-293", "cash_t": 6037, "cash_ct": 2161, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 7, "ct_kit": true, "series": "BO3"}
+{"id": "V1-294", "cash_t": 6846, "cash_ct": 2738, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 20, "ct_kit": false, "series": "BO5"}
+{"id": "V1-295", "cash_t": 7655, "cash_ct": 3315, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 33, "ct_kit": true, "series": "BO5"}
+{"id": "V1-296", "cash_t": 8464, "cash_ct": 3892, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-297", "cash_t": 9273, "cash_ct": 4469, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 25, "ct_kit": false, "series": "BO5"}
+{"id": "V1-298", "cash_t": 10082, "cash_ct": 5046, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 38, "ct_kit": true, "series": "BO5"}
+{"id": "V1-299", "cash_t": 10891, "cash_ct": 5623, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 17, "ct_kit": true, "series": "BO5"}
+{"id": "V1-300", "cash_t": 11700, "cash_ct": 6200, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-301", "cash_t": 12509, "cash_ct": 6777, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-302", "cash_t": 1118, "cash_ct": 7354, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-303", "cash_t": 1927, "cash_ct": 7931, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-304", "cash_t": 2736, "cash_ct": 8508, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-305", "cash_t": 3545, "cash_ct": 9085, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-306", "cash_t": 4354, "cash_ct": 9662, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-307", "cash_t": 5163, "cash_ct": 10239, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-308", "cash_t": 5972, "cash_ct": 10816, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-309", "cash_t": 6781, "cash_ct": 11393, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-310", "cash_t": 7590, "cash_ct": 11970, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-311", "cash_t": 8399, "cash_ct": 12547, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-312", "cash_t": 9208, "cash_ct": 13124, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-313", "cash_t": 10017, "cash_ct": 801, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-314", "cash_t": 10826, "cash_ct": 1378, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-315", "cash_t": 11635, "cash_ct": 1955, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-316", "cash_t": 12444, "cash_ct": 2532, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-317", "cash_t": 1053, "cash_ct": 3109, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-318", "cash_t": 1862, "cash_ct": 3686, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 26, "ct_kit": false, "series": "BO3"}
+{"id": "V1-319", "cash_t": 2671, "cash_ct": 4263, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 39, "ct_kit": true, "series": "BO3"}
+{"id": "V1-320", "cash_t": 3480, "cash_ct": 4840, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-321", "cash_t": 4289, "cash_ct": 5417, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 31, "ct_kit": false, "series": "BO3"}
+{"id": "V1-322", "cash_t": 5098, "cash_ct": 5994, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 10, "ct_kit": true, "series": "BO5"}
+{"id": "V1-323", "cash_t": 5907, "cash_ct": 6571, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 23, "ct_kit": true, "series": "BO5"}
+{"id": "V1-324", "cash_t": 6716, "cash_ct": 7148, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-325", "cash_t": 7525, "cash_ct": 7725, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 15, "ct_kit": true, "series": "BO5"}
+{"id": "V1-326", "cash_t": 8334, "cash_ct": 8302, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 28, "ct_kit": true, "series": "BO5"}
+{"id": "V1-327", "cash_t": 9143, "cash_ct": 8879, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 7, "ct_kit": false, "series": "BO5"}
+{"id": "V1-328", "cash_t": 9952, "cash_ct": 9456, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-329", "cash_t": 10761, "cash_ct": 10033, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 33, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-330", "cash_t": 11570, "cash_ct": 10610, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-331", "cash_t": 12379, "cash_ct": 11187, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-332", "cash_t": 988, "cash_ct": 11764, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-333", "cash_t": 1797, "cash_ct": 12341, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-334", "cash_t": 2606, "cash_ct": 12918, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-335", "cash_t": 3415, "cash_ct": 13495, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-336", "cash_t": 4224, "cash_ct": 1172, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-337", "cash_t": 5033, "cash_ct": 1749, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-338", "cash_t": 5842, "cash_ct": 2326, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-339", "cash_t": 6651, "cash_ct": 2903, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-340", "cash_t": 7460, "cash_ct": 3480, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-341", "cash_t": 8269, "cash_ct": 4057, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-342", "cash_t": 9078, "cash_ct": 4634, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-343", "cash_t": 9887, "cash_ct": 5211, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-344", "cash_t": 10696, "cash_ct": 5788, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-345", "cash_t": 11505, "cash_ct": 6365, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-346", "cash_t": 12314, "cash_ct": 6942, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-347", "cash_t": 923, "cash_ct": 7519, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-348", "cash_t": 1732, "cash_ct": 8096, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-349", "cash_t": 2541, "cash_ct": 8673, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 21, "ct_kit": true, "series": "BO3"}
+{"id": "V1-350", "cash_t": 3350, "cash_ct": 9250, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 34, "ct_kit": true, "series": "BO5"}
+{"id": "V1-351", "cash_t": 4159, "cash_ct": 9827, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 13, "ct_kit": false, "series": "BO5"}
+{"id": "V1-352", "cash_t": 4968, "cash_ct": 10404, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-353", "cash_t": 5777, "cash_ct": 10981, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 39, "ct_kit": true, "series": "BO5"}
+{"id": "V1-354", "cash_t": 6586, "cash_ct": 11558, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 18, "ct_kit": false, "series": "BO5"}
+{"id": "V1-355", "cash_t": 7395, "cash_ct": 12135, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 31, "ct_kit": true, "series": "BO5"}
+{"id": "V1-356", "cash_t": 8204, "cash_ct": 12712, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-357", "cash_t": 9013, "cash_ct": 13289, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 23, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-358", "cash_t": 9822, "cash_ct": 966, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 36, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-359", "cash_t": 10631, "cash_ct": 1543, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 15, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-360", "cash_t": 11440, "cash_ct": 2120, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-361", "cash_t": 12249, "cash_ct": 2697, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-362", "cash_t": 858, "cash_ct": 3274, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-363", "cash_t": 1667, "cash_ct": 3851, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-364", "cash_t": 2476, "cash_ct": 4428, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-365", "cash_t": 3285, "cash_ct": 5005, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-366", "cash_t": 4094, "cash_ct": 5582, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-367", "cash_t": 4903, "cash_ct": 6159, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-368", "cash_t": 5712, "cash_ct": 6736, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-369", "cash_t": 6521, "cash_ct": 7313, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-370", "cash_t": 7330, "cash_ct": 7890, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-371", "cash_t": 8139, "cash_ct": 8467, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-372", "cash_t": 8948, "cash_ct": 9044, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-373", "cash_t": 9757, "cash_ct": 9621, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-374", "cash_t": 10566, "cash_ct": 10198, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-375", "cash_t": 11375, "cash_ct": 10775, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-376", "cash_t": 12184, "cash_ct": 11352, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-377", "cash_t": 12993, "cash_ct": 11929, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-378", "cash_t": 1602, "cash_ct": 12506, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 24, "ct_kit": false, "series": "BO5"}
+{"id": "V1-379", "cash_t": 2411, "cash_ct": 13083, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 37, "ct_kit": true, "series": "BO5"}
+{"id": "V1-380", "cash_t": 3220, "cash_ct": 13660, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-381", "cash_t": 4029, "cash_ct": 1337, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 29, "ct_kit": false, "series": "BO5"}
+{"id": "V1-382", "cash_t": 4838, "cash_ct": 1914, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 8, "ct_kit": true, "series": "BO5"}
+{"id": "V1-383", "cash_t": 5647, "cash_ct": 2491, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 21, "ct_kit": true, "series": "BO5"}
+{"id": "V1-384", "cash_t": 6456, "cash_ct": 3068, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-385", "cash_t": 7265, "cash_ct": 3645, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 13, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-386", "cash_t": 8074, "cash_ct": 4222, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 26, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-387", "cash_t": 8883, "cash_ct": 4799, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 39, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-388", "cash_t": 9692, "cash_ct": 5376, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-389", "cash_t": 10501, "cash_ct": 5953, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 31, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-390", "cash_t": 11310, "cash_ct": 6530, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-391", "cash_t": 12119, "cash_ct": 7107, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-392", "cash_t": 12928, "cash_ct": 7684, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-393", "cash_t": 1537, "cash_ct": 8261, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-394", "cash_t": 2346, "cash_ct": 8838, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-395", "cash_t": 3155, "cash_ct": 9415, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-396", "cash_t": 3964, "cash_ct": 9992, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-397", "cash_t": 4773, "cash_ct": 10569, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-398", "cash_t": 5582, "cash_ct": 11146, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-399", "cash_t": 6391, "cash_ct": 11723, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-400", "cash_t": 7200, "cash_ct": 12300, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-401", "cash_t": 8009, "cash_ct": 12877, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-402", "cash_t": 8818, "cash_ct": 13454, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-403", "cash_t": 9627, "cash_ct": 1131, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-404", "cash_t": 10436, "cash_ct": 1708, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-405", "cash_t": 11245, "cash_ct": 2285, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-406", "cash_t": 12054, "cash_ct": 2862, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-407", "cash_t": 12863, "cash_ct": 3439, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-408", "cash_t": 1472, "cash_ct": 4016, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-409", "cash_t": 2281, "cash_ct": 4593, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 19, "ct_kit": true, "series": "BO5"}
+{"id": "V1-410", "cash_t": 3090, "cash_ct": 5170, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 32, "ct_kit": true, "series": "BO5"}
+{"id": "V1-411", "cash_t": 3899, "cash_ct": 5747, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 11, "ct_kit": false, "series": "BO5"}
+{"id": "V1-412", "cash_t": 4708, "cash_ct": 6324, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-413", "cash_t": 5517, "cash_ct": 6901, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 37, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-414", "cash_t": 6326, "cash_ct": 7478, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 16, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-415", "cash_t": 7135, "cash_ct": 8055, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 29, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-416", "cash_t": 7944, "cash_ct": 8632, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-417", "cash_t": 8753, "cash_ct": 9209, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 21, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-418", "cash_t": 9562, "cash_ct": 9786, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 34, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-419", "cash_t": 10371, "cash_ct": 10363, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 13, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-420", "cash_t": 11180, "cash_ct": 10940, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-421", "cash_t": 11989, "cash_ct": 11517, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-422", "cash_t": 12798, "cash_ct": 12094, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-423", "cash_t": 1407, "cash_ct": 12671, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-424", "cash_t": 2216, "cash_ct": 13248, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-425", "cash_t": 3025, "cash_ct": 925, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-426", "cash_t": 3834, "cash_ct": 1502, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-427", "cash_t": 4643, "cash_ct": 2079, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-428", "cash_t": 5452, "cash_ct": 2656, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-429", "cash_t": 6261, "cash_ct": 3233, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-430", "cash_t": 7070, "cash_ct": 3810, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-431", "cash_t": 7879, "cash_ct": 4387, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-432", "cash_t": 8688, "cash_ct": 4964, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-433", "cash_t": 9497, "cash_ct": 5541, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-434", "cash_t": 10306, "cash_ct": 6118, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-435", "cash_t": 11115, "cash_ct": 6695, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-436", "cash_t": 11924, "cash_ct": 7272, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-437", "cash_t": 12733, "cash_ct": 7849, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-438", "cash_t": 1342, "cash_ct": 8426, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 22, "ct_kit": false, "series": "BO5"}
+{"id": "V1-439", "cash_t": 2151, "cash_ct": 9003, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 35, "ct_kit": true, "series": "BO5"}
+{"id": "V1-440", "cash_t": 2960, "cash_ct": 9580, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-441", "cash_t": 3769, "cash_ct": 10157, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 27, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-442", "cash_t": 4578, "cash_ct": 10734, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 6, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-443", "cash_t": 5387, "cash_ct": 11311, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 19, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-444", "cash_t": 6196, "cash_ct": 11888, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-445", "cash_t": 7005, "cash_ct": 12465, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 11, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-446", "cash_t": 7814, "cash_ct": 13042, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 24, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-447", "cash_t": 8623, "cash_ct": 13619, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 37, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-448", "cash_t": 9432, "cash_ct": 1296, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-449", "cash_t": 10241, "cash_ct": 1873, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 29, "ct_kit": true, "series": "BO1"}
+{"id": "V1-450", "cash_t": 11050, "cash_ct": 2450, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-451", "cash_t": 11859, "cash_ct": 3027, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-452", "cash_t": 12668, "cash_ct": 3604, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-453", "cash_t": 1277, "cash_ct": 4181, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-454", "cash_t": 2086, "cash_ct": 4758, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-455", "cash_t": 2895, "cash_ct": 5335, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-456", "cash_t": 3704, "cash_ct": 5912, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-457", "cash_t": 4513, "cash_ct": 6489, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-458", "cash_t": 5322, "cash_ct": 7066, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-459", "cash_t": 6131, "cash_ct": 7643, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-460", "cash_t": 6940, "cash_ct": 8220, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-461", "cash_t": 7749, "cash_ct": 8797, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-462", "cash_t": 8558, "cash_ct": 9374, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-463", "cash_t": 9367, "cash_ct": 9951, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-464", "cash_t": 10176, "cash_ct": 10528, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-465", "cash_t": 10985, "cash_ct": 11105, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-466", "cash_t": 11794, "cash_ct": 11682, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-467", "cash_t": 12603, "cash_ct": 12259, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-468", "cash_t": 1212, "cash_ct": 12836, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-469", "cash_t": 2021, "cash_ct": 13413, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 17, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-470", "cash_t": 2830, "cash_ct": 1090, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 30, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-471", "cash_t": 3639, "cash_ct": 1667, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 9, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-472", "cash_t": 4448, "cash_ct": 2244, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-473", "cash_t": 5257, "cash_ct": 2821, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 35, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-474", "cash_t": 6066, "cash_ct": 3398, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 14, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-475", "cash_t": 6875, "cash_ct": 3975, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 27, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-476", "cash_t": 7684, "cash_ct": 4552, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-477", "cash_t": 8493, "cash_ct": 5129, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 19, "ct_kit": false, "series": "BO1"}
+{"id": "V1-478", "cash_t": 9302, "cash_ct": 5706, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 32, "ct_kit": true, "series": "BO1"}
+{"id": "V1-479", "cash_t": 10111, "cash_ct": 6283, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 11, "ct_kit": true, "series": "BO1"}
+{"id": "V1-480", "cash_t": 10920, "cash_ct": 6860, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V1-481", "cash_t": 11729, "cash_ct": 7437, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-482", "cash_t": 12538, "cash_ct": 8014, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V1-483", "cash_t": 1147, "cash_ct": 8591, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-484", "cash_t": 1956, "cash_ct": 9168, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-485", "cash_t": 2765, "cash_ct": 9745, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-486", "cash_t": 3574, "cash_ct": 10322, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-487", "cash_t": 4383, "cash_ct": 10899, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-488", "cash_t": 5192, "cash_ct": 11476, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V1-489", "cash_t": 6001, "cash_ct": 12053, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V1-490", "cash_t": 6810, "cash_ct": 12630, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-491", "cash_t": 7619, "cash_ct": 13207, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-492", "cash_t": 8428, "cash_ct": 884, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-493", "cash_t": 9237, "cash_ct": 1461, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-494", "cash_t": 10046, "cash_ct": 2038, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-495", "cash_t": 10855, "cash_ct": 2615, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V1-496", "cash_t": 11664, "cash_ct": 3192, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V1-497", "cash_t": 12473, "cash_ct": 3769, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-498", "cash_t": 1082, "cash_ct": 4346, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 20, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-499", "cash_t": 1891, "cash_ct": 4923, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 33, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V1-500", "cash_t": 2700, "cash_ct": 5500, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-006", "cash_t": 5654, "cash_ct": 4262, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-007", "cash_t": 6463, "cash_ct": 4839, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-008", "cash_t": 7272, "cash_ct": 5416, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-009", "cash_t": 8081, "cash_ct": 5993, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-010", "cash_t": 8890, "cash_ct": 6570, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-011", "cash_t": 9699, "cash_ct": 7147, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-012", "cash_t": 10508, "cash_ct": 7724, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-013", "cash_t": 11317, "cash_ct": 8301, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-014", "cash_t": 12126, "cash_ct": 8878, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-015", "cash_t": 12935, "cash_ct": 9455, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-016", "cash_t": 1544, "cash_ct": 10032, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-017", "cash_t": 2353, "cash_ct": 10609, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-018", "cash_t": 3162, "cash_ct": 11186, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 36, "ct_kit": false, "series": "BO5"}
+{"id": "V2-019", "cash_t": 3971, "cash_ct": 11763, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 15, "ct_kit": true, "series": "BO5"}
+{"id": "V2-020", "cash_t": 4780, "cash_ct": 12340, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-021", "cash_t": 5589, "cash_ct": 12917, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 7, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-022", "cash_t": 6398, "cash_ct": 13494, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 20, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-023", "cash_t": 7207, "cash_ct": 1171, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 33, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-024", "cash_t": 8016, "cash_ct": 1748, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-025", "cash_t": 8825, "cash_ct": 2325, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 25, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-026", "cash_t": 9634, "cash_ct": 2902, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 38, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-027", "cash_t": 10443, "cash_ct": 3479, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 17, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-028", "cash_t": 11252, "cash_ct": 4056, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-029", "cash_t": 12061, "cash_ct": 4633, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 9, "ct_kit": true, "series": "BO1"}
+{"id": "V2-030", "cash_t": 12870, "cash_ct": 5210, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-031", "cash_t": 1479, "cash_ct": 5787, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-032", "cash_t": 2288, "cash_ct": 6364, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-033", "cash_t": 3097, "cash_ct": 6941, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-034", "cash_t": 3906, "cash_ct": 7518, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-035", "cash_t": 4715, "cash_ct": 8095, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-036", "cash_t": 5524, "cash_ct": 8672, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-037", "cash_t": 6333, "cash_ct": 9249, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-038", "cash_t": 7142, "cash_ct": 9826, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-039", "cash_t": 7951, "cash_ct": 10403, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-040", "cash_t": 8760, "cash_ct": 10980, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-041", "cash_t": 9569, "cash_ct": 11557, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-042", "cash_t": 10378, "cash_ct": 12134, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-043", "cash_t": 11187, "cash_ct": 12711, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-044", "cash_t": 11996, "cash_ct": 13288, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-045", "cash_t": 12805, "cash_ct": 965, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-046", "cash_t": 1414, "cash_ct": 1542, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-047", "cash_t": 2223, "cash_ct": 2119, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-048", "cash_t": 3032, "cash_ct": 2696, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-049", "cash_t": 3841, "cash_ct": 3273, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 31, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-050", "cash_t": 4650, "cash_ct": 3850, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 10, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-051", "cash_t": 5459, "cash_ct": 4427, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 23, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-052", "cash_t": 6268, "cash_ct": 5004, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-053", "cash_t": 7077, "cash_ct": 5581, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 15, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-054", "cash_t": 7886, "cash_ct": 6158, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 28, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-055", "cash_t": 8695, "cash_ct": 6735, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 7, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-056", "cash_t": 9504, "cash_ct": 7312, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-057", "cash_t": 10313, "cash_ct": 7889, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 33, "ct_kit": false, "series": "BO1"}
+{"id": "V2-058", "cash_t": 11122, "cash_ct": 8466, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 12, "ct_kit": true, "series": "BO1"}
+{"id": "V2-059", "cash_t": 11931, "cash_ct": 9043, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 25, "ct_kit": true, "series": "BO1"}
+{"id": "V2-060", "cash_t": 12740, "cash_ct": 9620, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-061", "cash_t": 1349, "cash_ct": 10197, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-062", "cash_t": 2158, "cash_ct": 10774, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-063", "cash_t": 2967, "cash_ct": 11351, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-064", "cash_t": 3776, "cash_ct": 11928, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-065", "cash_t": 4585, "cash_ct": 12505, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-066", "cash_t": 5394, "cash_ct": 13082, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-067", "cash_t": 6203, "cash_ct": 13659, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-068", "cash_t": 7012, "cash_ct": 1336, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-069", "cash_t": 7821, "cash_ct": 1913, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-070", "cash_t": 8630, "cash_ct": 2490, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-071", "cash_t": 9439, "cash_ct": 3067, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-072", "cash_t": 10248, "cash_ct": 3644, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-073", "cash_t": 11057, "cash_ct": 4221, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-074", "cash_t": 11866, "cash_ct": 4798, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-075", "cash_t": 12675, "cash_ct": 5375, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-076", "cash_t": 1284, "cash_ct": 5952, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-077", "cash_t": 2093, "cash_ct": 6529, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-078", "cash_t": 2902, "cash_ct": 7106, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 34, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-079", "cash_t": 3711, "cash_ct": 7683, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 13, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-080", "cash_t": 4520, "cash_ct": 8260, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-081", "cash_t": 5329, "cash_ct": 8837, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 39, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-082", "cash_t": 6138, "cash_ct": 9414, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 18, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-083", "cash_t": 6947, "cash_ct": 9991, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 31, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-084", "cash_t": 7756, "cash_ct": 10568, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-085", "cash_t": 8565, "cash_ct": 11145, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 23, "ct_kit": true, "series": "BO1"}
+{"id": "V2-086", "cash_t": 9374, "cash_ct": 11722, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 36, "ct_kit": true, "series": "BO1"}
+{"id": "V2-087", "cash_t": 10183, "cash_ct": 12299, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 15, "ct_kit": false, "series": "BO1"}
+{"id": "V2-088", "cash_t": 10992, "cash_ct": 12876, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-089", "cash_t": 11801, "cash_ct": 13453, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 7, "ct_kit": true, "series": "BO1"}
+{"id": "V2-090", "cash_t": 12610, "cash_ct": 1130, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-091", "cash_t": 1219, "cash_ct": 1707, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-092", "cash_t": 2028, "cash_ct": 2284, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-093", "cash_t": 2837, "cash_ct": 2861, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-094", "cash_t": 3646, "cash_ct": 3438, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-095", "cash_t": 4455, "cash_ct": 4015, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-096", "cash_t": 5264, "cash_ct": 4592, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-097", "cash_t": 6073, "cash_ct": 5169, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-098", "cash_t": 6882, "cash_ct": 5746, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-099", "cash_t": 7691, "cash_ct": 6323, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-100", "cash_t": 8500, "cash_ct": 6900, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-101", "cash_t": 9309, "cash_ct": 7477, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-102", "cash_t": 10118, "cash_ct": 8054, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-103", "cash_t": 10927, "cash_ct": 8631, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-104", "cash_t": 11736, "cash_ct": 9208, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-105", "cash_t": 12545, "cash_ct": 9785, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-106", "cash_t": 1154, "cash_ct": 10362, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-107", "cash_t": 1963, "cash_ct": 10939, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-108", "cash_t": 2772, "cash_ct": 11516, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-109", "cash_t": 3581, "cash_ct": 12093, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 29, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-110", "cash_t": 4390, "cash_ct": 12670, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 8, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-111", "cash_t": 5199, "cash_ct": 13247, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 21, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-112", "cash_t": 6008, "cash_ct": 924, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-113", "cash_t": 6817, "cash_ct": 1501, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 13, "ct_kit": true, "series": "BO1"}
+{"id": "V2-114", "cash_t": 7626, "cash_ct": 2078, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 26, "ct_kit": false, "series": "BO1"}
+{"id": "V2-115", "cash_t": 8435, "cash_ct": 2655, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 39, "ct_kit": true, "series": "BO1"}
+{"id": "V2-116", "cash_t": 9244, "cash_ct": 3232, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-117", "cash_t": 10053, "cash_ct": 3809, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 31, "ct_kit": false, "series": "BO1"}
+{"id": "V2-118", "cash_t": 10862, "cash_ct": 4386, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 10, "ct_kit": true, "series": "BO1"}
+{"id": "V2-119", "cash_t": 11671, "cash_ct": 4963, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 23, "ct_kit": true, "series": "BO3"}
+{"id": "V2-120", "cash_t": 12480, "cash_ct": 5540, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-121", "cash_t": 1089, "cash_ct": 6117, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-122", "cash_t": 1898, "cash_ct": 6694, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-123", "cash_t": 2707, "cash_ct": 7271, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-124", "cash_t": 3516, "cash_ct": 7848, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-125", "cash_t": 4325, "cash_ct": 8425, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-126", "cash_t": 5134, "cash_ct": 9002, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-127", "cash_t": 5943, "cash_ct": 9579, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-128", "cash_t": 6752, "cash_ct": 10156, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-129", "cash_t": 7561, "cash_ct": 10733, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-130", "cash_t": 8370, "cash_ct": 11310, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-131", "cash_t": 9179, "cash_ct": 11887, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-132", "cash_t": 9988, "cash_ct": 12464, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-133", "cash_t": 10797, "cash_ct": 13041, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-134", "cash_t": 11606, "cash_ct": 13618, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-135", "cash_t": 12415, "cash_ct": 1295, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-136", "cash_t": 1024, "cash_ct": 1872, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-137", "cash_t": 1833, "cash_ct": 2449, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-138", "cash_t": 2642, "cash_ct": 3026, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 32, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-139", "cash_t": 3451, "cash_ct": 3603, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 11, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-140", "cash_t": 4260, "cash_ct": 4180, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-141", "cash_t": 5069, "cash_ct": 4757, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 37, "ct_kit": false, "series": "BO1"}
+{"id": "V2-142", "cash_t": 5878, "cash_ct": 5334, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 16, "ct_kit": true, "series": "BO1"}
+{"id": "V2-143", "cash_t": 6687, "cash_ct": 5911, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 29, "ct_kit": true, "series": "BO1"}
+{"id": "V2-144", "cash_t": 7496, "cash_ct": 6488, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-145", "cash_t": 8305, "cash_ct": 7065, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 21, "ct_kit": true, "series": "BO1"}
+{"id": "V2-146", "cash_t": 9114, "cash_ct": 7642, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 34, "ct_kit": true, "series": "BO1"}
+{"id": "V2-147", "cash_t": 9923, "cash_ct": 8219, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 13, "ct_kit": false, "series": "BO3"}
+{"id": "V2-148", "cash_t": 10732, "cash_ct": 8796, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-149", "cash_t": 11541, "cash_ct": 9373, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 39, "ct_kit": true, "series": "BO3"}
+{"id": "V2-150", "cash_t": 12350, "cash_ct": 9950, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-151", "cash_t": 959, "cash_ct": 10527, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-152", "cash_t": 1768, "cash_ct": 11104, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-153", "cash_t": 2577, "cash_ct": 11681, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-154", "cash_t": 3386, "cash_ct": 12258, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-155", "cash_t": 4195, "cash_ct": 12835, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-156", "cash_t": 5004, "cash_ct": 13412, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-157", "cash_t": 5813, "cash_ct": 1089, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-158", "cash_t": 6622, "cash_ct": 1666, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-159", "cash_t": 7431, "cash_ct": 2243, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-160", "cash_t": 8240, "cash_ct": 2820, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-161", "cash_t": 9049, "cash_ct": 3397, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-162", "cash_t": 9858, "cash_ct": 3974, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-163", "cash_t": 10667, "cash_ct": 4551, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-164", "cash_t": 11476, "cash_ct": 5128, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-165", "cash_t": 12285, "cash_ct": 5705, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-166", "cash_t": 894, "cash_ct": 6282, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-167", "cash_t": 1703, "cash_ct": 6859, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-168", "cash_t": 2512, "cash_ct": 7436, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-169", "cash_t": 3321, "cash_ct": 8013, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 27, "ct_kit": true, "series": "BO1"}
+{"id": "V2-170", "cash_t": 4130, "cash_ct": 8590, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 6, "ct_kit": true, "series": "BO1"}
+{"id": "V2-171", "cash_t": 4939, "cash_ct": 9167, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 19, "ct_kit": false, "series": "BO1"}
+{"id": "V2-172", "cash_t": 5748, "cash_ct": 9744, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-173", "cash_t": 6557, "cash_ct": 10321, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 11, "ct_kit": true, "series": "BO1"}
+{"id": "V2-174", "cash_t": 7366, "cash_ct": 10898, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 24, "ct_kit": false, "series": "BO1"}
+{"id": "V2-175", "cash_t": 8175, "cash_ct": 11475, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 37, "ct_kit": true, "series": "BO3"}
+{"id": "V2-176", "cash_t": 8984, "cash_ct": 12052, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-177", "cash_t": 9793, "cash_ct": 12629, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 29, "ct_kit": false, "series": "BO3"}
+{"id": "V2-178", "cash_t": 10602, "cash_ct": 13206, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 8, "ct_kit": true, "series": "BO3"}
+{"id": "V2-179", "cash_t": 11411, "cash_ct": 883, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 21, "ct_kit": true, "series": "BO3"}
+{"id": "V2-180", "cash_t": 12220, "cash_ct": 1460, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-181", "cash_t": 829, "cash_ct": 2037, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-182", "cash_t": 1638, "cash_ct": 2614, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-183", "cash_t": 2447, "cash_ct": 3191, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-184", "cash_t": 3256, "cash_ct": 3768, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-185", "cash_t": 4065, "cash_ct": 4345, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-186", "cash_t": 4874, "cash_ct": 4922, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-187", "cash_t": 5683, "cash_ct": 5499, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-188", "cash_t": 6492, "cash_ct": 6076, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-189", "cash_t": 7301, "cash_ct": 6653, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-190", "cash_t": 8110, "cash_ct": 7230, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-191", "cash_t": 8919, "cash_ct": 7807, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-192", "cash_t": 9728, "cash_ct": 8384, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-193", "cash_t": 10537, "cash_ct": 8961, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-194", "cash_t": 11346, "cash_ct": 9538, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-195", "cash_t": 12155, "cash_ct": 10115, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-196", "cash_t": 12964, "cash_ct": 10692, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-197", "cash_t": 1573, "cash_ct": 11269, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-198", "cash_t": 2382, "cash_ct": 11846, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 30, "ct_kit": false, "series": "BO1"}
+{"id": "V2-199", "cash_t": 3191, "cash_ct": 12423, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 9, "ct_kit": true, "series": "BO1"}
+{"id": "V2-200", "cash_t": 4000, "cash_ct": 13000, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-201", "cash_t": 4809, "cash_ct": 13577, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 35, "ct_kit": false, "series": "BO1"}
+{"id": "V2-202", "cash_t": 5618, "cash_ct": 1254, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 14, "ct_kit": true, "series": "BO1"}
+{"id": "V2-203", "cash_t": 6427, "cash_ct": 1831, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 27, "ct_kit": true, "series": "BO3"}
+{"id": "V2-204", "cash_t": 7236, "cash_ct": 2408, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-205", "cash_t": 8045, "cash_ct": 2985, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 19, "ct_kit": true, "series": "BO3"}
+{"id": "V2-206", "cash_t": 8854, "cash_ct": 3562, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 32, "ct_kit": true, "series": "BO3"}
+{"id": "V2-207", "cash_t": 9663, "cash_ct": 4139, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 11, "ct_kit": false, "series": "BO3"}
+{"id": "V2-208", "cash_t": 10472, "cash_ct": 4716, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-209", "cash_t": 11281, "cash_ct": 5293, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 37, "ct_kit": true, "series": "BO3"}
+{"id": "V2-210", "cash_t": 12090, "cash_ct": 5870, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-211", "cash_t": 12899, "cash_ct": 6447, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-212", "cash_t": 1508, "cash_ct": 7024, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-213", "cash_t": 2317, "cash_ct": 7601, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-214", "cash_t": 3126, "cash_ct": 8178, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-215", "cash_t": 3935, "cash_ct": 8755, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-216", "cash_t": 4744, "cash_ct": 9332, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-217", "cash_t": 5553, "cash_ct": 9909, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-218", "cash_t": 6362, "cash_ct": 10486, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-219", "cash_t": 7171, "cash_ct": 11063, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-220", "cash_t": 7980, "cash_ct": 11640, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-221", "cash_t": 8789, "cash_ct": 12217, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-222", "cash_t": 9598, "cash_ct": 12794, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-223", "cash_t": 10407, "cash_ct": 13371, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-224", "cash_t": 11216, "cash_ct": 1048, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-225", "cash_t": 12025, "cash_ct": 1625, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-226", "cash_t": 12834, "cash_ct": 2202, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-227", "cash_t": 1443, "cash_ct": 2779, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-228", "cash_t": 2252, "cash_ct": 3356, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-229", "cash_t": 3061, "cash_ct": 3933, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 25, "ct_kit": true, "series": "BO1"}
+{"id": "V2-230", "cash_t": 3870, "cash_ct": 4510, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 38, "ct_kit": true, "series": "BO1"}
+{"id": "V2-231", "cash_t": 4679, "cash_ct": 5087, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 17, "ct_kit": false, "series": "BO3"}
+{"id": "V2-232", "cash_t": 5488, "cash_ct": 5664, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-233", "cash_t": 6297, "cash_ct": 6241, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 9, "ct_kit": true, "series": "BO3"}
+{"id": "V2-234", "cash_t": 7106, "cash_ct": 6818, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 22, "ct_kit": false, "series": "BO3"}
+{"id": "V2-235", "cash_t": 7915, "cash_ct": 7395, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 35, "ct_kit": true, "series": "BO3"}
+{"id": "V2-236", "cash_t": 8724, "cash_ct": 7972, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-237", "cash_t": 9533, "cash_ct": 8549, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 27, "ct_kit": false, "series": "BO3"}
+{"id": "V2-238", "cash_t": 10342, "cash_ct": 9126, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 6, "ct_kit": true, "series": "BO5"}
+{"id": "V2-239", "cash_t": 11151, "cash_ct": 9703, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 19, "ct_kit": true, "series": "BO5"}
+{"id": "V2-240", "cash_t": 11960, "cash_ct": 10280, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-241", "cash_t": 12769, "cash_ct": 10857, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-242", "cash_t": 1378, "cash_ct": 11434, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-243", "cash_t": 2187, "cash_ct": 12011, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-244", "cash_t": 2996, "cash_ct": 12588, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-245", "cash_t": 3805, "cash_ct": 13165, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-246", "cash_t": 4614, "cash_ct": 842, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-247", "cash_t": 5423, "cash_ct": 1419, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-248", "cash_t": 6232, "cash_ct": 1996, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-249", "cash_t": 7041, "cash_ct": 2573, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-250", "cash_t": 7850, "cash_ct": 3150, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-251", "cash_t": 8659, "cash_ct": 3727, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-252", "cash_t": 9468, "cash_ct": 4304, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-253", "cash_t": 10277, "cash_ct": 4881, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-254", "cash_t": 11086, "cash_ct": 5458, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-255", "cash_t": 11895, "cash_ct": 6035, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-256", "cash_t": 12704, "cash_ct": 6612, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-257", "cash_t": 1313, "cash_ct": 7189, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-258", "cash_t": 2122, "cash_ct": 7766, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 28, "ct_kit": false, "series": "BO1"}
+{"id": "V2-259", "cash_t": 2931, "cash_ct": 8343, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 7, "ct_kit": true, "series": "BO3"}
+{"id": "V2-260", "cash_t": 3740, "cash_ct": 8920, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-261", "cash_t": 4549, "cash_ct": 9497, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 33, "ct_kit": false, "series": "BO3"}
+{"id": "V2-262", "cash_t": 5358, "cash_ct": 10074, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 12, "ct_kit": true, "series": "BO3"}
+{"id": "V2-263", "cash_t": 6167, "cash_ct": 10651, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 25, "ct_kit": true, "series": "BO3"}
+{"id": "V2-264", "cash_t": 6976, "cash_ct": 11228, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-265", "cash_t": 7785, "cash_ct": 11805, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 17, "ct_kit": true, "series": "BO3"}
+{"id": "V2-266", "cash_t": 8594, "cash_ct": 12382, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 30, "ct_kit": true, "series": "BO5"}
+{"id": "V2-267", "cash_t": 9403, "cash_ct": 12959, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 9, "ct_kit": false, "series": "BO5"}
+{"id": "V2-268", "cash_t": 10212, "cash_ct": 13536, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-269", "cash_t": 11021, "cash_ct": 1213, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 35, "ct_kit": true, "series": "BO5"}
+{"id": "V2-270", "cash_t": 11830, "cash_ct": 1790, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-271", "cash_t": 12639, "cash_ct": 2367, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-272", "cash_t": 1248, "cash_ct": 2944, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-273", "cash_t": 2057, "cash_ct": 3521, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-274", "cash_t": 2866, "cash_ct": 4098, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-275", "cash_t": 3675, "cash_ct": 4675, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-276", "cash_t": 4484, "cash_ct": 5252, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-277", "cash_t": 5293, "cash_ct": 5829, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-278", "cash_t": 6102, "cash_ct": 6406, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-279", "cash_t": 6911, "cash_ct": 6983, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-280", "cash_t": 7720, "cash_ct": 7560, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-281", "cash_t": 8529, "cash_ct": 8137, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-282", "cash_t": 9338, "cash_ct": 8714, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-283", "cash_t": 10147, "cash_ct": 9291, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-284", "cash_t": 10956, "cash_ct": 9868, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-285", "cash_t": 11765, "cash_ct": 10445, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-286", "cash_t": 12574, "cash_ct": 11022, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-287", "cash_t": 1183, "cash_ct": 11599, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-288", "cash_t": 1992, "cash_ct": 12176, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-289", "cash_t": 2801, "cash_ct": 12753, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 23, "ct_kit": true, "series": "BO3"}
+{"id": "V2-290", "cash_t": 3610, "cash_ct": 13330, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 36, "ct_kit": true, "series": "BO3"}
+{"id": "V2-291", "cash_t": 4419, "cash_ct": 1007, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 15, "ct_kit": false, "series": "BO3"}
+{"id": "V2-292", "cash_t": 5228, "cash_ct": 1584, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-293", "cash_t": 6037, "cash_ct": 2161, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 7, "ct_kit": true, "series": "BO3"}
+{"id": "V2-294", "cash_t": 6846, "cash_ct": 2738, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 20, "ct_kit": false, "series": "BO5"}
+{"id": "V2-295", "cash_t": 7655, "cash_ct": 3315, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 33, "ct_kit": true, "series": "BO5"}
+{"id": "V2-296", "cash_t": 8464, "cash_ct": 3892, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-297", "cash_t": 9273, "cash_ct": 4469, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 25, "ct_kit": false, "series": "BO5"}
+{"id": "V2-298", "cash_t": 10082, "cash_ct": 5046, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 38, "ct_kit": true, "series": "BO5"}
+{"id": "V2-299", "cash_t": 10891, "cash_ct": 5623, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 17, "ct_kit": true, "series": "BO5"}
+{"id": "V2-300", "cash_t": 11700, "cash_ct": 6200, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-301", "cash_t": 12509, "cash_ct": 6777, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-302", "cash_t": 1118, "cash_ct": 7354, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-303", "cash_t": 1927, "cash_ct": 7931, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-304", "cash_t": 2736, "cash_ct": 8508, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-305", "cash_t": 3545, "cash_ct": 9085, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-306", "cash_t": 4354, "cash_ct": 9662, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-307", "cash_t": 5163, "cash_ct": 10239, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-308", "cash_t": 5972, "cash_ct": 10816, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-309", "cash_t": 6781, "cash_ct": 11393, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-310", "cash_t": 7590, "cash_ct": 11970, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-311", "cash_t": 8399, "cash_ct": 12547, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-312", "cash_t": 9208, "cash_ct": 13124, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-313", "cash_t": 10017, "cash_ct": 801, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-314", "cash_t": 10826, "cash_ct": 1378, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-315", "cash_t": 11635, "cash_ct": 1955, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-316", "cash_t": 12444, "cash_ct": 2532, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-317", "cash_t": 1053, "cash_ct": 3109, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-318", "cash_t": 1862, "cash_ct": 3686, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 26, "ct_kit": false, "series": "BO3"}
+{"id": "V2-319", "cash_t": 2671, "cash_ct": 4263, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 39, "ct_kit": true, "series": "BO3"}
+{"id": "V2-320", "cash_t": 3480, "cash_ct": 4840, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-321", "cash_t": 4289, "cash_ct": 5417, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 31, "ct_kit": false, "series": "BO3"}
+{"id": "V2-322", "cash_t": 5098, "cash_ct": 5994, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 10, "ct_kit": true, "series": "BO5"}
+{"id": "V2-323", "cash_t": 5907, "cash_ct": 6571, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 23, "ct_kit": true, "series": "BO5"}
+{"id": "V2-324", "cash_t": 6716, "cash_ct": 7148, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-325", "cash_t": 7525, "cash_ct": 7725, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 15, "ct_kit": true, "series": "BO5"}
+{"id": "V2-326", "cash_t": 8334, "cash_ct": 8302, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 28, "ct_kit": true, "series": "BO5"}
+{"id": "V2-327", "cash_t": 9143, "cash_ct": 8879, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 7, "ct_kit": false, "series": "BO5"}
+{"id": "V2-328", "cash_t": 9952, "cash_ct": 9456, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-329", "cash_t": 10761, "cash_ct": 10033, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 33, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-330", "cash_t": 11570, "cash_ct": 10610, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-331", "cash_t": 12379, "cash_ct": 11187, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-332", "cash_t": 988, "cash_ct": 11764, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-333", "cash_t": 1797, "cash_ct": 12341, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-334", "cash_t": 2606, "cash_ct": 12918, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-335", "cash_t": 3415, "cash_ct": 13495, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-336", "cash_t": 4224, "cash_ct": 1172, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-337", "cash_t": 5033, "cash_ct": 1749, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-338", "cash_t": 5842, "cash_ct": 2326, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-339", "cash_t": 6651, "cash_ct": 2903, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-340", "cash_t": 7460, "cash_ct": 3480, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-341", "cash_t": 8269, "cash_ct": 4057, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-342", "cash_t": 9078, "cash_ct": 4634, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-343", "cash_t": 9887, "cash_ct": 5211, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-344", "cash_t": 10696, "cash_ct": 5788, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-345", "cash_t": 11505, "cash_ct": 6365, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-346", "cash_t": 12314, "cash_ct": 6942, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-347", "cash_t": 923, "cash_ct": 7519, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-348", "cash_t": 1732, "cash_ct": 8096, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-349", "cash_t": 2541, "cash_ct": 8673, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 21, "ct_kit": true, "series": "BO3"}
+{"id": "V2-350", "cash_t": 3350, "cash_ct": 9250, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 34, "ct_kit": true, "series": "BO5"}
+{"id": "V2-351", "cash_t": 4159, "cash_ct": 9827, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 13, "ct_kit": false, "series": "BO5"}
+{"id": "V2-352", "cash_t": 4968, "cash_ct": 10404, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-353", "cash_t": 5777, "cash_ct": 10981, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 39, "ct_kit": true, "series": "BO5"}
+{"id": "V2-354", "cash_t": 6586, "cash_ct": 11558, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 18, "ct_kit": false, "series": "BO5"}
+{"id": "V2-355", "cash_t": 7395, "cash_ct": 12135, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 31, "ct_kit": true, "series": "BO5"}
+{"id": "V2-356", "cash_t": 8204, "cash_ct": 12712, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-357", "cash_t": 9013, "cash_ct": 13289, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 23, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-358", "cash_t": 9822, "cash_ct": 966, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 36, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-359", "cash_t": 10631, "cash_ct": 1543, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 15, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-360", "cash_t": 11440, "cash_ct": 2120, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-361", "cash_t": 12249, "cash_ct": 2697, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-362", "cash_t": 858, "cash_ct": 3274, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-363", "cash_t": 1667, "cash_ct": 3851, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-364", "cash_t": 2476, "cash_ct": 4428, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-365", "cash_t": 3285, "cash_ct": 5005, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-366", "cash_t": 4094, "cash_ct": 5582, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-367", "cash_t": 4903, "cash_ct": 6159, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-368", "cash_t": 5712, "cash_ct": 6736, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-369", "cash_t": 6521, "cash_ct": 7313, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-370", "cash_t": 7330, "cash_ct": 7890, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-371", "cash_t": 8139, "cash_ct": 8467, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-372", "cash_t": 8948, "cash_ct": 9044, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-373", "cash_t": 9757, "cash_ct": 9621, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-374", "cash_t": 10566, "cash_ct": 10198, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-375", "cash_t": 11375, "cash_ct": 10775, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-376", "cash_t": 12184, "cash_ct": 11352, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-377", "cash_t": 12993, "cash_ct": 11929, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-378", "cash_t": 1602, "cash_ct": 12506, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 24, "ct_kit": false, "series": "BO5"}
+{"id": "V2-379", "cash_t": 2411, "cash_ct": 13083, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 37, "ct_kit": true, "series": "BO5"}
+{"id": "V2-380", "cash_t": 3220, "cash_ct": 13660, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-381", "cash_t": 4029, "cash_ct": 1337, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 29, "ct_kit": false, "series": "BO5"}
+{"id": "V2-382", "cash_t": 4838, "cash_ct": 1914, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 8, "ct_kit": true, "series": "BO5"}
+{"id": "V2-383", "cash_t": 5647, "cash_ct": 2491, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 21, "ct_kit": true, "series": "BO5"}
+{"id": "V2-384", "cash_t": 6456, "cash_ct": 3068, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-385", "cash_t": 7265, "cash_ct": 3645, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 13, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-386", "cash_t": 8074, "cash_ct": 4222, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 26, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-387", "cash_t": 8883, "cash_ct": 4799, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 39, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-388", "cash_t": 9692, "cash_ct": 5376, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-389", "cash_t": 10501, "cash_ct": 5953, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 31, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-390", "cash_t": 11310, "cash_ct": 6530, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-391", "cash_t": 12119, "cash_ct": 7107, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-392", "cash_t": 12928, "cash_ct": 7684, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-393", "cash_t": 1537, "cash_ct": 8261, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-394", "cash_t": 2346, "cash_ct": 8838, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-395", "cash_t": 3155, "cash_ct": 9415, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-396", "cash_t": 3964, "cash_ct": 9992, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-397", "cash_t": 4773, "cash_ct": 10569, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-398", "cash_t": 5582, "cash_ct": 11146, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-399", "cash_t": 6391, "cash_ct": 11723, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-400", "cash_t": 7200, "cash_ct": 12300, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-401", "cash_t": 8009, "cash_ct": 12877, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-402", "cash_t": 8818, "cash_ct": 13454, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-403", "cash_t": 9627, "cash_ct": 1131, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-404", "cash_t": 10436, "cash_ct": 1708, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-405", "cash_t": 11245, "cash_ct": 2285, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-406", "cash_t": 12054, "cash_ct": 2862, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-407", "cash_t": 12863, "cash_ct": 3439, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-408", "cash_t": 1472, "cash_ct": 4016, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-409", "cash_t": 2281, "cash_ct": 4593, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 19, "ct_kit": true, "series": "BO5"}
+{"id": "V2-410", "cash_t": 3090, "cash_ct": 5170, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 32, "ct_kit": true, "series": "BO5"}
+{"id": "V2-411", "cash_t": 3899, "cash_ct": 5747, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 11, "ct_kit": false, "series": "BO5"}
+{"id": "V2-412", "cash_t": 4708, "cash_ct": 6324, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-413", "cash_t": 5517, "cash_ct": 6901, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 37, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-414", "cash_t": 6326, "cash_ct": 7478, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 16, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-415", "cash_t": 7135, "cash_ct": 8055, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 29, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-416", "cash_t": 7944, "cash_ct": 8632, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-417", "cash_t": 8753, "cash_ct": 9209, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 21, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-418", "cash_t": 9562, "cash_ct": 9786, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 34, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-419", "cash_t": 10371, "cash_ct": 10363, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 13, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-420", "cash_t": 11180, "cash_ct": 10940, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-421", "cash_t": 11989, "cash_ct": 11517, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-422", "cash_t": 12798, "cash_ct": 12094, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-423", "cash_t": 1407, "cash_ct": 12671, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-424", "cash_t": 2216, "cash_ct": 13248, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-425", "cash_t": 3025, "cash_ct": 925, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-426", "cash_t": 3834, "cash_ct": 1502, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-427", "cash_t": 4643, "cash_ct": 2079, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-428", "cash_t": 5452, "cash_ct": 2656, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-429", "cash_t": 6261, "cash_ct": 3233, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-430", "cash_t": 7070, "cash_ct": 3810, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-431", "cash_t": 7879, "cash_ct": 4387, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-432", "cash_t": 8688, "cash_ct": 4964, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-433", "cash_t": 9497, "cash_ct": 5541, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-434", "cash_t": 10306, "cash_ct": 6118, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-435", "cash_t": 11115, "cash_ct": 6695, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-436", "cash_t": 11924, "cash_ct": 7272, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-437", "cash_t": 12733, "cash_ct": 7849, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-438", "cash_t": 1342, "cash_ct": 8426, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 22, "ct_kit": false, "series": "BO5"}
+{"id": "V2-439", "cash_t": 2151, "cash_ct": 9003, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 35, "ct_kit": true, "series": "BO5"}
+{"id": "V2-440", "cash_t": 2960, "cash_ct": 9580, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-441", "cash_t": 3769, "cash_ct": 10157, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 27, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-442", "cash_t": 4578, "cash_ct": 10734, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 6, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-443", "cash_t": 5387, "cash_ct": 11311, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 19, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-444", "cash_t": 6196, "cash_ct": 11888, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-445", "cash_t": 7005, "cash_ct": 12465, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 11, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-446", "cash_t": 7814, "cash_ct": 13042, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 24, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-447", "cash_t": 8623, "cash_ct": 13619, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 37, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-448", "cash_t": 9432, "cash_ct": 1296, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-449", "cash_t": 10241, "cash_ct": 1873, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 29, "ct_kit": true, "series": "BO1"}
+{"id": "V2-450", "cash_t": 11050, "cash_ct": 2450, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-451", "cash_t": 11859, "cash_ct": 3027, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-452", "cash_t": 12668, "cash_ct": 3604, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-453", "cash_t": 1277, "cash_ct": 4181, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-454", "cash_t": 2086, "cash_ct": 4758, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-455", "cash_t": 2895, "cash_ct": 5335, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-456", "cash_t": 3704, "cash_ct": 5912, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-457", "cash_t": 4513, "cash_ct": 6489, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-458", "cash_t": 5322, "cash_ct": 7066, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-459", "cash_t": 6131, "cash_ct": 7643, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-460", "cash_t": 6940, "cash_ct": 8220, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-461", "cash_t": 7749, "cash_ct": 8797, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-462", "cash_t": 8558, "cash_ct": 9374, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-463", "cash_t": 9367, "cash_ct": 9951, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-464", "cash_t": 10176, "cash_ct": 10528, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-465", "cash_t": 10985, "cash_ct": 11105, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-466", "cash_t": 11794, "cash_ct": 11682, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-467", "cash_t": 12603, "cash_ct": 12259, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-468", "cash_t": 1212, "cash_ct": 12836, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-469", "cash_t": 2021, "cash_ct": 13413, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 17, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-470", "cash_t": 2830, "cash_ct": 1090, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 30, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-471", "cash_t": 3639, "cash_ct": 1667, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": true, "bomb_seconds": 9, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-472", "cash_t": 4448, "cash_ct": 2244, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-473", "cash_t": 5257, "cash_ct": 2821, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 35, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-474", "cash_t": 6066, "cash_ct": 3398, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 14, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-475", "cash_t": 6875, "cash_ct": 3975, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": true, "bomb_seconds": 27, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-476", "cash_t": 7684, "cash_ct": 4552, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-477", "cash_t": 8493, "cash_ct": 5129, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": true, "bomb_seconds": 19, "ct_kit": false, "series": "BO1"}
+{"id": "V2-478", "cash_t": 9302, "cash_ct": 5706, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 32, "ct_kit": true, "series": "BO1"}
+{"id": "V2-479", "cash_t": 10111, "cash_ct": 6283, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 11, "ct_kit": true, "series": "BO1"}
+{"id": "V2-480", "cash_t": 10920, "cash_ct": 6860, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO1"}
+{"id": "V2-481", "cash_t": 11729, "cash_ct": 7437, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-482", "cash_t": 12538, "cash_ct": 8014, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO1"}
+{"id": "V2-483", "cash_t": 1147, "cash_ct": 8591, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-484", "cash_t": 1956, "cash_ct": 9168, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-485", "cash_t": 2765, "cash_ct": 9745, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-486", "cash_t": 3574, "cash_ct": 10322, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-487", "cash_t": 4383, "cash_ct": 10899, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-488", "cash_t": 5192, "cash_ct": 11476, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO3"}
+{"id": "V2-489", "cash_t": 6001, "cash_ct": 12053, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO3"}
+{"id": "V2-490", "cash_t": 6810, "cash_ct": 12630, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-491", "cash_t": 7619, "cash_ct": 13207, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-492", "cash_t": 8428, "cash_ct": 884, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-493", "cash_t": 9237, "cash_ct": 1461, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-494", "cash_t": 10046, "cash_ct": 2038, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-495", "cash_t": 10855, "cash_ct": 2615, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": false, "series": "BO5"}
+{"id": "V2-496", "cash_t": 11664, "cash_ct": 3192, "loss_streak_t": 1, "loss_streak_ct": 4, "t_alive": 1, "ct_alive": 1, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5"}
+{"id": "V2-497", "cash_t": 12473, "cash_ct": 3769, "loss_streak_t": 2, "loss_streak_ct": 2, "t_alive": 3, "ct_alive": 4, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-498", "cash_t": 1082, "cash_ct": 4346, "loss_streak_t": 3, "loss_streak_ct": 0, "t_alive": 5, "ct_alive": 2, "plant": true, "bomb_seconds": 20, "ct_kit": false, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-499", "cash_t": 1891, "cash_ct": 4923, "loss_streak_t": 4, "loss_streak_ct": 3, "t_alive": 2, "ct_alive": 5, "plant": true, "bomb_seconds": 33, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
+{"id": "V2-500", "cash_t": 2700, "cash_ct": 5500, "loss_streak_t": 0, "loss_streak_ct": 1, "t_alive": 4, "ct_alive": 3, "plant": false, "bomb_seconds": null, "ct_kit": true, "series": "BO5 with upper-bracket map advantage"}
