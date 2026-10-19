@@ -50,6 +50,9 @@ class Contract:
     prize_share_player: float = 0.8  # players keep 80% of prize money by default
     signing_bonus: float = 0.0
     win_bonus: float = 0.0  # paid per tournament win
+    start_week: int = 0
+    contract_id: int = 0
+    status: str = "active"  # active -> talks -> renewed/leaving; a new Contract replaces a renewed one
 
 
 @dataclass

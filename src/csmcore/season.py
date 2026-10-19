@@ -5,7 +5,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from . import character, development, economy, promises as promises_mod, squad, world
+from . import character, contracts, development, economy, promises as promises_mod, squad, world
 from .board import Owner
 from .chronicle import Chronicle
 from .legacy import Legacy
@@ -130,15 +130,64 @@ def play_series(a: Club, b: Club, graph: RelationGraph, seed: int, ctx: dict, ma
     return winner, loser, f"{a.name} {wins[0]}:{wins[1]} {b.name}"
 
 
+INVITE_LEAD = 4   # weeks between the Invite Date and the event (a game number, not Valve's)
+
+
+def core_rule(t: Tournament) -> bool:
+    """Direct league invites to S and A events follow the roster-core rule: at least three of the
+    five on the Invite Date must play (Valve's VRS rules, section 3.2.5, the "3 of 5" core)."""
+    return t.tier in ("S", "A") and t.divisions is not None and not t.qualifies_to
+
+
+def snapshot_invites(run: SeasonRun, clubs: list[Club], calendar: dict, wk: int) -> None:
+    """The Invite Date: remember who each directly invited club would field."""
+    events = calendar.get(wk + INVITE_LEAD, [])
+    for t in events if isinstance(events, list) else [events]:
+        if core_rule(t):
+            run.invites[t.name] = {c.name: [p.name for p in c.lineup() if p in c.roster] for c in clubs
+                                   if t.invited(c) and f"qual:{t.name}" not in c.flags}
+
+
+def core_check(t: Tournament, clubs: list[Club], invited: list[Club], snap: dict) -> tuple[list[Club], list[str]]:
+    """Clubs that lost their core decline; the invite goes down the ranking to clubs with five."""
+    out, lines, gone = [], [], 0
+    for c in invited:
+        core = snap.get(c.name)
+        kept = len(set(core) & {p.name for p in c.lineup() if p in c.roster}) if core else 5
+        if core and kept < 3:
+            gone += 1
+            lines.append(f"{c.name} не может принять инвайт на {t.name}: из пятёрки на дату приглашения "
+                         f"в составе {kept}, нужно 3")
+        else:
+            out.append(c)
+    if gone:
+        taken = {c.name for c in invited}
+        nxt = sorted((c for c in clubs if c.name not in taken
+                      and sum("benched" not in p.flags for p in c.roster) >= 5
+                      and (t.region is None or c.region == t.region)), key=lambda c: c.rank)[:gone]
+        for c in nxt:
+            lines.append(f"{c.name} получает место на {t.name} вместо отказавшегося клуба")
+        out += nxt
+    return out, lines
+
+
 def run_tournament(t: Tournament, clubs: list[Club], graph: RelationGraph, week: int, rng: random.Random,
-                   log: SeasonLog, sysm: "Systems | None" = None, season: int = 1) -> list[Club]:
+                   log: SeasonLog, sysm: "Systems | None" = None, season: int = 1,
+                   invites: dict | None = None) -> list[Club]:
     """Single elimination among invited clubs (top by rank, power of two). Returns final order."""
     qual = f"qual:{t.name}"
     if t.seed_by_season:
         key = lambda c: (-c.season_points, c.rank)   # noqa: E731
     else:   # qualifiers keep their places, the lowest-ranked direct invites make room
         key = lambda c: (qual not in c.flags, c.rank)   # noqa: E731
-    invited = sorted([c for c in clubs if t.invited(c)], key=key)
+    invited = [c for c in clubs if t.invited(c)]
+    if invites and t.name in invites and core_rule(t):
+        invited, lines = core_check(t, clubs, invited, invites.pop(t.name))
+        log.management += lines
+        if sysm and sysm.chronicle:
+            for line in lines[:1]:
+                sysm.chronicle.add(season, week, "board", line)
+    invited = sorted(invited, key=key)
     size = 1
     while size * 2 <= len(invited) and (not t.slots or size * 2 <= t.slots):
         size *= 2
@@ -215,6 +264,7 @@ class SeasonRun:
     log: SeasonLog
     titles_before: dict
     wk: int = 0
+    invites: dict = field(default_factory=dict)   # event -> {club: the five on its Invite Date}
 
 
 def season_begin(clubs: list[Club], seed: int, sysm: Systems, season: int = 1, start_week: int = 0) -> SeasonRun:
@@ -244,6 +294,9 @@ def season_week(run: SeasonRun, clubs: list[Club], graph: RelationGraph, calenda
     week_plans = dict(plans or {})
     events = calendar.get(wk, [])
     events = events if isinstance(events, list) else [events]   # a big world runs several events a week
+    if not hasattr(run, "invites"):
+        run.invites = {}
+    snapshot_invites(run, clubs, calendar, wk)
     for t in events:
         for c in clubs:
             if t.invited(c):
@@ -278,6 +331,7 @@ def season_week(run: SeasonRun, clubs: list[Club], graph: RelationGraph, calenda
         if sysm.promises and c.name in sysm.promises:
             log.management += promises_mod.check(sysm.promises[c.name], c, graph, week)
     if sysm.market is not None:
+        log.management += contracts.week(clubs, sysm.market, week, mgmt_rng, sysm.manager_club)
         deals = sysm.market.week(clubs, week, mgmt_rng, sysm.manager_club)
         log.management += deals
         if sysm.chronicle:
@@ -316,7 +370,7 @@ def season_week(run: SeasonRun, clubs: list[Club], graph: RelationGraph, calenda
                             sysm.chronicle.add(season, week, "board",
                                                f"{c.name}: {gone.name} уволен, новый менеджер {new.name}")
     for t in events:
-        run_tournament(t, clubs, graph, week, rng, log, sysm, season)
+        run_tournament(t, clubs, graph, week, rng, log, sysm, season, getattr(run, "invites", None))
     if events:
         rerank(clubs)
     _platforms_week(clubs, sysm, log, season, week)
@@ -372,6 +426,8 @@ def season_finish(run: SeasonRun, clubs: list[Club], sysm: Systems) -> None:
             log.management.append(line)
             if sysm.chronicle:
                 sysm.chronicle.add(season, end_week, "retirement", line)
+        if sysm.market is not None:
+            log.management += sysm.legacy.free_agents_end(sysm.market, end_week, mgmt_rng)
         taken = {p.name for c in clubs for p in c.roster + c.former}
         if sysm.market is not None:
             taken |= {p.name for p in sysm.market.free_agents}
@@ -396,7 +452,8 @@ def season_finish(run: SeasonRun, clubs: list[Club], sysm: Systems) -> None:
             if "season_stats" in p.__dict__:
                 p.__dict__["last_season_stats"] = p.__dict__.pop("season_stats")
     if sysm.development:
-        development.season_end([p for c in clubs for p in c.roster])
+        development.season_end([p for c in clubs for p in c.roster]
+                               + (sysm.market.free_agents if sysm.market is not None else []))
 
 
 def run_season(clubs: list[Club], graph: RelationGraph, calendar: dict[int, Tournament], seed: int,

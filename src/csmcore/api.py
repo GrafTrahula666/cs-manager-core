@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import base64
 
-from . import circuit, economy, save as save_mod
+from . import circuit, contracts as contracts_mod, economy, save as save_mod
 from .game import Game
 from .market import asking, expected_salary
 from .talks import PRESS, TONES
@@ -75,6 +75,7 @@ def roster() -> list[dict]:
                        if t in lib and not lib[t].hidden_until],
             "star": "star" in p.flags, "stats": _season_stats(p),
             "salary": _money(k.salary_month) if k else 0, "contract_end": k.end_week if k else None,
+            "contract_status": k.status if k else None,
             "value": _money(economy.market_value(p)), "lineup": p.name in lineup,
             "benched": "benched" in p.flags, "wants_out": "transfer_requested" in p.flags,
             "fame": round(p.fame), "history": p.history[-4:], **_haceit_card(p.name),
@@ -223,15 +224,49 @@ def release(name: str) -> str:
     p = next((q for q in c.roster if q.name == name), None)
     if p is None:
         return "нет такого игрока"
-    k = c.contracts.pop(name, None)
+    k = c.contracts.get(name)
     payout = k.salary_month * 3 if k else 0
-    c.book(g.week, "release", -payout, name)
-    c.roster.remove(p)
-    c.former.append(p)
-    p.former_clubs.add(c.name)
-    p.flags.add("free_agent")
-    g.sysm.market.free_agents.append(p)
+    contracts_mod.release(c, p, g.sysm.market, g.week, "менеджер отпустил", payout_months=3 if k else 0)
+    contracts_mod.note(g.sysm.market, g.week, c.name, name, "released", "решение менеджера")
     return f"{name} отпущен, компенсация {payout:,.0f}"
+
+
+def contracts() -> list[dict]:
+    """The manager's contracts: who is in extension talks and who leaves on a free."""
+    g = _g()
+    out = []
+    for p in sorted(g.club.roster, key=lambda q: g.club.contracts[q.name].end_week if q.name in g.club.contracts else 1 << 30):
+        k = g.club.contracts.get(p.name)
+        if k is None:
+            continue
+        out.append({"name": p.name, "salary": _money(k.salary_month), "end_week": k.end_week,
+                    "weeks_left": k.end_week - g.week, "status": k.status, "id": k.contract_id,
+                    "expected": _money(expected_salary(p)), "offer": _money(contracts_mod.offer_salary(g.club, p))})
+    return out
+
+
+def renew(name: str, salary: float, weeks: int = 104) -> str:
+    """Offer an extension; the player decides as with any contract."""
+    g = _g()
+    c = g.club
+    p = next((q for q in c.roster if q.name == name), None)
+    k = c.contracts.get(name)
+    if p is None or k is None:
+        return "нет такого игрока"
+    if k.end_week - g.week > contracts_mod.RENEWAL_WINDOW * 3:
+        return f"рано: контракт до недели {k.end_week}"
+    if k.status == "leaving" and g.week - g.sysm.market.refused.get((name, c.name), -999) < 4:
+        return f"{name} только что отказал, вернитесь позже"
+    ok, line = contracts_mod.offer(g.sysm.market, c, p, float(salary), int(weeks), g.week, g.desk.rng, "менеджер")
+    if not ok:
+        g.sysm.market.refused[(name, c.name)] = g.week
+    return line
+
+
+def hiring(n: int = 40) -> dict:
+    """Why clubs did or did not complete their rosters: the contract and hiring journal."""
+    m = _g().sysm.market
+    return {"journal": m.journal[-n:][::-1], "stats": dict(m.stats.most_common())}
 
 
 def toggle_bench(name: str) -> str:

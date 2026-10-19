@@ -9,6 +9,10 @@ from .economy import Club, Contract
 from .player import Player
 
 TIER_PRESTIGE = {"tier3": 10, "tier2": 35, "tier1": 70, "super": 90}
+# Extensions (game hypotheses, tuned on the 20x10 lab: with the plain signing rule ~87% of
+# extension offers were refused, mostly by average players of small clubs).
+STAY_FAMILIAR = 0.5
+STAY_FAIR_PAY_AMBITION = 0.3
 
 
 @dataclass
@@ -25,7 +29,8 @@ def _logistic(x: float) -> float:
 
 
 def contract_acceptance(player: Player, offer: Contract, expected_salary: float, buyer: Club,
-                        current: Club | None = None, relocation: bool = False, free_weeks: float = 0.0) -> Verdict:
+                        current: Club | None = None, relocation: bool = False, free_weeks: float = 0.0,
+                        staying: bool = False) -> Verdict:
     """Will the player sign? Money vs wins, ambition vs club prestige, loyalty, home attachment.
     A free agent's pride fades with every week without a team: after ~8 months he takes a small club."""
     reasons: list[str] = []
@@ -44,6 +49,16 @@ def contract_acceptance(player: Player, offer: Contract, expected_salary: float,
     if current is not None and current is not buyer:
         loyalty = -(player.p("loyalty") / 100) * 1.5
         reasons.append(f"лояльность текущему клубу {player.p('loyalty'):.0f}")
+
+    if staying:   # an extension: he knows the people, the city and the project
+        loyalty = STAY_FAMILIAR + (player.p("loyalty") - 40) / 100 * 1.5
+        reasons.append(f"продление: лояльность {player.p('loyalty'):.0f}")
+        if ambition < 0 and money_ratio >= 0.95:
+            ambition *= STAY_FAIR_PAY_AMBITION   # paid what he is worth: a bigger club is a wish, not a plan
+            reasons.append("клуб платит по его уровню")
+        if "transfer_requested" in player.flags:
+            loyalty -= 1.5
+            reasons.append("сам просил трансфер")
 
     home = 0.0
     if relocation:
