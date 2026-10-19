@@ -6,11 +6,12 @@ from __future__ import annotations
 
 import math
 import random
+from collections import Counter
 from dataclasses import dataclass, field
 
-from . import economy
+from . import contracts, economy
 from .decisions import contract_acceptance
-from .economy import Club, Contract, market_value
+from .economy import Club, Contract
 from .player import Player
 
 TIER_SALARY_CAP = {t: v["salary"][1] for t, v in economy.TIERS.items()}
@@ -62,6 +63,10 @@ class Market:
     offers: list[Offer] = field(default_factory=list)    # offers waiting for the manager
     log: list[str] = field(default_factory=list)
     refused: dict[tuple[str, str], int] = field(default_factory=dict)  # (player, club) -> week
+    journal: list[dict] = field(default_factory=list)   # contract and hiring decisions with their reasons
+    stats: Counter = field(default_factory=Counter)      # outcome -> count, for the lab and the UI
+    next_contract_id: int = 0
+    short_since: dict[str, int] = field(default_factory=dict)   # club -> first week it had fewer than five
 
     def listed(self, clubs: list[Club], week: int = 0) -> list[tuple[Player, Club | None]]:
         out: list[tuple[Player, Club | None]] = [(p, None) for p in self.free_agents]
@@ -69,7 +74,10 @@ class Market:
             p.__dict__.setdefault("free_since", week)
         for c in clubs:
             for p in c.roster:
-                if "transfer_requested" in p.flags and "legend_contract" not in p.flags:
+                if "legend_contract" in p.flags:
+                    continue
+                k = c.contracts.get(p.name)
+                if "transfer_requested" in p.flags or (k is not None and k.status == "leaving"):
                     out.append((p, c))
             for p in c.former:
                 if "free_agent" in p.flags and p not in self.free_agents:
@@ -80,7 +88,7 @@ class Market:
 
     def _need(self, club: Club) -> float:
         lineup = [p for p in club.roster if "benched" not in p.flags]
-        if len(lineup) < 5:
+        if len(lineup) < 5 or contracts.staying(club) < 5:
             return 0.0  # any decent player helps
         return min(p.overall() for p in lineup)
 
@@ -89,41 +97,58 @@ class Market:
         every week and goes first. Clubs over ROSTER_MAX release their weakest bench player."""
         window = week % 4 == 0
         notes = self._trim_rosters(clubs, week, manager_club) if window else []
-        short = [c for c in clubs if len(c.roster) < 5 and c.name != manager_club]
+        short = [c for c in clubs if contracts.staying(c) < 5 and c.name != manager_club]
+        for name in [n for n in self.short_since if n not in {c.name for c in short}]:
+            del self.short_since[name]
+        for c in short:
+            self.short_since.setdefault(c.name, week)
         if not window and not short:
             return notes
         pool = self.listed(clubs, week)
-        buyers = sorted(clubs if window else short, key=lambda c: (len(c.roster) >= 5, c.rank))
-        buyers = [(b, extra) for b in buyers for extra in range(3 if len(b.roster) < 5 else 1)]
+        buyers = sorted(clubs if window else short, key=lambda c: (contracts.staying(c) >= 5, c.rank))
+        buyers = [(b, extra) for b in buyers for extra in range(3 if contracts.staying(b) < 5 else 1)]
         for buyer, extra in buyers:   # a short club gets three tries: a refusal is not the end
-            if buyer.name == manager_club or (buyer.cash < 0 and len(buyer.roster) >= 5):
+            if buyer.name == manager_club or (buyer.cash < 0 and contracts.staying(buyer) >= 5):
                 continue
-            if extra and len(buyer.roster) >= 5:
+            if extra and contracts.staying(buyer) >= 5:
                 continue
-            if len(buyer.roster) >= ROSTER_MAX:
+            if contracts.staying(buyer) >= ROSTER_MAX:
                 continue
             need = self._need(buyer)
             best = None
+            why: Counter = Counter()   # why each candidate was passed over, for a short club's diagnosis
             for p, seller in pool:
-                if seller is buyer or p.overall() < need + 2:
+                if seller is buyer:
+                    continue
+                if p.overall() < need + 2:
+                    why["not_better"] += 1
                     continue
                 if week - self.refused.get((p.name, buyer.name), -999) < 26:
+                    why["refused_recently"] += 1
                     continue  # he said no recently
                 ask = asking(p, week) if seller is None else expected_salary(p)
                 if ask > TIER_SALARY_CAP[buyer.tier] * 1.1:
+                    why["wage_gap"] += 1
                     continue  # cannot pay what he wants: do not waste an offer
                 salary = min(ask * rng.uniform(0.9, 1.15), TIER_SALARY_CAP[buyer.tier])
-                fee = 0.0 if seller is None else market_value(p) * (1.3 if seller.contracts.get(p.name) else 1.0)
-                if fee + salary * (6 if len(buyer.roster) >= 5 else 2) > buyer.cash:
+                fee = 0.0 if seller is None else contracts.sale_fee(seller, p, week)
+                if fee + salary * (6 if contracts.staying(buyer) >= 5 else 2) > buyer.cash:
+                    why["cash"] += 1
                     continue  # a club short of players signs on two months of wages
                 guess = contract_acceptance(p, Contract(p.name, salary, week + 52, 0.0), ask, buyer,
                                             seller, relocation=bool(seller), free_weeks=free_weeks(p, week))
                 if guess.p < 0.25:
+                    why["expected_refusal"] += 1
                     continue  # scouts know he would say no (ambition, loyalty, home)
                 gain = p.overall() - need
                 if best is None or gain > best[0]:
                     best = (gain, p, seller, fee, salary)
             if not best:
+                if contracts.staying(buyer) < 5 and not extra:
+                    reasons = [f"{k}: {n}" for k, n in why.most_common(3)] or ["market_empty: на рынке никого"]
+                    contracts.note(self, week, buyer.name, "", "hire_failed",
+                                   f"остаются {contracts.staying(buyer)} из {len(buyer.roster)}, подходящего кандидата нет", reasons)
+                    self.stats.update({f"hire_failed:{k}": n for k, n in why.items()})
                 continue
             _, p, seller, fee, salary = best
             offer = Offer(week, buyer, seller, p, fee, salary)
@@ -138,44 +163,41 @@ class Market:
             note = self.complete(offer, week, rng)
             notes.append(note)
             pool = [(q, s) for q, s in pool if q is not p]
+        for c in short:   # still short after its tries and for weeks: the academy
+            if len(c.roster) < 5 and week - self.short_since.get(c.name, week) >= contracts.ACADEMY_AFTER:
+                notes.append(contracts.academy_signing(c, clubs, self, week, rng))
+                if len(c.roster) >= 5:
+                    self.short_since.pop(c.name, None)
         self.log += [f"week {week}: {n}" for n in notes]
         return notes
 
     def _trim_rosters(self, clubs: list[Club], week: int, manager_club: str | None) -> list[str]:
         notes = []
         for c in clubs:
-            if c.name == manager_club or len(c.roster) <= ROSTER_MAX:
+            if c.name == manager_club or contracts.staying(c) <= ROSTER_MAX:
                 continue
             lineup = c.lineup()
-            spare = [p for p in c.roster if p not in lineup and "legend_contract" not in p.flags]
+            spare = [p for p in c.roster if p not in lineup and "legend_contract" not in p.flags
+                     and (c.contracts.get(p.name) is None or c.contracts[p.name].status != "leaving")]
             if not spare:
                 continue
             p = min(spare, key=lambda q: q.overall())
-            k = c.contracts.pop(p.name, None)
-            if k is not None:
-                c.book(week, "release", -3 * k.salary_month, p.name)
-            c.roster.remove(p)
-            c.former.append(p)
-            p.former_clubs.add(c.name)
-            p.flags.add("free_agent")
-            p.flags.discard("transfer_requested")
-            p.__dict__["free_since"] = week
-            self.free_agents.append(p)
-            p.history.append(f"week {week}: {c.name} отпустил его, в составе было {len(c.roster) + 1} игроков")
+            contracts.release(c, p, self, week, f"в составе было {len(c.roster)} игроков", payout_months=3)
+            contracts.note(self, week, c.name, p.name, "released", f"в составе больше {ROSTER_MAX}", [])
             notes.append(f"{c.name} отпустил {p.name}: в составе лишний игрок")
         return notes
 
     def complete(self, o: Offer, week: int, rng: random.Random) -> str:
         """Seller agreed (or free agent); now the player decides."""
         p = o.player
-        contract = Contract(p.name, o.salary, end_week=week + rng.choice([52, 78, 104]),
-                            buyout=economy.buyout_for(o.salary, 104))
+        contract = contracts.make(self, p.name, o.salary, week, rng.choice(contracts.TERMS))
         v = contract_acceptance(p, contract, asking(p, week) if o.seller is None else expected_salary(p), o.buyer, o.seller,
                                 free_weeks=free_weeks(p, week) if o.seller is None else 0.0,
                                 relocation=bool(o.seller and o.seller.name != o.buyer.name))
         if not v.decide(rng.random()):
             o.status = "refused"
             self.refused[(p.name, o.buyer.name)] = week
+            contracts.note(self, week, o.buyer.name, p.name, "signing_refused", "игрок отказал", v.reasons[:3])
             return f"{p.name} отказал {o.buyer.name}: " + "; ".join(v.reasons[:2])
         o.status = "done"
         p.flags.discard("transfer_requested")
@@ -188,8 +210,10 @@ class Market:
             o.buyer.roster.append(p)
             o.buyer.contracts[p.name] = contract
             p.history.append(f"week {week}: свободный агент подписал {o.buyer.name}")
+            contracts.note(self, week, o.buyer.name, p.name, "signed_free", f"{o.salary:,.0f}/мес", v.reasons[:2])
             return f"{o.buyer.name} подписал свободного агента {p.name} ({o.salary:,.0f}/мес)"
         economy.transfer(o.buyer, o.seller, p, o.fee, contract, week)
+        contracts.note(self, week, o.buyer.name, p.name, "transferred", f"из {o.seller.name} за {o.fee:,.0f}", v.reasons[:2])
         return f"{p.name}: {o.seller.name} → {o.buyer.name} за {o.fee:,.0f} ({o.salary:,.0f}/мес)"
 
     def answer(self, o: Offer, accept: bool, week: int, rng: random.Random) -> str:

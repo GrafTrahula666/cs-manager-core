@@ -146,6 +146,9 @@ class ManagerDesk:
         from .market import Offer
         c = seller.contracts.get(p.name)
         ask = min(economy.market_value(p) * 0.9, c.buyout if c else float("inf"))
+        if c is not None and c.status == "leaving":   # he will leave on a free: the seller takes what it can
+            from .contracts import sale_fee
+            ask = min(ask, sale_fee(seller, p, week) * 0.9)
         if fee < ask:
             return f"{seller.name} отклонил {fee:,.0f} за {p.name} (хотят от {ask:,.0f})"
         return self.market.complete(Offer(week, self.club, seller, p, fee, salary), week, self.rng)

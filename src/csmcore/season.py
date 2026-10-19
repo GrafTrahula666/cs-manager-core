@@ -5,7 +5,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from . import character, development, economy, promises as promises_mod, squad, world
+from . import character, contracts, development, economy, promises as promises_mod, squad, world
 from .board import Owner
 from .chronicle import Chronicle
 from .legacy import Legacy
@@ -278,6 +278,7 @@ def season_week(run: SeasonRun, clubs: list[Club], graph: RelationGraph, calenda
         if sysm.promises and c.name in sysm.promises:
             log.management += promises_mod.check(sysm.promises[c.name], c, graph, week)
     if sysm.market is not None:
+        log.management += contracts.week(clubs, sysm.market, week, mgmt_rng, sysm.manager_club)
         deals = sysm.market.week(clubs, week, mgmt_rng, sysm.manager_club)
         log.management += deals
         if sysm.chronicle:
