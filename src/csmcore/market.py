@@ -18,13 +18,23 @@ TIER_SALARY_CAP = {t: v["salary"][1] for t, v in economy.TIERS.items()}
 ROSTER_MAX = 6          # AI clubs keep five and a substitute; the weakest extra is released
 ASK_DROP_MONTH = 0.06   # a free agent asks 6% less for every month without a club...
 ASK_FLOOR = 0.45        # ...down to 45% of what he thinks he is worth
+LEVEL_TOP_SHARE = 1 / 6  # the world's scale is read from its best sixth of rostered players (~top 100 of 600)
 
 
-def expected_salary(p: Player) -> float:
+def expected_salary(p: Player, shift: float = 0.0) -> float:
     """What a player thinks he is worth per month: exponential in level, like real salaries
-    (tier-3 ~$1k, solid tier-1 ~$20-40k, superstar ~$100k+)."""
+    (tier-3 ~$1k, solid tier-1 ~$20-40k, superstar ~$100k+). `shift` is how far the world's level
+    has risen since it was made (Market.level_shift): pay follows a player's place in the world,
+    so when everybody gets better, a 75 is paid what a 70 was."""
     hype = p.mod("fan_gain")[1]
-    return 600 * math.exp((p.overall() - 45) / 7.5) * (0.85 + 0.15 * hype)
+    return 600 * math.exp((p.overall() - shift - 45) / 7.5) * (0.85 + 0.15 * hype)
+
+
+def world_level(clubs: list[Club]) -> float:
+    """Average level of the best sixth of rostered players."""
+    lv = sorted((p.overall() for c in clubs for p in c.roster), reverse=True)
+    top = lv[:max(1, round(len(lv) * LEVEL_TOP_SHARE))]
+    return sum(top) / len(top) if top else 0.0
 
 
 def free_weeks(p: Player, week: int) -> float:
@@ -37,13 +47,13 @@ def free_weeks(p: Player, week: int) -> float:
     return weeks
 
 
-def asking(p: Player, week: int) -> float:
+def asking(p: Player, week: int, shift: float = 0.0) -> float:
     """What a free agent settles for: months without a team lower his demands."""
     since = p.__dict__.get("free_since")
     if since is None:
-        return expected_salary(p)
+        return expected_salary(p, shift)
     months = max(0, week - since) / 4
-    return expected_salary(p) * max(ASK_FLOOR, 1 - ASK_DROP_MONTH * months)
+    return expected_salary(p, shift) * max(ASK_FLOOR, 1 - ASK_DROP_MONTH * months)
 
 
 @dataclass
@@ -67,6 +77,15 @@ class Market:
     stats: Counter = field(default_factory=Counter)      # outcome -> count, for the lab and the UI
     next_contract_id: int = 0
     short_since: dict[str, int] = field(default_factory=dict)   # club -> first week it had fewer than five
+    level_ref: float | None = None   # world_level() when the market first looked at the world
+    level_shift: float = 0.0         # world_level() now minus level_ref: see expected_salary
+
+    def rescale(self, clubs: list[Club]) -> float:
+        now = world_level(clubs)
+        if self.level_ref is None:
+            self.level_ref = now
+        self.level_shift = now - self.level_ref
+        return self.level_shift
 
     def listed(self, clubs: list[Club], week: int = 0) -> list[tuple[Player, Club | None]]:
         out: list[tuple[Player, Club | None]] = [(p, None) for p in self.free_agents]
@@ -96,6 +115,7 @@ class Market:
         """AI clubs act every 4 weeks, at most one deal each; a club without five players looks
         every week and goes first. Clubs over ROSTER_MAX release their weakest bench player."""
         window = week % 4 == 0
+        self.rescale(clubs)
         notes = self._trim_rosters(clubs, week, manager_club) if window else []
         short = [c for c in clubs if contracts.staying(c) < 5 and c.name != manager_club]
         for name in [n for n in self.short_since if n not in {c.name for c in short}]:
@@ -126,12 +146,12 @@ class Market:
                 if week - self.refused.get((p.name, buyer.name), -999) < 26:
                     why["refused_recently"] += 1
                     continue  # he said no recently
-                ask = asking(p, week) if seller is None else expected_salary(p)
+                ask = asking(p, week, self.level_shift) if seller is None else expected_salary(p, self.level_shift)
                 if ask > TIER_SALARY_CAP[buyer.tier] * 1.1:
                     why["wage_gap"] += 1
                     continue  # cannot pay what he wants: do not waste an offer
                 salary = min(ask * rng.uniform(0.9, 1.15), TIER_SALARY_CAP[buyer.tier])
-                fee = 0.0 if seller is None else contracts.sale_fee(seller, p, week)
+                fee = 0.0 if seller is None else contracts.sale_fee(seller, p, week, self.level_shift)
                 if fee + salary * (6 if contracts.staying(buyer) >= 5 else 2) > buyer.cash:
                     why["cash"] += 1
                     continue  # a club short of players signs on two months of wages
@@ -191,7 +211,7 @@ class Market:
         """Seller agreed (or free agent); now the player decides."""
         p = o.player
         contract = contracts.make(self, p.name, o.salary, week, rng.choice(contracts.TERMS))
-        v = contract_acceptance(p, contract, asking(p, week) if o.seller is None else expected_salary(p), o.buyer, o.seller,
+        v = contract_acceptance(p, contract, asking(p, week, self.level_shift) if o.seller is None else expected_salary(p, self.level_shift), o.buyer, o.seller,
                                 free_weeks=free_weeks(p, week) if o.seller is None else 0.0,
                                 relocation=bool(o.seller and o.seller.name != o.buyer.name))
         if not v.decide(rng.random()):

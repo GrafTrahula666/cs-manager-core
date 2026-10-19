@@ -246,9 +246,10 @@ def award(club: Club, t: Tournament, place: int, week: int, field_size: int) -> 
     return kept
 
 
-def market_value(p: Player) -> float:
-    """Transfer value. Peaks at 19-24, scales steeply with level and hype (fan_gain traits)."""
-    level = p.overall()
+def market_value(p: Player, shift: float = 0.0) -> float:
+    """Transfer value. Peaks at 19-24, scales steeply with level and hype (fan_gain traits).
+    `shift`: the world's level rise (Market.level_shift), as in market.expected_salary."""
+    level = p.overall() - shift
     age_mul = 1.0 if 19 <= p.age <= 24 else max(0.3, 1 - 0.12 * abs(p.age - (19 if p.age < 19 else 24)))
     form_mul = 0.8 + 0.4 * p.s("form") / 100
     hype = p.mod("fan_gain")[1]

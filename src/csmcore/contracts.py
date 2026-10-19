@@ -67,12 +67,12 @@ def staying(club: Club) -> int:
     return sum(1 for p in club.roster if (k := club.contracts.get(p.name)) is None or k.status != "leaving")
 
 
-def offer_salary(club: Club, p) -> float:
+def offer_salary(club: Club, p, shift: float = 0.0) -> float:
     from .market import TIER_SALARY_CAP, expected_salary
-    return min(expected_salary(p), TIER_SALARY_CAP[club.tier])
+    return min(expected_salary(p, shift), TIER_SALARY_CAP[club.tier])
 
 
-def club_wants(club: Club, p, week: int) -> tuple[bool, str]:
+def club_wants(club: Club, p, week: int, shift: float = 0.0) -> tuple[bool, str]:
     """Would the club extend him? A plain rule a manager could explain to the press."""
     lineup = club.lineup()
     if len(club.roster) <= 5 and p.age < 33:
@@ -83,7 +83,7 @@ def club_wants(club: Club, p, week: int) -> tuple[bool, str]:
         best = sorted(club.roster, key=lambda q: -q.overall())[:2]
         if p not in best:
             return False, "сам просил трансфер, а клуб не держится за него"
-    salary = offer_salary(club, p)
+    salary = offer_salary(club, p, shift)
     if salary * 6 > max(0.0, club.cash):
         return False, f"нет денег на полгода его зарплаты ({salary:,.0f}/мес)"
     return True, "игрок основы"
@@ -95,7 +95,7 @@ def offer(market, club: Club, p, salary: float, weeks: int, week: int, rng: rand
     old = club.contracts[p.name]
     new = make(market, p.name, salary, old.end_week, weeks)
     new.start_week = week
-    v = contract_acceptance(p, new, expected_salary(p), club, staying=True)
+    v = contract_acceptance(p, new, expected_salary(p, market.level_shift), club, staying=True)
     if not v.decide(rng.random()):
         old.status = "leaving"
         note(market, week, club.name, p.name, "renewal_refused", f"{by}: игрок отказал", v.reasons[:3])
@@ -108,12 +108,12 @@ def offer(market, club: Club, p, salary: float, weeks: int, week: int, rng: rand
 
 
 def ai_decide(market, club: Club, p, week: int, rng: random.Random, by: str = "ai") -> str:
-    wants, why = club_wants(club, p, week)
+    wants, why = club_wants(club, p, week, market.level_shift)
     if not wants:
         club.contracts[p.name].status = "leaving"
         note(market, week, club.name, p.name, "not_offered", f"{by}: {why}")
         return f"{club.name} не продлевает контракт {p.name}: {why}"
-    return offer(market, club, p, offer_salary(club, p), rng.choice(TERMS), week, rng, by)[1]
+    return offer(market, club, p, offer_salary(club, p, market.level_shift), rng.choice(TERMS), week, rng, by)[1]
 
 
 def week(clubs: list[Club], market, week: int, rng: random.Random, manager_club: str | None = None) -> list[str]:
@@ -144,15 +144,16 @@ def week(clubs: list[Club], market, week: int, rng: random.Random, manager_club:
     return out
 
 
-def sale_fee(seller: Club, p, week: int) -> float:
+def sale_fee(seller: Club, p, week: int, shift: float = 0.0) -> float:
     """A player who will leave on a free is worth less every week (cf. the m0NESY sale, H02)."""
     from .economy import market_value
+    value = market_value(p, shift)
     c = seller.contracts.get(p.name)
     if c is None:
-        return market_value(p)
+        return value
     if c.status == "leaving":
-        return market_value(p) * max(0.1, min(1.0, (c.end_week - week) / 52))
-    return market_value(p) * 1.3
+        return value * max(0.1, min(1.0, (c.end_week - week) / 52))
+    return value * 1.3
 
 
 ACADEMY_AFTER = 2   # weeks a club stays short with nobody it can afford before it promotes a junior
@@ -168,7 +169,7 @@ def academy_signing(club: Club, clubs: list[Club], market, week: int, rng: rando
     from .market import TIER_SALARY_CAP, expected_salary
     from .worldgen import REGIONS, ROLES, Nicknames
     cap = TIER_SALARY_CAP[club.tier]
-    affordable = 45 + 7.5 * math.log(cap * 0.8 / 600)          # inverse of market.expected_salary
+    affordable = 45 + market.level_shift + 7.5 * math.log(cap * 0.8 / 600)   # inverse of market.expected_salary
     real = [p.overall() for p in club.roster]
     level = min(affordable, (sum(real) / len(real) - 4) if real else affordable)
     taken = {p.name for c in clubs for p in c.roster + c.former} | {p.name for p in market.free_agents}
@@ -177,7 +178,7 @@ def academy_signing(club: Club, clubs: list[Club], market, week: int, rng: rando
     p = make_player(Nicknames(rng, reserved=taken)(), level, rng, role, age=rng.randint(17, 19))
     p.country = rng.choice(REGIONS.get(club.region, REGIONS["EU"])[1])
     p.potential = roll_potential(p.overall(), p.age, rng)
-    salary = min(expected_salary(p), cap)
+    salary = min(expected_salary(p, market.level_shift), cap)
     club.roster.append(p)
     club.contracts[p.name] = make(market, p.name, salary, week, 52)
     p.joined_week = week

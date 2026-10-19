@@ -11,11 +11,12 @@ import io
 import pickle
 
 MAGIC = b"CSMSAVE"
-VERSION = 4
+VERSION = 5
 # Version history: 1 = before the emergent world engine; 2 = sysm.emergent (facts, minds, press);
 # 3 = leagues (Тир 1-3 and the rest), HACEIT and HLTW; 4 = contracts that end, the hiring journal,
-# the roster-core rule for invites.
-SUPPORTED = (1, 2, 3, 4)
+# the roster-core rule for invites; 5 = salaries and prices follow the world's level scale.
+SUPPORTED = (1, 2, 3, 4, 5)
+WORLD_LEVEL_AT_START = 70.0   # see _to_world_scale
 
 
 def dumps(game) -> bytes:
@@ -50,7 +51,21 @@ def migrate(game, version: int):
         _to_leagues(game)
     if version < 4:
         _to_contracts(game)
+    if version < 5:
+        _to_world_scale(game)
     return game
+
+
+def _to_world_scale(game) -> None:
+    """4 -> 5: salaries and prices follow the world's level (Market.level_shift). An old save does
+    not know the level its world started at; generated worlds start with the best sixth of
+    players at ~70 (seeds 1-20 of the 120-club lab world), so that is taken as the start."""
+    from .market import world_level
+    m = game.sysm.market
+    if m is not None:
+        m.__dict__.setdefault("level_ref", min(WORLD_LEVEL_AT_START, world_level(game.clubs)))
+        m.__dict__.setdefault("level_shift", 0.0)
+        m.rescale(game.clubs)
 
 
 def _to_contracts(game) -> None:
