@@ -77,7 +77,7 @@ class AuditGame(ObservedGame):
         notes = super()._new_season()
         survivors = {id(c) for c in self.clubs}
         removed = Counter(c.tier for c in before if id(c) not in survivors)
-        closures = sum("закрылся после банкротства" in line for line in notes)
+        closure_notes = {line.removeprefix("мир: ").split(" закрылся после банкротства")[0]\n                         for line in notes if " закрылся после банкротства" in line}\n        closures = len(closure_notes)\n        closures_by_tier = Counter(c.tier for c in before if c.name in closure_notes)
         self.audit_closed.append({
             "clubs": clubs,
             "money": dict(sorted(items.items())),
@@ -87,7 +87,7 @@ class AuditGame(ObservedGame):
             "fan_growth_median": median(fan_growth),
             "fan_growth_mean": mean(fan_growth),
             "removed_by_tier": dict(sorted(removed.items())),
-            "bankruptcy_closure_messages": closures,
+            "bankruptcy_closure_messages": closures,\n            "bankruptcy_closures_by_tier": dict(sorted(closures_by_tier.items())),
             "rollover_messages": [s for s in notes if
                 "закрылся" in s or "инвестор купил" in s or "исчез" in s],
         })
@@ -160,13 +160,13 @@ def run_world(seed: int, seasons: int, clubs: int, director: str):
             "contracts_expired": kinds["expired_left"],
             "not_offered": kinds["not_offered"],
             "signing_refusals": kinds["signing_refused"],
-            "academy_signings": kinds["academy_signed"] + kinds["academy_signing"],
+            "academy_signings": kinds["academy"],
             "direct_roster_moves": game.audit_direct_moves[season],
             "roster_entries_from_nonclub": game.audit_from_free[season],
             "roster_exits_to_nonclub": game.audit_to_free[season],
             "bankruptcy_closures": clubs_closed,
             "removed_club_objects": sum(finance["removed_by_tier"].values()),
-            "tier1_removed_objects": finance["removed_by_tier"].get("tier1", 0),
+            "tier1_removed_objects": finance["removed_by_tier"].get("tier1", 0),\n            "tier1_bankruptcy_closures": finance["bankruptcy_closures_by_tier"].get("tier1", 0),
             "finance_reconciliation_failures": finance["reconciliation_failures"],
             "finance_reconciliation_max_abs": finance["reconciliation_max_abs"],
             "fan_growth_median": finance["fan_growth_median"],
