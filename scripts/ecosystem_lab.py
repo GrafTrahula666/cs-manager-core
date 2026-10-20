@@ -77,7 +77,10 @@ class AuditGame(ObservedGame):
         notes = super()._new_season()
         survivors = {id(c) for c in self.clubs}
         removed = Counter(c.tier for c in before if id(c) not in survivors)
-        closure_notes = {line.removeprefix("мир: ").split(" закрылся после банкротства")[0]\n                         for line in notes if " закрылся после банкротства" in line}\n        closures = len(closure_notes)\n        closures_by_tier = Counter(c.tier for c in before if c.name in closure_notes)
+        closure_notes = {line.removeprefix("мир: ").split(" закрылся после банкротства")[0]
+                         for line in notes if " закрылся после банкротства" in line}
+        closures = len(closure_notes)
+        closures_by_tier = Counter(c.tier for c in before if c.name in closure_notes)
         self.audit_closed.append({
             "clubs": clubs,
             "money": dict(sorted(items.items())),
