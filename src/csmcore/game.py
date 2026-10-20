@@ -54,7 +54,10 @@ class Game:
     def new(cls, seed: int = 1, n_clubs: int = 120, club: str | None = None, director: str = "cassandra",
             manager_name: str = "Вы") -> "Game":
         clubs, graph, cal, sysm, home = worldgen.generate(seed, n_clubs, director)
-        return cls(seed, clubs, graph, cal, sysm, club or home, manager_name)
+        g = cls(seed, clubs, graph, cal, sysm, club or home, manager_name)
+        from . import hunt
+        g.opening_news = hunt.spawn(g, random.Random(seed + 91))
+        return g
 
     # ---- lookups ----
     @property
@@ -225,6 +228,8 @@ class Game:
         if self.sysm.market is not None:   # off-season window: retirements left holes in the rosters
             self.sysm.market.week(self.clubs, start, rng, self.club_name)
         self.run = season_begin(self.clubs, self._season_seed(), self.sysm, self.season, start)
+        from . import hunt
+        lines += hunt.spawn(self, random.Random(self._season_seed() + 91))
         owner = self.desk.owner
         if owner and owner.objectives:
             lines.append("Цели владельца: " + "; ".join(o.text for o in owner.objectives))
