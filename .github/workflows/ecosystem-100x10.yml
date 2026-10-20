@@ -1,0 +1,106 @@
+name: CS Manager ecosystem lab 100x10 (P1)
+
+on:
+  push:
+    branches:
+      - analysis/ecosystem-100x10-p1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ecosystem-lab-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Regression and 24-club smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dev dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Full game regression tests and observer parity
+        run: python -m pytest -q
+      - name: End-to-end one-world smoke
+        run: python scripts/ecosystem_lab.py --worlds 1 --seasons 1 --clubs 24 --output out/smoke
+      - name: Upload smoke evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-smoke
+          path: out/smoke/
+          retention-days: 14
+
+  simulate:
+    name: Seeds ${{ matrix.seed_start }}–${{ matrix.seed_end }}
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        include:
+          - {shard: 0, seed_start: 1, seed_end: 10}
+          - {shard: 1, seed_start: 11, seed_end: 20}
+          - {shard: 2, seed_start: 21, seed_end: 30}
+          - {shard: 3, seed_start: 31, seed_end: 40}
+          - {shard: 4, seed_start: 41, seed_end: 50}
+          - {shard: 5, seed_start: 51, seed_end: 60}
+          - {shard: 6, seed_start: 61, seed_end: 70}
+          - {shard: 7, seed_start: 71, seed_end: 80}
+          - {shard: 8, seed_start: 81, seed_end: 90}
+          - {shard: 9, seed_start: 91, seed_end: 100}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install project
+        run: python -m pip install -e .
+      - name: Simulate ten worlds with ten seasons and 120 clubs
+        run: >-
+          python scripts/ecosystem_lab.py
+          --worlds 10 --seasons 10 --clubs 120
+          --seed-start ${{ matrix.seed_start }}
+          --director cassandra --output out/ecosystem
+      - name: Upload raw per-world JSON checkpoints
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-shard-${{ matrix.shard }}
+          path: out/ecosystem/world-*.json
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    name: Aggregate 100 worlds and check integrity
+    needs: simulate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Download ten shard artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ecosystem-shard-*
+          path: out/combined
+          merge-multiple: true
+      - name: Require 100 distinct seeds and export season data
+        run: >-
+          python scripts/ecosystem_lab.py --aggregate-only
+          --worlds 100 --seasons 10 --clubs 120
+          --output out/combined
+      - name: Upload complete result (raw and analytical files)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-100x10-final
+          path: out/combined/
+          if-no-files-found: error
+          retention-days: 30
