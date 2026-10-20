@@ -90,7 +90,8 @@ class AuditGame(ObservedGame):
             "fan_growth_median": median(fan_growth),
             "fan_growth_mean": mean(fan_growth),
             "removed_by_tier": dict(sorted(removed.items())),
-            "bankruptcy_closure_messages": closures,\n            "bankruptcy_closures_by_tier": dict(sorted(closures_by_tier.items())),
+            "bankruptcy_closure_messages": closures,
+            "bankruptcy_closures_by_tier": dict(sorted(closures_by_tier.items())),
             "rollover_messages": [s for s in notes if
                 "закрылся" in s or "инвестор купил" in s or "исчез" in s],
         })
@@ -169,7 +170,8 @@ def run_world(seed: int, seasons: int, clubs: int, director: str):
             "roster_exits_to_nonclub": game.audit_to_free[season],
             "bankruptcy_closures": clubs_closed,
             "removed_club_objects": sum(finance["removed_by_tier"].values()),
-            "tier1_removed_objects": finance["removed_by_tier"].get("tier1", 0),\n            "tier1_bankruptcy_closures": finance["bankruptcy_closures_by_tier"].get("tier1", 0),
+            "tier1_removed_objects": finance["removed_by_tier"].get("tier1", 0),
+            "tier1_bankruptcy_closures": finance["bankruptcy_closures_by_tier"].get("tier1", 0),
             "finance_reconciliation_failures": finance["reconciliation_failures"],
             "finance_reconciliation_max_abs": finance["reconciliation_max_abs"],
             "fan_growth_median": finance["fan_growth_median"],
