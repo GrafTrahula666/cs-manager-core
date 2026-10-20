@@ -136,3 +136,18 @@ def test_multi_season_world_is_deterministic():
         return [e.text for e in sysm.chronicle.entries]
     a = run()
     assert a == run() and len(a) > 20
+
+
+def test_api_inbox_hints_and_objective_status():
+    from csmcore import api
+    api.new_game(7, 100)
+    for _ in range(12):
+        api.advance(1)
+        ib = api.inbox()
+        if ib["events"]:
+            e = ib["events"][0]
+            assert len(e["hints"]) == len(e["options"]) and 0 <= e["left"] <= 2
+            assert all({"cash", "fans_pct", "brand", "morale", "risky"} <= set(h) for h in e["hints"])
+            break
+    s = api.state()
+    assert s["zone"] in ("", "up", "down") and all("score" in o for o in s["objective_status"])

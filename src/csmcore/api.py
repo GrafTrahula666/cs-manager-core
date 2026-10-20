@@ -55,9 +55,47 @@ def state() -> dict:
         "sacked": g.sacked, "patch": g.sysm.meta.patch["name"] if g.sysm.meta else "",
         "facilities": {FACILITIES[k]: v for k, v in c.facilities.items() if k in FACILITIES},
         "situations": len(g.situations()),
+        "objective_status": [{"text": o.text, "score": round(owner._score(o, c), 2)} for o in owner.objectives] if owner else [],
+        "zone": _zone(g),
         "division": circuit.name(c.division), "division_place": circuit.standings(g.clubs, c.division).index(c) + 1,
         "season_points": round(c.season_points), "hltw_rank": g.sysm.hltw.place(c.name) if g.sysm.hltw else None,
     }
+
+
+def _zone(g: Game) -> str:
+    """'up' / 'down' when the club sits in a promotion / relegation place of its league now."""
+    k = g.club.division
+    rows = circuit.standings(g.clubs, k)
+    i = rows.index(g.club) + 1
+    up = circuit.SWAPS.get(k - 1, 0) if k > 1 else 0
+    down = circuit.SWAPS.get(k, 0) if k < 4 else 0
+    return "up" if i <= up else "down" if down and i > len(rows) - down else ""
+
+
+def _hints(club, effects: list[dict]) -> dict:
+    """What an option does to the club, read from its effects: sure numbers and 'maybe' flags."""
+    from .storylets import TIER_CASH
+    h = {"cash": 0, "fans_pct": 0, "brand": 0, "morale": 0, "risky": False}
+    for e in effects:
+        if "chance" in e or "follow" in e or "follow_random" in e or "sponsor_leaves" in e or "release" in e \
+                or "add_trait" in e or "secret" in e or "flag" in e:
+            h["risky"] = True
+        if "chance" in e:
+            continue
+        if "cash" in e:
+            h["cash"] += e["cash"]
+        elif "cash_scaled" in e:
+            h["cash"] += e["cash_scaled"] * TIER_CASH.get(club.tier, 1.0)
+        elif "fans_pct" in e:
+            h["fans_pct"] += e["fans_pct"]
+        elif "brand" in e:
+            h["brand"] += e["brand"]
+        elif "team_morale" in e:
+            h["morale"] += e["team_morale"]
+        elif e.get("state") == "morale" and e.get("who") != "b":
+            h["morale"] += e["add"] / 5
+    h["cash"] = _money(h["cash"])
+    return h
 
 
 def roster() -> list[dict]:
@@ -149,7 +187,9 @@ def inbox() -> dict:
     g = _g()
     st, mk = g.sysm.stories, g.sysm.market
     events = [{"i": i, "id": f.event_id, "deck": bool(st.events[f.event_id].get("deck")), "title": f.title,
-               "text": f.text, "options": f.options, "why": f.why[:4], "week": f.week}
+               "text": f.text, "options": f.options, "why": f.why[:4], "week": f.week,
+               "hints": [_hints(g.club, o.get("effects", [])) for o in st.events[f.event_id].get("options", [])],
+               "left": max(0, 2 - (g.week - f.week))}
               for i, f in enumerate(st.pending if st else [])]
     offers = [{"i": i, "buyer": o.buyer.name, "player": o.player.name, "fee": _money(o.fee), "salary": _money(o.salary)}
               for i, o in enumerate(mk.offers if mk else [])]
