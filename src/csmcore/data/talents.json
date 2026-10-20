@@ -24,271 +24,325 @@
  },
  "channels": {
   "prep.opponent_report": {
+   "label": "Точность отчётов о соперниках",
    "cap": 0.4,
    "hook": "meta.py / engine.py",
    "status": "planned"
   },
   "prep.map_info": {
+   "label": "Информация о картах соперника",
    "cap": 0.4,
    "hook": "meta.py / engine.py",
    "status": "planned"
   },
   "review.error_clarity": {
+   "label": "Ясность разбора ошибок",
    "cap": 0.4,
    "hook": "matchstats.py",
    "status": "planned"
   },
   "prep.style_info": {
+   "label": "Распознавание стиля соперника",
    "cap": 0.4,
    "hook": "meta.py / engine.py",
    "status": "planned"
   },
   "prep.weakness_info": {
+   "label": "Поиск слабых мест соперника",
    "cap": 0.4,
    "hook": "meta.py / engine.py",
    "status": "planned"
   },
   "staff.coach_sync": {
+   "label": "Согласованность с главным тренером",
    "cap": 0.4,
    "hook": "contracts.py",
    "status": "planned"
   },
   "prep.veto_info": {
+   "label": "Подсказки вето и пика",
    "cap": 0.4,
    "hook": "meta.py / engine.py",
    "status": "planned"
   },
   "prep.counter_info": {
+   "label": "Контрпланы против типовых схем",
    "cap": 0.4,
    "hook": "meta.py / engine.py",
    "status": "planned"
   },
   "prep.series_info": {
+   "label": "План на серию BO3/BO5",
    "cap": 0.4,
    "hook": "meta.py / engine.py",
    "status": "planned"
   },
   "match.timeout_info": {
+   "label": "Подсказки по тайм-аутам",
    "cap": 0.4,
    "hook": "engine.py",
    "status": "planned"
   },
   "prep.decider_info": {
+   "label": "Подготовка к решающим матчам",
    "cap": 0.4,
    "hook": "meta.py / engine.py",
    "status": "planned"
   },
   "talk.effect": {
+   "label": "Сила разговора с игроком",
    "cap": 0.4,
    "hook": "talks.py",
    "status": "planned"
   },
   "adapt.newcomer": {
+   "label": "Адаптация новичков",
    "cap": 0.4,
    "hook": "market.py",
    "status": "planned"
   },
   "stress.relief": {
+   "label": "Снятие стресса",
    "cap": 0.4,
    "hook": "talks.py",
    "status": "planned"
   },
   "conflict.early_warning": {
+   "label": "Раннее предупреждение конфликтов",
    "cap": 0.4,
    "hook": "emergent/manager_view.py",
    "status": "planned"
   },
   "morale.recovery": {
+   "label": "Восстановление морали",
    "cap": 0.4,
    "hook": "squad.py",
    "status": "planned"
   },
   "captain.sync": {
+   "label": "Связь с капитаном",
    "cap": 0.4,
    "hook": "squad.py",
    "status": "planned"
   },
   "trust.gain": {
+   "label": "Рост доверия",
    "cap": 0.4,
    "hook": "promises.py",
    "status": "planned"
   },
   "talk.hard_characters": {
+   "label": "Разговор со сложными характерами",
    "cap": 0.4,
    "hook": "talks.py",
    "status": "planned"
   },
   "adapt.transfer": {
+   "label": "Адаптация после трансфера",
    "cap": 0.4,
    "hook": "market.py",
    "status": "planned"
   },
   "team.discipline": {
+   "label": "Командная дисциплина",
    "cap": 0.4,
    "hook": "squad.py",
    "status": "planned"
   },
   "crisis.recovery": {
+   "label": "Выход из кризиса",
    "cap": 0.4,
    "hook": "emergent/manager_view.py",
    "status": "planned"
   },
   "scout.find_rate": {
+   "label": "Находки скаутов",
    "cap": 0.4,
    "hook": "scouting.py",
    "status": "planned"
   },
   "scout.stat_precision": {
+   "label": "Точность оценки уровня",
    "cap": 0.4,
    "hook": "scouting.py",
    "status": "planned"
   },
   "analysis.demo_depth": {
+   "label": "Глубина разбора демок",
    "cap": 0.4,
    "hook": "scouting.py",
    "status": "planned"
   },
   "scout.potential_precision": {
+   "label": "Точность оценки потенциала",
    "cap": 0.4,
    "hook": "scouting.py",
    "status": "planned"
   },
   "analysis.model_quality": {
+   "label": "Качество аналитических моделей",
    "cap": 0.4,
    "hook": "scouting.py",
    "status": "planned"
   },
   "scout.chemistry_read": {
+   "label": "Оценка совместимости игроков",
    "cap": 0.4,
    "hook": "scouting.py",
    "status": "planned"
   },
   "scout.growth_forecast": {
+   "label": "Прогноз развития",
    "cap": 0.4,
    "hook": "scouting.py",
    "status": "planned"
   },
   "scout.error_cut": {
+   "label": "Меньше ошибок скаутинга",
    "cap": 0.4,
    "hook": "scouting.py",
    "status": "planned"
   },
   "training.plan_quality": {
+   "label": "Качество тренировочных планов",
    "cap": 0.4,
    "hook": "development.py",
    "status": "planned"
   },
   "staff.analyst_slots": {
+   "label": "Места аналитиков",
    "cap": 0.4,
    "hook": "contracts.py",
    "status": "planned"
   },
   "neg.contract": {
+   "label": "Условия контрактов",
    "cap": 0.12,
    "hook": "contracts.py",
    "status": "planned"
   },
   "hire.pool_quality": {
+   "label": "Качество рынка штата",
    "cap": 0.4,
    "hook": "market.py",
    "status": "planned"
   },
   "cost.upkeep_cut": {
+   "label": "Скидка на содержание",
    "cap": 0.12,
    "hook": "economy.py",
    "status": "planned"
   },
   "staff.sync": {
+   "label": "Согласованность штаба",
    "cap": 0.4,
    "hook": "contracts.py",
    "status": "planned"
   },
   "infra.build_cost_cut": {
+   "label": "Скидка на стройку",
    "cap": 0.12,
    "hook": "economy.py",
    "status": "planned"
   },
   "academy.intake": {
+   "label": "Качество набора в академию",
    "cap": 0.4,
    "hook": "legacy.py",
    "status": "planned"
   },
   "sponsor.offer_quality": {
+   "label": "Условия спонсоров",
    "cap": 0.2,
    "hook": "economy.py",
    "status": "planned"
   },
   "finance.loan_terms": {
+   "label": "Условия кредитов и инвесторов",
    "cap": 0.15,
    "hook": "economy.py",
    "status": "planned"
   },
   "owner.patience": {
+   "label": "Терпение владельца",
    "cap": 0.25,
    "hook": "board.py",
    "status": "planned"
   },
   "infra.build_time_cut": {
+   "label": "Скорость стройки",
    "cap": 0.4,
    "hook": "economy.py",
    "status": "planned"
   },
   "staff.slots": {
+   "label": "Размер штаба без конфликтов",
    "cap": 0.4,
    "hook": "contracts.py",
    "status": "planned"
   },
   "contacts.network": {
+   "label": "Личные связи",
    "cap": 0.4,
    "hook": "relations.py",
    "status": "planned"
   },
   "neg.agent": {
+   "label": "Переговоры с агентами",
    "cap": 0.15,
    "hook": "contracts.py",
    "status": "planned"
   },
   "press.tone": {
+   "label": "Тон прессы",
    "cap": 0.4,
    "hook": "talks.py",
    "status": "planned"
   },
   "intel.rumour_accuracy": {
+   "label": "Точность слухов",
    "cap": 0.4,
    "hook": "secrets.py",
    "status": "planned"
   },
   "talk.persuade": {
+   "label": "Убеждение",
    "cap": 0.4,
    "hook": "talks.py",
    "status": "planned"
   },
   "reputation.damage_cut": {
+   "label": "Защита репутации",
    "cap": 0.4,
    "hook": "chronicle.py",
    "status": "planned"
   },
   "diplomacy.club_relations": {
+   "label": "Отношения с клубами",
    "cap": 0.4,
    "hook": "rivalry.py",
    "status": "planned"
   },
   "neg.transfer": {
+   "label": "Трансферные переговоры",
    "cap": 0.15,
    "hook": "contracts.py",
    "status": "planned"
   },
   "leverage.conflicts": {
+   "label": "Использование чужих конфликтов",
    "cap": 0.4,
    "hook": "secrets.py",
    "status": "planned"
   },
   "crisis.contacts": {
+   "label": "Кризисы через связи",
    "cap": 0.4,
    "hook": "emergent/manager_view.py",
    "status": "planned"
   },
   "deals.long_term": {
+   "label": "Долгие договорённости",
    "cap": 0.4,
    "hook": "contracts.py",
    "status": "planned"

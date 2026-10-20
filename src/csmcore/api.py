@@ -9,7 +9,9 @@ import base64
 
 from . import circuit, contracts as contracts_mod, economy, save as save_mod
 from . import hunt as hunt_mod
+from . import livingdata
 from .game import Game
+from .progression import STAT_RU, xp_to_next
 from .market import asking, expected_salary
 from .talks import PRESS, TONES
 from .traits import library
@@ -27,9 +29,9 @@ def _g() -> Game:
     return G
 
 
-def new_game(seed: int = 1, n_clubs: int = 120, director: str = "cassandra") -> dict:
+def new_game(seed: int = 1, n_clubs: int = 120, director: str = "cassandra", profile: dict | None = None) -> dict:
     global G
-    G = Game.new(seed=seed, n_clubs=n_clubs, director=director)
+    G = Game.new(seed=seed, n_clubs=n_clubs, director=director, profile=profile)
     s = state()
     s["opening_news"] = getattr(G, "opening_news", [])
     return s
@@ -55,6 +57,8 @@ def state() -> dict:
         "offers": len(g.sysm.market.offers) if g.sysm.market else 0,
         "manager": {"name": g.manager_name, "reputation": round(m.reputation) if m else None,
                     "titles": m.titles if m else 0},
+        "level": g.ensure_living().level, "xp": g.living.xp, "xp_next": xp_to_next(g.living.level) if g.living.level < g.living.max_level else 0,
+        "talent_points": g.living.available_points,
         "sacked": g.sacked, "patch": g.sysm.meta.patch["name"] if g.sysm.meta else "",
         "facilities": {FACILITIES[k]: v for k, v in c.facilities.items() if k in FACILITIES},
         "situations": len(g.situations()),
@@ -480,6 +484,7 @@ def save_b64() -> str:
 def load_b64(data: str) -> dict:
     global G
     G = save_mod.loads(base64.b64decode(data))
+    G.ensure_living()
     return state()
 
 
@@ -624,3 +629,49 @@ def haceit(n: int = 25) -> dict:
                "age": ages.get(name), "hpl": name in hc.hpl} for i, (name, e) in enumerate(hc.ladder(n), 1)]
     mine = [{"player": p.name, **hc.card(p.name)} for p in g.club.roster if p.name in hc.elo]
     return {"ladder": ladder, "mine": mine, "hpl": len(hc.hpl)}
+
+
+# ---------- LIVING CLUB: manager creation and talents ----------
+COUNTRIES = ["RU", "UA", "KZ", "BY", "PL", "SE", "DK", "FR", "DE", "BR", "US", "CN"]
+
+
+def manager_options() -> dict:
+    """Everything the creation screen needs: backgrounds, branches, character traits."""
+    bg, t = livingdata.load("backgrounds"), livingdata.load("talents")
+    return {"stats": bg["stats"], "stat_ru": STAT_RU, "specialization_bonus": bg["specialization_bonus"],
+            "specialization_stat": bg["specialization_stat"], "traits": bg["traits"], "backgrounds": bg["backgrounds"],
+            "branches": [{"id": k, **v, "stat": bg["specialization_stat"][k]} for k, v in t["branches"].items()],
+            "countries": COUNTRIES, "max_level": livingdata.load("progression")["max_level"]}
+
+
+def living() -> dict:
+    """Level, XP, talent tree with the state of every node and what the manager's channels add up to."""
+    g = _g()
+    lv = g.ensure_living()
+    t = livingdata.load("talents")
+    nodes = []
+    for n in t["nodes"]:
+        ok, why = lv.can_unlock(n["id"])
+        state = "unlocked" if n["id"] in lv.unlocked else "available" if ok else "locked"
+        nodes.append({"id": n["id"], "branch": n["branch"], "name": n["name"], "tier": n["tier"], "requires": n["requires"],
+                      "desc": n["desc"], "capstone": bool(n.get("capstone")), "risk": n.get("risk"), "state": state, "why": why,
+                      "effect": [{"channel": e["channel"], "label": t["channels"][e["channel"]]["label"], "value": e["value"],
+                                  "cap": t["channels"][e["channel"]]["cap"]} for e in n["effects"]]})
+    chans = []
+    for name, c in t["channels"].items():
+        v = lv.channel(name)
+        if abs(v) > 1e-9:
+            chans.append({"channel": name, "label": c["label"], "value": round(v, 3), "cap": c["cap"], "status": c["status"],
+                          "why": lv.explain(name)})
+    bg = next(b for b in livingdata.load("backgrounds")["backgrounds"] if b["id"] == lv.background)
+    tr = {x["id"]: x for x in livingdata.load("backgrounds")["traits"]}
+    return {"name": lv.name, "age": lv.age, "country": lv.country, "face": lv.face, "background": bg["name"], "strength": bg["strength"],
+            "weakness": bg["weakness"], "specialization": lv.specialization, "stats": lv.stats, "stat_ru": STAT_RU,
+            "traits": [tr[i] for i in lv.traits], "level": lv.level, "max_level": lv.max_level, "xp": lv.xp,
+            "xp_next": xp_to_next(lv.level) if lv.level < lv.max_level else 0, "points": lv.available_points,
+            "spent": lv.spent_points, "branches": t["branches"], "nodes": nodes, "channels": sorted(chans, key=lambda x: x["label"]),
+            "journal": [j for j in lv.journal if j["xp"]][-12:][::-1]}
+
+
+def unlock_talent(tid: str) -> str:
+    return _g().ensure_living().unlock(tid)

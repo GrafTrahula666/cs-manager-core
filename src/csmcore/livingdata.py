@@ -19,12 +19,14 @@ def talents() -> dict[str, dict]:
     return {n["id"]: n for n in load("talents")["nodes"]}
 
 
-def channel_total(unlocked: set[str], channel: str) -> float:
-    """Sum of unlocked talent effects on one channel, clamped by the channel's cap."""
+def channel_total(unlocked: set[str], channel: str, extra: float = 0.0) -> float:
+    """Sum of unlocked talent effects on one channel plus `extra` (background and traits),
+    clamped to [-cap, cap]."""
     data = load("talents")
     nodes = talents()
-    raw = sum(e["value"] for t in unlocked for e in nodes[t]["effects"] if e["channel"] == channel)
-    return min(raw, data["channels"][channel]["cap"])
+    raw = extra + sum(e["value"] for t in unlocked for e in nodes[t]["effects"] if e["channel"] == channel)
+    cap = data["channels"][channel]["cap"]
+    return max(-cap, min(raw, cap))
 
 
 def validate() -> list[str]:
@@ -62,6 +64,16 @@ def validate() -> list[str]:
     sums = {sum(b["stats"].values()) for b in bg["backgrounds"]}
     if len(sums) != 1:
         errs.append(f"backgrounds: start stat sums differ: {sorted(sums)}")
+    chs = set(t["channels"])
+    for tr in bg["traits"]:
+        for e in tr["effects"]:
+            if e["channel"] not in chs:
+                errs.append(f"backgrounds: trait {tr['id']} uses unknown channel {e['channel']}")
+    for stat, lst in bg["stat_channels"].items():
+        if stat not in bg["stats"] or any(c not in chs for c in lst):
+            errs.append(f"backgrounds: stat_channels {stat} is malformed")
+    if set(bg["specialization_stat"]) != set(t["branches"]):
+        errs.append("backgrounds: specialization_stat must cover every branch")
     roles = {r["id"] for r in load("staff_roles")["roles"]}
     f = load("facilities")
     workplaces = {r["workplace"] for r in load("staff_roles")["roles"]} - {"office"}

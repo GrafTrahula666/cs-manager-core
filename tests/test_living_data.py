@@ -77,3 +77,70 @@ def test_ladder_reaches_mid_levels_in_five_or_six_seasons_with_good_play():
         m.grant("title_a", f"{s}:cup", s); m.grant("exceeded_rank", str(s), s)
         m.grant("infra_project", f"p{s}", s); m.grant("long_task", f"t{s}", s)
     assert 10 <= m.level <= 22
+
+
+PROFILE = {"name": "Иван Громов", "age": 38, "country": "RU", "background": "analyst", "specialization": "strategist",
+           "traits": ["workaholic", "visionary"], "face": {"seed": "x"}}
+
+
+def test_creation_validation_and_balance():
+    from csmcore.progression import create
+    bg = livingdata.load("backgrounds")
+    sums = set()
+    for b in bg["backgrounds"]:
+        for spec in livingdata.load("talents")["branches"]:
+            m = create("m", "Тест Тестов", 30, "RU", b["id"], spec, ["patient", "empath"])
+            sums.add(sum(m.stats.values()))
+    assert len(sums) == 1   # no background is stronger in total, whatever the specialization
+    with pytest.raises(ValueError):
+        create("m", "Т", 30, "RU", "analyst", "strategist", ["patient", "empath"])
+    with pytest.raises(ValueError):
+        create("m", "Тест Тестов", 30, "RU", "analyst", "strategist", ["patient", "patient"])
+    with pytest.raises(ValueError):
+        create("m", "Тест Тестов", 30, "RU", "nope", "strategist", ["patient", "empath"])
+    with pytest.raises(ValueError):
+        create("m", "Тест Тестов", 99, "RU", "analyst", "strategist", ["patient", "empath"])
+
+
+def test_background_and_traits_feed_channels_with_explanations():
+    from csmcore.progression import create
+    m = create("m", "Тест Тестов", 30, "RU", "analyst", "analyst", ["workaholic", "visionary"])
+    assert m.channel("prep.opponent_report") > 0
+    why = m.explain("scout.potential_precision")
+    assert any("Визионер" in w for w in why)
+    assert abs(m.channel("stress.relief")) <= livingdata.load("talents")["channels"]["stress.relief"]["cap"]
+
+
+def test_game_with_profile_levels_up_from_real_titles_and_is_deterministic():
+    from csmcore import api
+    def run():
+        api.new_game(7, 100, "cassandra", PROFILE)
+        for _ in range(30):
+            for i in reversed(range(len(api.inbox()["events"]))):
+                api.answer_event(i, 0)
+            api.advance(1)
+        return api.living()
+    a, b = run(), run()
+    assert (a["level"], a["xp"], a["journal"]) == (b["level"], b["xp"], b["journal"])
+    assert a["name"] == "Иван Громов" and api.state()["manager"]["name"] == "Иван Громов"
+    keys = [(j["reason"], j["key"]) for j in a["journal"]]
+    assert len(keys) == len(set(keys))   # nothing paid twice
+    assert a["level"] - 1 == a["points"] + a["spent"]
+
+
+def test_unlock_through_api_and_old_save_gets_a_profile():
+    from csmcore import api
+    api.new_game(7, 100, "cassandra", PROFILE)
+    g = api._g()
+    for i in range(10):
+        g.living.grant("career_milestone", f"t{i}", 1 + i // 8)
+    assert api.unlock_talent("str_dossier").startswith("Изучен")
+    with pytest.raises(ValueError):
+        api.unlock_talent("str_grand")
+    b64 = api.save_b64()
+    g.living = None   # what an old save looks like
+    del g.living
+    api.G = g
+    b64 = api.save_b64()
+    api.load_b64(b64)
+    assert api.living()["level"] == 1 and api.state()["level"] == 1

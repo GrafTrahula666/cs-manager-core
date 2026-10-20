@@ -21,6 +21,12 @@ class ManagerProgression:
     manager_id: str
     background: str = ""
     specialization: str = ""
+    name: str = ""
+    age: int = 35
+    country: str = ""
+    traits: list[str] = field(default_factory=list)
+    face: dict = field(default_factory=dict)         # avatar seed and overrides, drawn by the UI
+    stats: dict[str, int] = field(default_factory=dict)   # tactics/people/analytics/business/intrigue
     level: int = 1
     xp: int = 0                        # progress into the current level
     spent_points: int = 0
@@ -76,6 +82,9 @@ class ManagerProgression:
         self.journal.append({"reason": reason, "key": key, "season": season, **out})
         return out
 
+    def journal_has(self, reason: str, key: str) -> bool:
+        return f"{reason}:{key}" in self._seen
+
     def can_unlock(self, tid: str) -> tuple[bool, str]:
         node = livingdata.talents().get(tid)
         if node is None:
@@ -98,6 +107,61 @@ class ManagerProgression:
         self.spent_points += node["cost"]
         return f"Изучен талант «{node['name']}»"
 
+    def _base(self, name: str) -> float:
+        """Background stats and character traits: what the manager brings before any talent."""
+        bg = livingdata.load("backgrounds")
+        x = 0.0
+        for stat, chans in bg["stat_channels"].items():
+            if name in chans:
+                x += max(0, self.stats.get(stat, 0) - bg["stat_baseline"]) * bg["stat_step"]
+        for tr in bg["traits"]:
+            if tr["id"] in self.traits:
+                x += sum(e["value"] for e in tr["effects"] if e["channel"] == name)
+        return x
+
     def channel(self, name: str) -> float:
-        """Total effect of the unlocked talents on one channel, clamped by the channel cap."""
-        return livingdata.channel_total(self.unlocked, name)
+        """Total effect on one channel: stats + traits + unlocked talents, clamped by the cap."""
+        return livingdata.channel_total(self.unlocked, name, self._base(name))
+
+    def explain(self, name: str) -> list[str]:
+        """Sources of a channel's value, for the interface: nothing is applied without a reason."""
+        out = []
+        nodes = livingdata.talents()
+        for t in sorted(self.unlocked):
+            for e in nodes[t]["effects"]:
+                if e["channel"] == name:
+                    out.append(f"талант «{nodes[t]['name']}»: {e['value']:+.0%}")
+        bg = livingdata.load("backgrounds")
+        for stat, chans in bg["stat_channels"].items():
+            v = max(0, self.stats.get(stat, 0) - bg["stat_baseline"]) * bg["stat_step"]
+            if name in chans and v:
+                out.append(f"навык «{STAT_RU[stat]}» {self.stats.get(stat, 0)}: {v:+.1%}")
+        for tr in bg["traits"]:
+            if tr["id"] in self.traits:
+                out += [f"черта «{tr['name']}»: {e['value']:+.0%}" for e in tr["effects"] if e["channel"] == name]
+        return out
+
+
+STAT_RU = {"tactics": "Тактика", "people": "Люди", "analytics": "Аналитика", "business": "Бизнес", "intrigue": "Интриги"}
+
+
+def create(manager_id: str, name: str, age: int, country: str, background: str, specialization: str,
+           traits: list[str], face: dict | None = None) -> ManagerProgression:
+    """Validated creation: one background, one specialization, two different traits."""
+    bg = livingdata.load("backgrounds")
+    b = next((x for x in bg["backgrounds"] if x["id"] == background), None)
+    if b is None:
+        raise ValueError("неизвестная предыстория")
+    if specialization not in bg["specialization_stat"]:
+        raise ValueError("неизвестная специализация")
+    ids = {t["id"] for t in bg["traits"]}
+    if len(set(traits)) != 2 or not set(traits) <= ids:
+        raise ValueError("нужно выбрать две разные черты характера")
+    name = " ".join(name.split())
+    if len(name) < 2 or len(name) > 40:
+        raise ValueError("имя от 2 до 40 символов")
+    if not 25 <= int(age) <= 65:
+        raise ValueError("возраст от 25 до 65")
+    stats = dict(b["stats"])
+    stats[bg["specialization_stat"][specialization]] += bg["specialization_bonus"]
+    return ManagerProgression(manager_id, background, specialization, name, int(age), country, sorted(traits), dict(face or {}), stats)

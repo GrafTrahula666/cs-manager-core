@@ -7,6 +7,168 @@
   "business",
   "intrigue"
  ],
+ "specialization_bonus": 2,
+ "specialization_stat": {
+  "strategist": "tactics",
+  "motivator": "people",
+  "analyst": "analytics",
+  "manager": "business",
+  "intriguer": "intrigue"
+ },
+ "stat_baseline": 2,
+ "stat_step": 0.015,
+ "stat_channels": {
+  "tactics": [
+   "prep.opponent_report",
+   "prep.map_info"
+  ],
+  "people": [
+   "talk.effect",
+   "trust.gain"
+  ],
+  "analytics": [
+   "scout.stat_precision",
+   "analysis.demo_depth"
+  ],
+  "business": [
+   "neg.contract",
+   "hire.pool_quality"
+  ],
+  "intrigue": [
+   "contacts.network",
+   "intel.rumour_accuracy"
+  ]
+ },
+ "traits": [
+  {
+   "id": "patient",
+   "name": "Терпеливый",
+   "plus": "Игроки доверяют быстрее",
+   "minus": "Решения принимаются медленнее: реже мгновенный отклик",
+   "effects": [
+    {
+     "channel": "trust.gain",
+     "value": 0.05
+    },
+    {
+     "channel": "talk.persuade",
+     "value": -0.03
+    }
+   ]
+  },
+  {
+   "id": "workaholic",
+   "name": "Трудоголик",
+   "plus": "Лучше готовится к матчам",
+   "minus": "Хуже слышит усталость игроков",
+   "effects": [
+    {
+     "channel": "prep.opponent_report",
+     "value": 0.05
+    },
+    {
+     "channel": "stress.relief",
+     "value": -0.04
+    }
+   ]
+  },
+  {
+   "id": "charmer",
+   "name": "Обаятельный",
+   "plus": "Журналисты и агенты тянутся к вам",
+   "minus": "Обещает больше, чем успевает",
+   "effects": [
+    {
+     "channel": "press.tone",
+     "value": 0.06
+    },
+    {
+     "channel": "trust.gain",
+     "value": -0.03
+    }
+   ]
+  },
+  {
+   "id": "frugal",
+   "name": "Экономный",
+   "plus": "Содержание и сделки дешевле",
+   "minus": "Игроки считают вас скрягой",
+   "effects": [
+    {
+     "channel": "cost.upkeep_cut",
+     "value": 0.04
+    },
+    {
+     "channel": "morale.recovery",
+     "value": -0.03
+    }
+   ]
+  },
+  {
+   "id": "visionary",
+   "name": "Визионер",
+   "plus": "Видит потенциал молодых",
+   "minus": "Скауты чаще ошибаются в зрелых игроках",
+   "effects": [
+    {
+     "channel": "scout.potential_precision",
+     "value": 0.06
+    },
+    {
+     "channel": "scout.stat_precision",
+     "value": -0.04
+    }
+   ]
+  },
+  {
+   "id": "hothead",
+   "name": "Вспыльчивый",
+   "plus": "Жёсткая дисциплина в команде",
+   "minus": "Конфликты вспыхивают чаще",
+   "effects": [
+    {
+     "channel": "team.discipline",
+     "value": 0.06
+    },
+    {
+     "channel": "conflict.early_warning",
+     "value": -0.05
+    }
+   ]
+  },
+  {
+   "id": "empath",
+   "name": "Эмпат",
+   "plus": "Чувствует настроение людей",
+   "minus": "Тяжело переживает поражения: слабее разговор после провала",
+   "effects": [
+    {
+     "channel": "conflict.early_warning",
+     "value": 0.06
+    },
+    {
+     "channel": "crisis.recovery",
+     "value": -0.04
+    }
+   ]
+  },
+  {
+   "id": "schemer",
+   "name": "Расчётливый",
+   "plus": "Знает, кто что думает",
+   "minus": "Люди чувствуют холод: меньше доверия",
+   "effects": [
+    {
+     "channel": "intel.rumour_accuracy",
+     "value": 0.06
+    },
+    {
+     "channel": "trust.gain",
+     "value": -0.04
+    }
+   ]
+  }
+ ],
  "backgrounds": [
   {
    "id": "ex_player",

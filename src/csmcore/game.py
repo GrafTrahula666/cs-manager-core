@@ -43,6 +43,8 @@ class Game:
         self.history: list[WeekNews] = []
         self.run: SeasonRun = season_begin(clubs, self._season_seed(), systems, 1, 0)
         self.manager_name = manager_name
+        self.living = None            # progression.ManagerProgression: level, XP, talents (None in old saves until first use)
+        self._titles_seen = 0
         if systems.careers is not None:   # the human gets the job instead of an AI coach
             m = systems.careers.managers.get(club_name)
             if m is not None:
@@ -52,9 +54,16 @@ class Game:
     # ---- construction ----
     @classmethod
     def new(cls, seed: int = 1, n_clubs: int = 120, club: str | None = None, director: str = "cassandra",
-            manager_name: str = "Вы") -> "Game":
+            manager_name: str = "Вы", profile: dict | None = None) -> "Game":
         clubs, graph, cal, sysm, home = worldgen.generate(seed, n_clubs, director)
+        if profile:
+            manager_name = " ".join(profile["name"].split())
         g = cls(seed, clubs, graph, cal, sysm, club or home, manager_name)
+        from . import progression
+        p = profile or {"name": manager_name, "age": 35, "country": "", "background": "rookie",
+                        "specialization": "motivator", "traits": ["patient", "empath"], "face": {}}
+        g.living = progression.create(f"manager:{manager_name}", p["name"], p["age"], p.get("country", ""), p["background"],
+                                      p["specialization"], list(p["traits"]), p.get("face"))
         from . import hunt
         g.opening_news = hunt.spawn(g, random.Random(seed + 91))
         return g
@@ -106,6 +115,7 @@ class Game:
         plans = {self.club_name: self.desk.plan}
         season_week(self.run, self.clubs, self.graph, self.calendar, self.sysm, plans)
         news = WeekNews(self.week, self.season, self._collect())
+        news.lines += self._living_week()
         self.desk.plan = type(self.desk.plan)()   # plans last one week
         if self.run.wk >= economy.WEEKS_PER_YEAR:
             season_finish(self.run, self.clubs, self.sysm)
@@ -179,7 +189,76 @@ class Game:
             raise ValueError("нет такой ситуации")
         if key not in {o["key"] for o in s.options}:
             raise ValueError(f"нет такого варианта: {key}")
-        return resolve(self.sysm.emergent, self._desk_ctx(), s, key, by=by)
+        out = resolve(self.sysm.emergent, self._desk_ctx(), s, key, by=by)
+        if by == "manager" and s.kind in ("conflict", "complaint"):
+            out = out + self._grant("conflict_resolved", str(sid))
+        return out
+
+    def ensure_living(self):
+        """Old saves have no manager profile: give them a neutral one (a young manager, no talents)."""
+        if getattr(self, "living", None) is None:
+            from . import progression
+            self.living = progression.create(f"manager:{self.manager_name}", self.manager_name if len(self.manager_name) > 1 else "Менеджер",
+                                             35, "", "rookie", "motivator", ["patient", "empath"])
+        if not hasattr(self, "_titles_seen"):
+            ch = self.sysm.chronicle
+            self._titles_seen = len(ch.titles.get(self.club_name, [])) if ch else 0
+        return self.living
+
+    # ---- manager progression (progression.py): XP only for named achievements ----
+    def _grant(self, reason: str, key: str) -> list[str]:
+        """Award XP for one achievement; returns news lines (XP and level-ups)."""
+        lv = self.living
+        if lv is None:
+            return []
+        mult = 1.15 if lv.background == "rookie" and lv.level < 10 else 1.0   # a young manager grows fast at first
+        r = lv.grant(reason, key, self.season, mult)
+        if not r["xp"]:
+            return []
+        out = [f"менеджер: +{r['xp']} опыта: {r['why']}"]
+        if r["levels"]:
+            out.append(f"менеджер: новый уровень {lv.level}! Свободных очков талантов: {lv.available_points}")
+        return out
+
+    def _tier_of(self, tournament: str) -> str:
+        for ts in self.calendar.values():
+            for t in (ts if isinstance(ts, list) else [ts]):
+                if t.name == tournament:
+                    return t.tier
+        return "C"
+
+    def _living_week(self) -> list[str]:
+        """Titles of my club since last week: XP by tournament tier and the first-title milestones."""
+        ch = self.sysm.chronicle
+        if self.living is None or ch is None:
+            return []
+        won = ch.titles.get(self.club_name, [])
+        out = []
+        for title in won[self._titles_seen:]:
+            name = title.rsplit(" (сезон", 1)[0]
+            tier = self._tier_of(name)
+            if tier in ("S", "A", "B"):
+                out += self._grant(f"title_{tier.lower()}", f"{self.season}:{name}")
+            if not self.living.journal_has("career_milestone", "first_title"):
+                out += self._grant("career_milestone", "first_title")
+            if tier == "S" and not self.living.journal_has("career_milestone", "first_s_title"):
+                out += self._grant("career_milestone", "first_s_title")
+            self._titles_seen += 1
+        self._titles_seen = len(won)
+        return out
+
+    def _living_season_end(self) -> list[str]:
+        """Owner goals met and a rank well above the target, before the owner sets new objectives."""
+        owner = self.desk.owner
+        if self.living is None or owner is None:
+            return []
+        out = []
+        for o in owner.objectives:
+            if owner._score(o, self.club) >= 0.3:
+                out += self._grant("owner_goal", f"{self.season}:{o.kind}")
+            if o.kind == "rank" and self.club.rank <= o.target - 3:
+                out += self._grant("exceeded_rank", str(self.season))
+        return out
 
     def _assistant_decides(self) -> None:
         for sit in self.situations():
@@ -203,6 +282,7 @@ class Game:
         """Season rollover: ranking points decay, expired sponsors are replaced, owners set new
         targets, old ledger lines are trimmed."""
         was = self.club.division
+        living_lines = self._living_season_end()
         lines = [f"Сезон {self.season} завершён. {self.club_name}: место {self.club.rank}, "
                  f"{circuit.name(was)}, {circuit.standings(self.clubs, was).index(self.club) + 1}-е в таблице лиги"]
         moves = circuit.season_end(self.clubs)
@@ -231,6 +311,7 @@ class Game:
         from . import hunt
         lines += hunt.spawn(self, random.Random(self._season_seed() + 91))
         owner = self.desk.owner
+        lines += living_lines
         if owner and owner.objectives:
             lines.append("Цели владельца: " + "; ".join(o.text for o in owner.objectives))
         return lines
@@ -294,6 +375,8 @@ class Game:
         m.history.append(f"week {self.week}: возглавил {club_name}")
         careers.managers[club_name] = m
         self.club_name = self.sysm.manager_club = club_name
+        ch = self.sysm.chronicle
+        self._titles_seen = len(ch.titles.get(club_name, [])) if ch else 0   # titles won earlier are not mine
         owner = (self.sysm.owners or {}).get(club_name)
         if owner:
             owner.fired, owner.confidence = False, 55.0
