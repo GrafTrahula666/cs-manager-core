@@ -1,0 +1,1086 @@
+{
+ "note": "Уровни 0-5: 0 отсутствует, 1 базовый, 2 улучшенный, 3 профессиональный, 4 элитный, 5 мировой. Все стоимости и эффекты: гипотезы для лаборатории. Строительство в долг только через оформленное финансирование. effects суммируются с каналом по правилу cap.",
+ "level_names": [
+  "отсутствует",
+  "базовый",
+  "улучшенный",
+  "профессиональный",
+  "элитный",
+  "мирового уровня"
+ ],
+ "facilities": [
+  {
+   "id": "training_zone",
+   "name": "Тренировочная зона",
+   "room": "training",
+   "footprint": [
+    3,
+    2
+   ],
+   "start_level": 1,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 120000,
+     "build_weeks": 2,
+     "upkeep_month": 4000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "training.quality": 0.04,
+      "fatigue.risk": 0.02
+     },
+     "events": [],
+     "visual": "training_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 300000,
+     "build_weeks": 4,
+     "upkeep_month": 8000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "training.quality": 0.03,
+      "role_prep.slots": 1
+     },
+     "events": [
+      "burnout: перегрузка при высоком уровне и плотном графике"
+     ],
+     "visual": "training_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 720000,
+     "build_weeks": 8,
+     "upkeep_month": 16000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "training_zone",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "training.quality": 0.03
+     },
+     "events": [
+      "burnout: перегрузка при высоком уровне и плотном графике"
+     ],
+     "visual": "training_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 1680000,
+     "build_weeks": 14,
+     "upkeep_month": 28000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "training_zone",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "training.quality": 0.03,
+      "role_prep.slots": 1
+     },
+     "events": [
+      "burnout: перегрузка при высоком уровне и плотном графике"
+     ],
+     "visual": "training_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 3600000,
+     "build_weeks": 24,
+     "upkeep_month": 44000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "training_zone",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "training.quality": 0.03
+     },
+     "events": [
+      "burnout: перегрузка при высоком уровне и плотном графике"
+     ],
+     "visual": "training_lvl5"
+    }
+   ]
+  },
+  {
+   "id": "academy",
+   "name": "Академия",
+   "room": "academy",
+   "footprint": [
+    4,
+    3
+   ],
+   "start_level": 0,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 200000,
+     "build_weeks": 2,
+     "upkeep_month": 7000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "academy.slots": 2,
+      "academy.potential_read": 0.05
+     },
+     "events": [],
+     "visual": "academy_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 500000,
+     "build_weeks": 4,
+     "upkeep_month": 14000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "academy.slots": 1,
+      "academy.potential_read": 0.05
+     },
+     "events": [
+      "poaching: конкурент переманивает воспитанника",
+      "demands: выпускник требует места в основе или продажи"
+     ],
+     "visual": "academy_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 1200000,
+     "build_weeks": 8,
+     "upkeep_month": 28000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "academy",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "academy.slots": 1,
+      "academy.youth_tournaments": 1
+     },
+     "events": [
+      "poaching: конкурент переманивает воспитанника",
+      "demands: выпускник требует места в основе или продажи"
+     ],
+     "visual": "academy_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 2800000,
+     "build_weeks": 14,
+     "upkeep_month": 49000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "academy",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "academy.slots": 1,
+      "academy.potential_read": 0.05
+     },
+     "events": [
+      "poaching: конкурент переманивает воспитанника",
+      "demands: выпускник требует места в основе или продажи"
+     ],
+     "visual": "academy_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 6000000,
+     "build_weeks": 24,
+     "upkeep_month": 77000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "academy",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "academy.slots": 2,
+      "academy.intl_scouting": 1
+     },
+     "events": [
+      "poaching: конкурент переманивает воспитанника",
+      "demands: выпускник требует места в основе или продажи"
+     ],
+     "visual": "academy_lvl5"
+    }
+   ]
+  },
+  {
+   "id": "streaming_room",
+   "name": "Стриминг-рум",
+   "room": "streaming",
+   "footprint": [
+    3,
+    2
+   ],
+   "start_level": 0,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 150000,
+     "build_weeks": 2,
+     "upkeep_month": 5000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "streaming.income": 0.1
+     },
+     "events": [],
+     "visual": "streaming_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 375000,
+     "build_weeks": 4,
+     "upkeep_month": 10000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "streaming.income": 0.1,
+      "streaming.slots": 1
+     },
+     "events": [
+      "fatigue: усталость от расписания",
+      "scandal: репутационная ошибка в эфире",
+      "agency: игрок хочет долю или уходит в стриминг"
+     ],
+     "visual": "streaming_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 900000,
+     "build_weeks": 8,
+     "upkeep_month": 20000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "streaming_room",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "streaming.income": 0.1
+     },
+     "events": [
+      "fatigue: усталость от расписания",
+      "scandal: репутационная ошибка в эфире",
+      "agency: игрок хочет долю или уходит в стриминг"
+     ],
+     "visual": "streaming_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 2100000,
+     "build_weeks": 14,
+     "upkeep_month": 35000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "streaming_room",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "streaming.income": 0.08,
+      "streaming.slots": 1
+     },
+     "events": [
+      "fatigue: усталость от расписания",
+      "scandal: репутационная ошибка в эфире",
+      "agency: игрок хочет долю или уходит в стриминг"
+     ],
+     "visual": "streaming_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 4500000,
+     "build_weeks": 24,
+     "upkeep_month": 55000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "streaming_room",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "streaming.income": 0.08
+     },
+     "events": [
+      "fatigue: усталость от расписания",
+      "scandal: репутационная ошибка в эфире",
+      "agency: игрок хочет долю или уходит в стриминг"
+     ],
+     "visual": "streaming_lvl5"
+    }
+   ]
+  },
+  {
+   "id": "psychology_center",
+   "name": "Психологический центр",
+   "room": "psychology",
+   "footprint": [
+    3,
+    2
+   ],
+   "start_level": 0,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 120000,
+     "build_weeks": 2,
+     "upkeep_month": 5000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "stress.relief": 0.05
+     },
+     "events": [],
+     "visual": "psychology_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 300000,
+     "build_weeks": 4,
+     "upkeep_month": 10000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "stress.relief": 0.04,
+      "conflict.mediation": 0.05
+     },
+     "events": [
+      "distrust: отдельный игрок не доверяет психологу и закрывается"
+     ],
+     "visual": "psychology_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 720000,
+     "build_weeks": 8,
+     "upkeep_month": 20000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "psychology_center",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "stress.relief": 0.04
+     },
+     "events": [
+      "distrust: отдельный игрок не доверяет психологу и закрывается"
+     ],
+     "visual": "psychology_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 1680000,
+     "build_weeks": 14,
+     "upkeep_month": 35000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "psychology_center",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "conflict.mediation": 0.05,
+      "burnout.prevention": 0.05
+     },
+     "events": [
+      "distrust: отдельный игрок не доверяет психологу и закрывается"
+     ],
+     "visual": "psychology_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 3600000,
+     "build_weeks": 24,
+     "upkeep_month": 55000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "psychology_center",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "burnout.prevention": 0.05
+     },
+     "events": [
+      "distrust: отдельный игрок не доверяет психологу и закрывается"
+     ],
+     "visual": "psychology_lvl5"
+    }
+   ]
+  },
+  {
+   "id": "lounge",
+   "name": "Комната отдыха",
+   "room": "lounge",
+   "footprint": [
+    3,
+    3
+   ],
+   "start_level": 1,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 60000,
+     "build_weeks": 2,
+     "upkeep_month": 2000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "recovery.rate": 0.04
+     },
+     "events": [],
+     "visual": "lounge_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 150000,
+     "build_weeks": 4,
+     "upkeep_month": 4000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "recovery.rate": 0.03,
+      "team.bonding": 0.03
+     },
+     "events": [
+      "comfort_trap: комфорт без режима расслабляет дисциплину"
+     ],
+     "visual": "lounge_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 360000,
+     "build_weeks": 8,
+     "upkeep_month": 8000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "lounge",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "recovery.rate": 0.03
+     },
+     "events": [
+      "comfort_trap: комфорт без режима расслабляет дисциплину"
+     ],
+     "visual": "lounge_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 840000,
+     "build_weeks": 14,
+     "upkeep_month": 14000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "lounge",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "team.bonding": 0.03
+     },
+     "events": [
+      "comfort_trap: комфорт без режима расслабляет дисциплину"
+     ],
+     "visual": "lounge_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 1800000,
+     "build_weeks": 24,
+     "upkeep_month": 22000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "lounge",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "recovery.rate": 0.02
+     },
+     "events": [
+      "comfort_trap: комфорт без режима расслабляет дисциплину"
+     ],
+     "visual": "lounge_lvl5"
+    }
+   ]
+  },
+  {
+   "id": "analytics_center",
+   "name": "Аналитический центр",
+   "room": "analytics",
+   "footprint": [
+    4,
+    2
+   ],
+   "start_level": 0,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 180000,
+     "build_weeks": 2,
+     "upkeep_month": 6000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "analysis.demo_depth": 0.05,
+      "analysis.slots": 1
+     },
+     "events": [],
+     "visual": "analytics_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 450000,
+     "build_weeks": 4,
+     "upkeep_month": 12000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "analysis.model_quality": 0.05,
+      "analysis.slots": 1
+     },
+     "events": [
+      "data_leak: утечка подготовки при слабой безопасности",
+      "overload: избыток данных усложняет решения"
+     ],
+     "visual": "analytics_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 1080000,
+     "build_weeks": 8,
+     "upkeep_month": 24000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "analytics_center",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "analysis.demo_depth": 0.05
+     },
+     "events": [
+      "data_leak: утечка подготовки при слабой безопасности",
+      "overload: избыток данных усложняет решения"
+     ],
+     "visual": "analytics_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 2520000,
+     "build_weeks": 14,
+     "upkeep_month": 42000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "analytics_center",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "analysis.model_quality": 0.05,
+      "analysis.slots": 1
+     },
+     "events": [
+      "data_leak: утечка подготовки при слабой безопасности",
+      "overload: избыток данных усложняет решения"
+     ],
+     "visual": "analytics_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 5400000,
+     "build_weeks": 24,
+     "upkeep_month": 66000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "analytics_center",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "analysis.slots": 1
+     },
+     "events": [
+      "data_leak: утечка подготовки при слабой безопасности",
+      "overload: избыток данных усложняет решения"
+     ],
+     "visual": "analytics_lvl5"
+    }
+   ]
+  },
+  {
+   "id": "media_center",
+   "name": "Медиацентр",
+   "room": "media",
+   "footprint": [
+    4,
+    2
+   ],
+   "start_level": 0,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 140000,
+     "build_weeks": 2,
+     "upkeep_month": 5000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "fans.growth": 0.05
+     },
+     "events": [],
+     "visual": "media_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 350000,
+     "build_weeks": 4,
+     "upkeep_month": 10000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "fans.growth": 0.05,
+      "content.slots": 1
+     },
+     "events": [
+      "publicity_risk: публичность увеличивает репутационные риски"
+     ],
+     "visual": "media_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 840000,
+     "build_weeks": 8,
+     "upkeep_month": 20000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "media_center",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "sponsor.interest": 0.05
+     },
+     "events": [
+      "publicity_risk: публичность увеличивает репутационные риски"
+     ],
+     "visual": "media_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 1960000,
+     "build_weeks": 14,
+     "upkeep_month": 35000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "media_center",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "fans.growth": 0.04,
+      "content.slots": 1
+     },
+     "events": [
+      "publicity_risk: публичность увеличивает репутационные риски"
+     ],
+     "visual": "media_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 4200000,
+     "build_weeks": 24,
+     "upkeep_month": 55000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "media_center",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "sponsor.interest": 0.04
+     },
+     "events": [
+      "publicity_risk: публичность увеличивает репутационные риски"
+     ],
+     "visual": "media_lvl5"
+    }
+   ]
+  },
+  {
+   "id": "medical_center",
+   "name": "Медицинский центр",
+   "room": "medical",
+   "footprint": [
+    3,
+    2
+   ],
+   "start_level": 0,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 130000,
+     "build_weeks": 2,
+     "upkeep_month": 5000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "recovery.rate": 0.04,
+      "injury.risk_cut": 0.03
+     },
+     "events": [],
+     "visual": "medical_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 325000,
+     "build_weeks": 4,
+     "upkeep_month": 10000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "recovery.rate": 0.03,
+      "burnout.prevention": 0.03
+     },
+     "events": [
+      "dependence: игроки привыкают к режиму и плохо переносят его отмену"
+     ],
+     "visual": "medical_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 780000,
+     "build_weeks": 8,
+     "upkeep_month": 20000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "medical_center",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "injury.risk_cut": 0.03
+     },
+     "events": [
+      "dependence: игроки привыкают к режиму и плохо переносят его отмену"
+     ],
+     "visual": "medical_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 1820000,
+     "build_weeks": 14,
+     "upkeep_month": 35000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "medical_center",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "recovery.rate": 0.03,
+      "burnout.prevention": 0.03
+     },
+     "events": [
+      "dependence: игроки привыкают к режиму и плохо переносят его отмену"
+     ],
+     "visual": "medical_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 3900000,
+     "build_weeks": 24,
+     "upkeep_month": 55000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "medical_center",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "injury.risk_cut": 0.03
+     },
+     "events": [
+      "dependence: игроки привыкают к режиму и плохо переносят его отмену"
+     ],
+     "visual": "medical_lvl5"
+    }
+   ]
+  },
+  {
+   "id": "headhunting_office",
+   "name": "Офис подбора",
+   "room": "office",
+   "footprint": [
+    2,
+    2
+   ],
+   "start_level": 0,
+   "levels": [
+    {
+     "level": 1,
+     "cost": 100000,
+     "build_weeks": 2,
+     "upkeep_month": 3000,
+     "requires": {
+      "club_reputation": 0,
+      "fans": 0
+     },
+     "effects": {
+      "hire.pool_size": 3
+     },
+     "events": [],
+     "visual": "office_lvl1"
+    },
+    {
+     "level": 2,
+     "cost": 250000,
+     "build_weeks": 4,
+     "upkeep_month": 6000,
+     "requires": {
+      "club_reputation": 25,
+      "fans": 150000,
+      "previous_level": 1
+     },
+     "effects": {
+      "hire.pool_size": 3,
+      "hire.rare_chance": 0.03
+     },
+     "events": [
+      "mismatch: лучший кандидат требует огромную зарплату и особые полномочия"
+     ],
+     "visual": "office_lvl2"
+    },
+    {
+     "level": 3,
+     "cost": 600000,
+     "build_weeks": 8,
+     "upkeep_month": 12000,
+     "requires": {
+      "club_reputation": 45,
+      "fans": 400000,
+      "previous_level": 2,
+      "staff_role_min_skill": {
+       "role_for": "headhunting_office",
+       "skill": 40
+      }
+     },
+     "effects": {
+      "hire.pool_size": 3
+     },
+     "events": [
+      "mismatch: лучший кандидат требует огромную зарплату и особые полномочия"
+     ],
+     "visual": "office_lvl3"
+    },
+    {
+     "level": 4,
+     "cost": 1400000,
+     "build_weeks": 14,
+     "upkeep_month": 21000,
+     "requires": {
+      "club_reputation": 65,
+      "fans": 900000,
+      "previous_level": 3,
+      "staff_role_min_skill": {
+       "role_for": "headhunting_office",
+       "skill": 50
+      },
+      "titles_a_or_higher": 1,
+      "owner_approval": true
+     },
+     "effects": {
+      "hire.rare_chance": 0.03
+     },
+     "events": [
+      "mismatch: лучший кандидат требует огромную зарплату и особые полномочия"
+     ],
+     "visual": "office_lvl4"
+    },
+    {
+     "level": 5,
+     "cost": 3000000,
+     "build_weeks": 24,
+     "upkeep_month": 33000,
+     "requires": {
+      "club_reputation": 85,
+      "fans": 2000000,
+      "previous_level": 4,
+      "staff_role_min_skill": {
+       "role_for": "headhunting_office",
+       "skill": 60
+      },
+      "titles_a_or_higher": 2,
+      "owner_approval": true
+     },
+     "effects": {
+      "hire.pool_size": 3
+     },
+     "events": [
+      "mismatch: лучший кандидат требует огромную зарплату и особые полномочия"
+     ],
+     "visual": "office_lvl5"
+    }
+   ]
+  }
+ ]
+}

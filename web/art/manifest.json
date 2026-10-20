@@ -24,5 +24,6 @@
   "support": "art/role_support.webp"
  },
  "logo": "art/logo.webp",
- "start": "art/start.webp"
+ "start": "art/start.webp",
+ "base": true
 }

@@ -126,7 +126,8 @@ main { padding-block: 18px; display: grid; gap: 16px; }
 .line { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
 .pill { font: 600 .62rem/1.5 var(--mono); text-transform: uppercase; letter-spacing: .08em; padding: 1px 6px; border-radius: 3px; background: var(--chip); color: var(--muted); flex: none; }
 .pill.match { background: color-mix(in srgb, var(--ct) 18%, transparent); color: var(--ct); }
-.pill.story { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+.pill.emb { display: inline-block; width: 28px; height: 28px; vertical-align: middle; margin-right: 6px; background: var(--emb) 0 0 / 500% 100% no-repeat; border-radius: 6px; }
+.story { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
 .pill.club { background: color-mix(in srgb, var(--good) 18%, transparent); color: var(--good); }
 .pill.world { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
 .event { border-left: 3px solid var(--ct); padding: 2px 0 2px 12px; display: grid; gap: 6px; }
@@ -241,6 +242,77 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
   .go { width: 100%; } .go .primary { flex: 1; }
 }
 @media (max-width: 520px) { .hide-sm { display: none; } }
+.creator { padding-block: 24px 60px; display: grid; gap: 16px; }
+#creator.art { background: linear-gradient(rgba(8,12,18,.72), rgba(8,12,18,.86)), var(--crart) center top / cover no-repeat; border-radius: 10px; padding-inline: 16px; }
+#creator.art .creator > h1, #creator.art .creator > p { color: #e7ebef; }
+.crframe { width: 200px; height: 266px; display: grid; place-items: center; background: var(--crframe) center / 100% 100% no-repeat; }
+.crframe svg.face { width: 150px !important; height: 150px !important; border: 0 !important; }
+.story { width: 100%; height: 150px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); margin-bottom: 10px; }
+.creator h1 { font: 800 1.5rem var(--display); margin: 0; }
+.crgrid { display: grid; gap: 16px; grid-template-columns: minmax(280px, 340px) 1fr; align-items: start; }
+@media (max-width: 820px) { .crgrid { grid-template-columns: 1fr; } }
+.crface { display: grid; gap: 10px; justify-items: center; }
+.crface svg.face { width: 180px; height: 180px; border-radius: 10px; border: 1px solid var(--line); }
+.sw { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.sw button { width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 2px solid transparent; }
+.sw button[aria-pressed="true"] { border-color: var(--fg); }
+.crrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+.crrow label { display: grid; gap: 4px; font-size: .78rem; color: var(--muted); }
+.choices { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.choice { text-align: left; display: grid; gap: 6px; padding: 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel2); color: var(--fg); font: inherit; align-content: start; }
+.choice[aria-pressed="true"] { border-color: var(--accent); background: linear-gradient(180deg, var(--glow), var(--panel2)); box-shadow: inset 0 0 0 1px var(--accent); }
+.choice b { font: 600 .95rem var(--display); }
+.choice .plus, .choice .minus { font-size: .8rem; }
+.sbars { display: grid; gap: 3px; }
+.sbar { display: grid; grid-template-columns: 74px 1fr 18px; gap: 6px; align-items: center; font-size: .74rem; color: var(--muted); }
+.sbar i { display: block; height: 6px; border-radius: 3px; background: var(--chip); position: relative; }
+.sbar i u { position: absolute; inset: 0 auto 0 0; background: var(--ct); border-radius: 3px; }
+.sbar i u.up { background: var(--accent); }
+.sbar span:last-child { font-family: var(--mono); text-align: right; }
+.lvlring { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; font: 800 1.5rem var(--display); background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--chip) 0); position: relative; flex: none; }
+.lvlring::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: var(--panel); }
+.lvlring b { position: relative; }
+.mhead { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.mhead svg.face { width: 96px; height: 96px; border-radius: 10px; border: 1px solid var(--line); }
+.mhead .nm { display: grid; gap: 4px; min-width: 0; flex: 1; }
+.tree svg { width: 100%; height: auto; display: block; }
+
+.housebar { display: flex; gap: 16px; align-items: center; margin-bottom: 14px; }
+.housebar img { width: min(360px, 45%); height: auto; }
+.housebar div { display: grid; gap: 4px; }
+.ftiles { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.ftile { display: grid; gap: 4px; padding: 8px; text-align: left; border: 1px solid var(--line); border-radius: 8px; background: var(--panel2); color: var(--fg); font: inherit; cursor: pointer; }
+.ftile.sel, .ftile:hover { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.ftile img { width: 100%; aspect-ratio: 3 / 2; object-fit: contain; background: radial-gradient(circle at 50% 60%, rgba(95,160,220,.18), transparent 70%); border-radius: 6px; }
+.ftile .ph { display: block; aspect-ratio: 3 / 2; background: var(--chip); border-radius: 6px; }
+.ftile.l0 img { opacity: .8; }
+.ftile b { font: 600 .85rem var(--display); }
+.ftile .lv { font: 700 .62rem var(--mono); color: var(--accent); letter-spacing: .04em; }
+.fdetail { width: 100%; max-height: 260px; object-fit: contain; }
+.reqrow { display: flex; gap: 8px; font-size: .82rem; }
+.reqrow.ok b { color: var(--good, #6fcf97); } .reqrow.no b { color: var(--bad, #eb5757); } .reqrow.soft b { color: var(--muted); }
+.lvbar { display: flex; gap: 4px; margin: 4px 0; } .lvbar i { flex: 1; height: 6px; border-radius: 3px; background: var(--panel2); } .lvbar i.on { background: var(--accent); }
+.tnode { cursor: pointer; }
+.tnode circle.bg { fill: var(--panel2); stroke: var(--line); stroke-width: 2; }
+.tnode.unlocked circle.bg { fill: var(--accent); stroke: var(--accent); }
+.tnode.available circle.bg { stroke: var(--accent); stroke-width: 3; animation: pulse 1.8s ease-in-out infinite; }
+.tnode.sel circle.bg { stroke: var(--fg); stroke-width: 3.5; animation: none; }
+.tnode text.ic { fill: var(--muted); font: 700 13px var(--mono); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.tnode.unlocked text.ic { fill: var(--accent-fg); }
+.tnode text.lb { fill: var(--fg); font: 500 10.5px var(--body); text-anchor: middle; pointer-events: none; }
+.tnode.locked text.lb { fill: var(--muted); }
+.tnode .cap { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.tlink { stroke: var(--line); stroke-width: 2; fill: none; }
+.tlink.on { stroke: var(--accent); }
+@keyframes pulse { 50% { stroke-opacity: .35; } }
+.detail { border: 1px solid var(--accent); border-radius: 6px; padding: 14px; display: grid; gap: 6px; background: linear-gradient(180deg, var(--glow), var(--panel)); }
+.lvlup { position: fixed; inset: 0; display: grid; place-items: center; z-index: 12; background: rgba(8, 12, 18, .72); }
+.lvlup .box { background: var(--panel); border: 2px solid var(--accent); border-radius: 12px; padding: 28px 34px; display: grid; gap: 10px; justify-items: center; text-align: center; max-width: min(92vw, 420px); animation: pop .5s cubic-bezier(.2, 1.4, .4, 1); }
+.lvlup .big { font: 800 4.2rem/1 var(--display); color: var(--accent); text-shadow: 0 0 30px var(--glow); }
+.lvlup .rays { position: absolute; width: 520px; height: 520px; border-radius: 50%; background: repeating-conic-gradient(from 0deg, var(--glow) 0 8deg, transparent 8deg 22deg); animation: spin 16s linear infinite; -webkit-mask-image: radial-gradient(circle, #000 0 30%, transparent 70%); mask-image: radial-gradient(circle, #000 0 30%, transparent 70%); pointer-events: none; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+.chrow { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: .86rem; }
+.chrow .why { grid-column: 1 / -1; }
 </style>
 
 <div class="wrap" id="app">
@@ -277,6 +349,8 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
     </div>
   </section>
 
+  <section id="creator" hidden></section>
+
   <div id="game" hidden>
     <header class="strip">
       <div class="top">
@@ -287,6 +361,7 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <div class="kpi"><small>Касса</small><span id="kCash">—</span></div>
           <div class="kpi"><small>Владелец</small><span id="kOwner">—</span></div>
           <div class="kpi hide-sm"><small>Репутация</small><span id="kRep">—</span></div>
+          <div class="kpi" title="Уровень менеджера и опыт"><small>Менеджер</small><span id="kLvl">—</span></div>
         </div>
         <div class="go">
           <button class="primary" id="nextBtn" title="Клавиша N или пробел">Следующая неделя</button>
@@ -332,6 +407,7 @@ async function loadArt() {
     if (!r.ok) return;
     ART = Object.assign(ART, await r.json());
     if (ART.logo) $("logo").innerHTML = `<img src="${esc(ART.logo)}" alt="CS MENEDGER">`;
+    if (ART.base) ART.start = "art/base/menu.webp";
     if (ART.start) { $("boot").classList.add("art"); $("boot").style.setProperty("--art", `url("${ART.start}")`); }
   } catch (e) {}
 }
@@ -380,12 +456,12 @@ function shade(hex, k) { // k < 1 darkens, k > 1 lightens
   const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.max(0, Math.min(255, Math.round(k < 1 ? v * k : v + (255 - v) * (k - 1)))));
   return "#" + c.map((v) => v.toString(16).padStart(2, "0")).join("");
 }
-function faceTraits(name, age) {
-  const r = rng32(hash("face:" + name));
+function faceTraits(name, age, ov = {}) {
+  const r = rng32(hash("face:" + (ov.seed || name)));
   const skin = SKIN[pickW(r, [[0, 12], [1, 20], [2, 20], [3, 16], [4, 12], [5, 10], [6, 6], [7, 4]])];
   let hair = pickW(r, HAIR);
   if (age >= 29 && r() < 0.3) hair = "#8b8f94";
-  return {
+  const t = {
     skin, hair, iris: IRIS[Math.floor(r() * IRIS.length)],
     hw: 14 + r() * 3.4, chinY: 44.5 + r() * 4, chinW: 5 + r() * 5, build: pickW(r, [[0, 3], [1, 5], [2, 3]]),
     style: pickW(r, [[0, 4], [1, 12], [2, 16], [3, 12], [4, 10], [5, 7], [6, 8], [7, 4], [8, 5], [9, 5], [10, 6]]),
@@ -393,9 +469,15 @@ function faceTraits(name, age) {
     beard: pickW(r, [[0, 46], [1, 16], [2, 14], [3, 12], [4, 12]]), headset: r() < 0.4, cap: r() < 0.13, glasses: r() < 0.1,
     scar: r() < 0.05, earring: r() < 0.09, lines: age >= 28, freckles: r() < 0.1, tilt: (r() - 0.5) * 3,
   };
+  if (ov.skin != null) t.skin = SKIN[ov.skin];
+  if (ov.hair != null) t.hair = HAIR[ov.hair][0];
+  if (ov.style != null && ov.style !== "") t.style = +ov.style;
+  if (ov.beard != null && ov.beard !== "") t.beard = +ov.beard;
+  for (const k of ["glasses", "headset", "cap"]) if (ov[k] != null) t[k] = !!ov[k];
+  return t;
 }
 function face(p, club, size = 40) {
-  const t = faceTraits(p.name, p.age || 22), h1 = hash(club || "free") % 360;
+  const t = faceTraits(p.name, p.age || 22, p.face || {}), h1 = hash(club || "free") % 360;
   const cx = 32, hw = t.hw, top = 10, chinY = t.chinY, sk = t.skin, dk = shade(sk, 0.82), hc = t.hair;
   const sw = [19, 23, 27][t.build], nw = [4.6, 5.6, 6.8][t.build];
   const lip = shade(sk, 0.62).replace(/^#(..)(..)(..)$/, (m, a, b, c) => "#" + [Math.min(255, parseInt(a, 16) + 38), parseInt(b, 16) - 18, parseInt(c, 16) - 6].map((v) => Math.max(0, v).toString(16).padStart(2, "0")).join(""));
@@ -512,6 +594,160 @@ async function boot() {
   }
 }
 
+// ---------- LIVING CLUB: manager creation ----------
+let MO = null, cr = null, selNode = null;
+const HAIR_STYLES = ["лысина", "ёжик", "короткая", "с пробором", "шипы", "длинные", "кудри", "ирокез", "пучок", "афро", "растрёпанная"];
+const BEARDS = ["нет", "щетина", "борода", "эспаньолка", "усы"];
+function crFace() { return face({ name: (cr.name + " " + cr.surname).trim() || "менеджер", age: cr.age, face: cr.ov }, "Вы", 180); }
+function openCreator() {
+  MO = MO || call("manager_options");
+  if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
+  $("boot").hidden = true; $("creator").hidden = false; renderCreator();
+}
+function crStats() {
+  const b = MO.backgrounds.find((x) => x.id === cr.bg), s = Object.assign({}, b.stats);
+  s[MO.specialization_stat[cr.spec]] += MO.specialization_bonus;
+  return [b.stats, s];
+}
+function crValid() { return (cr.name + cr.surname).trim().length >= 2 && cr.traits.length === 2; }
+function renderCreator() {
+  const [base, fin] = crStats();
+  const sbars = (a, b) => `<div class="sbars">${MO.stats.map((k) => `<div class="sbar"><span>${MO.stat_ru[k]}</span><i><u style="width:${a[k] * 16}%"></u>${b && b[k] > a[k] ? `<u class="up" style="width:${b[k] * 16}%;opacity:.45"></u>` : ""}</i><span>${b ? b[k] : a[k]}</span></div>`).join("")}</div>`;
+  const sw = SKIN.map((c, i) => `<button style="background:${c}" data-cr="skin" data-v="${i}" aria-pressed="${cr.ov.skin === i}" aria-label="оттенок кожи ${i + 1}"></button>`).join("");
+  const hw = HAIR.map(([c], i) => `<button style="background:${c}" data-cr="hair" data-v="${i}" aria-pressed="${cr.ov.hair === i}" aria-label="цвет волос ${i + 1}"></button>`).join("");
+  const opt = (arr, cur) => arr.map((n, i) => `<option value="${i}" ${cur === i ? "selected" : ""}>${n}</option>`).join("");
+  $("creator").classList.toggle("art", !!ART.base);
+  if (ART.base) { $("creator").style.setProperty("--crart", 'url("art/base/creator_bg.webp")'); $("creator").style.setProperty("--crframe", 'url("art/base/frame.webp")'); }
+  $("creator").innerHTML = `<div class="creator"><h1>Кто вы?</h1><p class="muted">Создайте менеджера. От предыстории и черт зависит, что получается у вас с первого дня, а специализация задаёт ветку талантов. Лучшего варианта нет: у всех равная сумма навыков.</p>
+  <div class="crgrid">
+   <section class="card"><h3>Внешность</h3><div class="crface">${ART.base ? `<div class="crframe"><span id="crPrev">${crFace()}</span></div>` : `<span id="crPrev">${crFace()}</span>`}
+     <button class="small" data-cr="reroll">Другое лицо</button>
+     <div class="sw" title="Оттенок кожи">${sw}</div><div class="sw" title="Цвет волос">${hw}</div>
+     <div class="crrow"><label>Причёска<select data-crsel="style"><option value="">случайная</option>${opt(HAIR_STYLES, cr.ov.style)}</select></label>
+       <label>Борода<select data-crsel="beard"><option value="">случайная</option>${opt(BEARDS, cr.ov.beard)}</select></label></div>
+     <div class="crrow">${[["glasses", "очки"], ["headset", "гарнитура"], ["cap", "кепка"]].map(([k, n]) => `<label><span><input type="checkbox" data-crchk="${k}" ${cr.ov[k] ? "checked" : ""}> ${n}</span></label>`).join("")}</div>
+   </div></section>
+   <div style="display:grid;gap:16px">
+    <section class="card"><h3>Имя и биография</h3><div class="crrow">
+      <label>Имя<input id="crName" value="${esc(cr.name)}" maxlength="20" placeholder="Иван"></label>
+      <label>Фамилия<input id="crSurname" value="${esc(cr.surname)}" maxlength="20" placeholder="Громов"></label>
+      <label>Возраст<input id="crAge" type="number" min="25" max="65" value="${cr.age}" style="width:80px"></label>
+      <label>Страна<select data-crsel="country">${MO.countries.map((c) => `<option ${c === cr.country ? "selected" : ""}>${c}</option>`).join("")}</select></label></div></section>
+    <section class="card"><h3>Предыстория</h3>${ART.base ? `<img class="story" src="art/base/story_${cr.bg}.webp" alt="" loading="lazy">` : ""}<div class="choices">${MO.backgrounds.map((b) => `<button class="choice" data-cr="bg" data-v="${b.id}" aria-pressed="${cr.bg === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span>${sbars(b.stats)}<span class="plus">+ ${esc(b.strength)}</span><span class="minus">− ${esc(b.weakness)}</span></button>`).join("")}</div></section>
+    <section class="card"><h3>Специализация</h3><div class="choices">${MO.branches.map((b) => `<button class="choice" data-cr="spec" data-v="${b.id}" aria-pressed="${cr.spec === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span><span class="why">+${MO.specialization_bonus} к навыку «${MO.stat_ru[b.stat]}»</span></button>`).join("")}</div></section>
+    <section class="card"><h3>Характер: выберите две черты <span class="muted">(${cr.traits.length}/2)</span></h3><div class="choices">${MO.traits.map((t) => `<button class="choice" data-cr="trait" data-v="${t.id}" aria-pressed="${cr.traits.includes(t.id)}"><b>${esc(t.name)}</b><span class="plus">+ ${esc(t.plus)}</span><span class="minus">− ${esc(t.minus)}</span></button>`).join("")}</div></section>
+    <section class="card"><h3>Ваши навыки на старте</h3>${sbars(base, fin)}<p class="muted">Светлая полоса: бонус специализации. Навыки усиливают соответствующие стороны игры, а таланты откроются по мере уровней.</p>
+      <div class="controls"><button class="primary" id="crGo" ${crValid() ? "" : "disabled"}>Начать карьеру</button><button id="crBack">Назад</button>
+      <span class="muted">${crValid() ? "" : "Нужны имя и две черты характера"}</span></div></section>
+   </div></div></div>`;
+}
+function crUpdateGo() { const b = $("crGo"); if (b) b.disabled = !crValid(); const p = $("crPrev"); if (p) p.innerHTML = crFace(); }
+async function startCareer() {
+  const profile = { name: (cr.name + " " + cr.surname).trim(), age: cr.age, country: cr.country, background: cr.bg, specialization: cr.spec, traits: cr.traits, face: cr.ov };
+  $("creator").hidden = true; busy(true, "Создаю мир…");
+  try {
+    const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value, profile));
+    busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null;
+    tab = "manager"; selNode = null; enterGame(s);
+    toast(`${profile.name}, вы возглавили ${s.club}. Откройте «Менеджер»: первые таланты появятся на втором уровне.`);
+  } catch (e) { busy(false); $("creator").hidden = false; toast("Не получилось: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]); }
+}
+
+// ---------- LIVING CLUB: manager screen and talent tree ----------
+const BR_ICON = { strategist: "▲", motivator: "●", analyst: "◆", manager: "■", intriguer: "✦" };
+function treeSvg(L, bid) {
+  const ns = L.nodes.filter((n) => n.branch === bid), by = Object.fromEntries(ns.map((n) => [n.id, n]));
+  const pos = {};
+  for (let t = 1; t <= 4; t++) {
+    const row = ns.filter((n) => n.tier === t);
+    const bary = (n) => n.requires.length ? n.requires.reduce((a, r) => a + pos[r].x, 0) / n.requires.length : 0;
+    row.sort((a, b) => bary(a) - bary(b));
+    row.forEach((n, i) => { pos[n.id] = { x: row.length === 1 ? 200 : 48 + i * (304 / (row.length - 1)), y: 38 + (t - 1) * 88 }; });
+  }
+  const links = ns.flatMap((n) => n.requires.map((r) => `<path class="tlink ${by[r].state === "unlocked" && n.state === "unlocked" ? "on" : ""}" d="M${pos[r].x} ${pos[r].y} C${pos[r].x} ${(pos[r].y + pos[n.id].y) / 2} ${pos[n.id].x} ${(pos[r].y + pos[n.id].y) / 2} ${pos[n.id].x} ${pos[n.id].y}"/>`)).join("");
+  const nodes = ns.map((n) => {
+    const { x, y } = pos[n.id], words = n.name.split(" "), l1 = [], l2 = [];
+    words.forEach((w) => ((l1.join(" ") + " " + w).trim().length <= 15 && !l2.length ? l1 : l2).push(w));
+    return `<g class="tnode ${n.state} ${selNode === n.id ? "sel" : ""}" data-node="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)}, ${n.state}">
+      ${n.capstone ? `<circle class="cap" cx="${x}" cy="${y}" r="29"/>` : ""}<circle class="bg" cx="${x}" cy="${y}" r="22"/>
+      <text class="ic" x="${x}" y="${y}">${n.state === "unlocked" ? "✓" : BR_ICON[bid]}</text>
+      <text class="lb" x="${x}" y="${y + 36}">${esc(l1.join(" "))}</text>${l2.length ? `<text class="lb" x="${x}" y="${y + 48}">${esc(l2.join(" "))}</text>` : ""}</g>`;
+  }).join("");
+  return `<svg viewBox="0 0 400 352" role="group" aria-label="Ветка талантов">${links}${nodes}</svg>`;
+}
+
+let selFac = "";
+function facImg(f) {
+  const n = f.project ? "fac_construction" : f.level ? `fac_${f.id}_lvl${f.level}` : "fac_empty";
+  return `art/base/${n}.webp`;
+}
+function houseLevel(total) { return total < 6 ? 1 : total < 12 ? 2 : total < 22 ? 3 : total < 34 ? 4 : 5; }
+function homeSvg(H) {
+  const hl = houseLevel(H.total_levels);
+  const banner = ART.base ? `<div class="housebar"><img src="art/base/house${hl}.webp" alt="Здание клуба"><div><b>Здание клуба: стадия ${hl} из 5</b><span class="muted">Растёт вместе с уровнями комнат. Сейчас ${H.total_levels} из ${H.max_levels}.</span></div></div>` : "";
+  const tiles = H.facilities.map((f) => `<button class="ftile ${selFac === f.id ? "sel" : ""} l${f.level}" data-fac="${f.id}" aria-label="${esc(f.name)}, уровень ${f.level}">
+      ${ART.base ? `<img src="${facImg(f)}" alt="" loading="lazy">` : `<i class="ph"></i>`}<b>${esc(f.name)}</b>
+      <span class="lv">${f.project ? `СТРОЙКА → ${f.project.to} · ${f.project.weeks_left} нед.` : f.level ? "УРОВЕНЬ " + f.level : "НЕ ПОСТРОЕНО"}</span></button>`).join("");
+  return banner + `<div class="ftiles">${tiles}</div>`;
+}
+function viewHome(s) {
+  const H = call("home");
+  if (!selFac) selFac = (H.facilities.find((f) => f.can && f.level === 0) || H.facilities[0]).id;
+  const f = H.facilities.find((x) => x.id === selFac) || H.facilities[0], n = f.next;
+  const bar = `<div class="lvbar">${[1, 2, 3, 4, 5].map((l) => `<i class="${l <= f.level ? "on" : ""}"></i>`).join("")}</div>`;
+  const nowFx = f.now.map((e) => `<span class="plus">${esc(e.label)}: ${e.value > 0 && e.value < 1 ? "+" + Math.round(e.value * 100) + "%" : "+" + e.value}</span>`).join("");
+  const detail = `<section class="card detail">${ART.base ? `<img class="fdetail" src="${facImg(f)}" alt="">` : ""}<b>${esc(f.name)}</b><span class="muted">${esc(f.level_name)}${f.project ? `, идёт стройка уровня ${f.project.to}: ещё ${f.project.weeks_left} нед.` : ""}</span>${bar}
+    ${nowFx || `<span class="muted">Пока ничего не даёт.</span>`}
+    ${n ? `<hr><b>Уровень ${n.level}: ${esc(H.level_names[n.level])}</b>
+      <span>Цена ${money(n.cost)} · стройка ${n.weeks} нед. · содержание ${money(n.upkeep_month)}/мес.</span>
+      ${ART.base ? `<img class="fdetail" style="max-height:150px;opacity:.9" src="art/base/fac_${f.id}_lvl${n.level}.webp" alt="Как будет выглядеть уровень ${n.level}">` : ""}
+      ${n.effects.map((e) => `<span class="plus">${esc(e.label)}: +${e.value < 1 ? Math.round(e.value * 100) + "%" : e.value}</span>`).join("")}
+      ${n.req.map((r) => `<div class="reqrow ${r.soft ? "soft" : r.ok ? "ok" : "no"}"><b>${r.soft ? "…" : r.ok ? "✓" : "✗"}</b><span>${esc(r.text)}</span></div>`).join("")}
+      ${n.events.length ? `<span class="why">Риски уровня: ${n.events.map((e) => esc(e.split(":")[1] || e)).join("; ")}</span>` : ""}
+      <div><button class="primary small" data-build="${f.id}" ${f.can ? "" : "disabled"}>Построить уровень ${n.level}</button></div>`
+      : `<span class="muted">${esc(f.why)}</span>`}
+    ${lastResults.build ? `<span class="result">${esc(lastResults.build)}</span>` : ""}
+    <span class="why">Эффекты зданий показываются честно, но подключатся к механикам в следующих этапах. Шанс победы здания напрямую не меняют.</span></section>`;
+  return `<section class="card"><h3>Мой дом <span class="muted">${H.total_levels}/${H.max_levels} уровней · содержание ${money(H.upkeep_month)}/мес.</span></h3>${homeSvg(H)}</section>
+    <div class="grid2">${detail}<section class="card"><h3>История базы</h3>${H.history.length ? H.history.map((x) => `<div class="line"><span>${esc(x)}</span></div>`).join("") : `<p class="muted">Здесь появится всё, что вы построите.</p>`}</section></div>`;
+}
+function viewManager(s) {
+  const L = call("living");
+  const sel = L.nodes.find((n) => n.id === selNode);
+  const pct = L.xp_next ? Math.round(L.xp / L.xp_next * 100) : 100;
+  const detail = sel ? `<div class="detail"><b>${esc(sel.name)}${sel.capstone ? " ★" : ""}</b><span class="muted">${esc(L.branches[sel.branch].name)}, ${sel.tier} уровень</span>
+      <span>${esc(sel.desc)}</span>${sel.effect.map((e) => `<span class="plus">${esc(e.label)}: +${Math.round(e.value * 100)}% (общий предел ${Math.round(e.cap * 100)}%)</span>`).join("")}
+      ${sel.risk ? `<span class="flag">Риск: может вскрыться (${esc(sel.risk === "exposure" ? "разоблачение" : "репутация")})</span>` : ""}
+      ${sel.requires.length ? `<span class="why">Нужно: ${sel.requires.map((r) => esc(L.nodes.find((n) => n.id === r).name)).join(", ")}</span>` : ""}
+      ${sel.state === "unlocked" ? `<span class="plus">Изучен</span>` : sel.state === "available" ? `<div><button class="primary small" data-talent="${sel.id}">Изучить за 1 очко</button></div>` : `<span class="why">${esc(sel.why)}</span>`}
+      ${lastResults.talent ? `<span class="result">${esc(lastResults.talent)}</span>` : ""}</div>`
+    : `<div class="detail"><b>Нажмите на талант</b><span class="muted">Таланты не дают процент к победе: они улучшают информацию, подготовку и управленческие решения. Всё не изучить: очков 39, а талантов 60.</span></div>`;
+  const order = [L.specialization, ...Object.keys(L.branches).filter((b) => b !== L.specialization)];
+  const trees = order.map((b) => `<section class="card tree"><h3>${ART.base ? `<i class="emb" style="--emb:url(art/base/icons_branches.webp);background-position:${["strategist", "motivator", "analyst", "manager", "intriguer"].indexOf(b) * 25}% 0"></i>` : ""}${esc(L.branches[b].name)} ${b === L.specialization ? `<span class="pill story">ваша ветка</span>` : ""} <span class="muted">${L.nodes.filter((n) => n.branch === b && n.state === "unlocked").length}/12</span></h3><span class="muted">${esc(L.branches[b].desc)}</span>${treeSvg(L, b)}</section>`).join("");
+  const ch = L.channels.map((c) => `<div class="chrow"><span>${esc(c.label)}</span><b class="${c.value >= 0 ? "plus" : "minus"}">${c.value >= 0 ? "+" : ""}${(c.value * 100).toFixed(1)}%</b><span class="why">${c.why.map(esc).join(" · ")}${c.status === "planned" ? " · подключится к игре в следующих этапах" : ""}</span></div>`).join("");
+  const jr = L.journal.map((j) => `<div class="line"><span class="num muted">С${j.season}</span><span>${esc(j.why)}</span><span class="num plus">+${j.xp}</span></div>`).join("");
+  return `<section class="card"><div class="mhead">${face({ name: L.name, age: L.age, face: L.face }, s.club, 96)}
+      <div class="nm"><b style="font:700 1.3rem var(--display)">${esc(L.name)}</b><span class="muted">${esc(L.background)}, ${L.age} лет, ${esc(L.country)} · ${esc(L.branches[L.specialization].name)}</span>
+      <div class="traits">${L.traits.map((t) => `<span title="+ ${esc(t.plus)}; − ${esc(t.minus)}">${esc(t.name)}</span>`).join("")}</div></div>
+      <div class="lvlring" style="--p:${pct}" title="Опыт ${L.xp} из ${L.xp_next}"><b>${L.level}</b></div>
+      <div style="display:grid;gap:2px"><b>Уровень ${L.level} из ${L.max_level}</b><span class="muted">${L.xp_next ? `Опыт ${L.xp} / ${L.xp_next}` : "Максимум"}</span>
+        <span class="${L.points ? "plus" : "muted"}"><b>Очков талантов: ${L.points}</b></span></div></div>
+    <div class="sbars">${Object.keys(L.stats).map((k) => `<div class="sbar"><span>${L.stat_ru[k]}</span><i><u style="width:${L.stats[k] * 14}%"></u></i><span>${L.stats[k]}</span></div>`).join("")}</div></section>
+  <div class="grid2"><div style="display:grid;gap:16px;align-content:start">${detail}
+      <section class="card"><h3>Что это даёт сейчас</h3>${ch || `<p class="muted">Пока только базовые навыки.</p>`}</section>
+      <section class="card"><h3>За что вы получали опыт</h3>${jr || `<p class="muted">Опыт дают цели владельца, титулы, выход за ожидания, решённые конфликты. За пропуск недели опыта нет.</p>`}</section></div>
+    <div style="display:grid;gap:16px;align-content:start">${trees}</div></div>`;
+}
+function showLevelUp(level, points) {
+  const d = document.createElement("div"); d.className = "lvlup"; d.setAttribute("role", "dialog"); d.setAttribute("aria-label", "Новый уровень");
+  d.innerHTML = `<div class="rays"></div><div class="box"><span class="muted" style="font:600 .7rem var(--mono);letter-spacing:.14em">НОВЫЙ УРОВЕНЬ</span><div class="big">${level}</div>
+    <b>${points ? `Свободных очков талантов: ${points}` : "Продолжайте"}</b><span class="muted">Выберите, каким менеджером вы станете.</span>
+    <div class="controls"><button class="primary" id="lvlGo">К талантам</button><button id="lvlClose">Позже</button></div></div>`;
+  document.body.appendChild(d);
+  d.addEventListener("click", (e) => { const id = e.target.id; if (id === "lvlGo") { tab = "manager"; d.remove(); render(); } else if (id === "lvlClose" || e.target === d) d.remove(); });
+  $("lvlGo").focus();
+}
+
 async function startNew() {
   busy(true, "Создаю мир…");
   const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value));
@@ -543,12 +779,14 @@ async function advance(n) {
   if (end.length) seasonReport = end;
   log = res.reverse().concat(log).slice(0, 40);
   const s = call("state");
+  const lvlBefore = curState ? curState.level : s.level;
   if (s.abs_week % 4 === 0) autosave();
   busy(false);
   btns.forEach((i) => ($(i).disabled = false));
   if (s.pending_events || s.offers) tab = "office";
   else if (s.situations) tab = "backstage";
   render(s);
+  if (s.level > lvlBefore) showLevelUp(s.level, s.talent_points);
   if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
 }
 
@@ -571,7 +809,7 @@ const hintHtml = (h) => {
   return bits.length ? bits.join(" ") : "без последствий";
 };
 
-const TABS = [["office", "Сводка"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+const TABS = [["office", "Сводка"], ["manager", "Менеджер"], ["home", "Мой дом"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
   ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
 
 function render(s) {
@@ -589,12 +827,13 @@ function render(s) {
   $("kOwner").textContent = s.owner_confidence + "/100";
   $("kOwner").className = s.owner_confidence < 35 ? "money-neg" : "";
   $("kRep").textContent = s.manager.reputation;
+  $("kLvl").textContent = `Ур. ${s.level}` + (s.talent_points ? ` · ${s.talent_points}★` : "");
   const ne = s.next_events.find((x) => x.invited) || s.next_events[0];
   $("toEventBtn").textContent = ne ? `До турнира · ${Math.max(1, ne.week - s.week)} нед.` : "До турнира";
   $("toEventBtn").title = ne ? `Играть до «${ne.name}» (неделя ${ne.week}); остановится, если нужно ваше решение` : "";
   const due = s.pending_events + s.offers, sits = s.situations || 0;
-  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
-  const views = { office: viewOffice, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
+  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "manager" && s.talent_points ? `<span class="badge">${s.talent_points}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
+  const views = { office: viewOffice, manager: viewManager, home: viewHome, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
   $("main").innerHTML = views[tab](s);
 }
 
@@ -869,11 +1108,29 @@ function viewCareer(s) {
 }
 
 document.addEventListener("click", async (ev) => {
+  const fc = ev.target.closest("[data-fac]");
+  if (fc) { selFac = fc.dataset.fac; lastResults.build = ""; return render(); }
+  const nd = ev.target.closest("[data-node]");
+  if (nd) { selNode = nd.dataset.node; lastResults.talent = ""; return render(); }
   const b = ev.target.closest("button");
   if (!b) return;
+  if (b.dataset.cr) {
+    const v = b.dataset.v;
+    if (b.dataset.cr === "reroll") { cr.ov.seed = Math.random().toString(36).slice(2, 8); delete cr.ov.skin; delete cr.ov.hair; delete cr.ov.style; delete cr.ov.beard; delete cr.ov.glasses; delete cr.ov.headset; delete cr.ov.cap; }
+    else if (b.dataset.cr === "skin") cr.ov.skin = +v;
+    else if (b.dataset.cr === "hair") cr.ov.hair = +v;
+    else if (b.dataset.cr === "bg") cr.bg = v;
+    else if (b.dataset.cr === "spec") cr.spec = v;
+    else if (b.dataset.cr === "trait") { const i = cr.traits.indexOf(v); if (i >= 0) cr.traits.splice(i, 1); else if (cr.traits.length < 2) cr.traits.push(v); else toast("Две черты уже выбраны: снимите одну"); }
+    return renderCreator();
+  }
   const d = b.dataset;
   try {
-    if (b.id === "newBtn") return startNew();
+    if (b.id === "newBtn") return openCreator();
+    if (b.id === "crGo") return startCareer();
+    if (b.id === "crBack") { $("creator").hidden = true; $("boot").hidden = false; return; }
+    if (d.build) { try { lastResults.build = call("build", d.build); } catch (e) { lastResults.build = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
+    if (d.talent) { try { lastResults.talent = call("unlock_talent", d.talent); } catch (e) { lastResults.talent = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
     if (b.id === "contBtn") { let t = ""; try { t = localStorage.getItem(SAVE_KEY) || ""; } catch (e) {} return loadFrom(t); }
     if (b.id === "importBtn") return loadFrom($("importText").value);
     if (b.id === "nextBtn") return advance(1);
@@ -921,7 +1178,16 @@ document.addEventListener("click", async (ev) => {
     toast("Ошибка: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]);
   }
 });
+document.addEventListener("input", (ev) => {
+  const id = ev.target.id;
+  if (id === "crName") { cr.name = ev.target.value; crUpdateGo(); }
+  if (id === "crSurname") { cr.surname = ev.target.value; crUpdateGo(); }
+  if (id === "crAge") { cr.age = Math.max(25, Math.min(65, +ev.target.value || 36)); crUpdateGo(); }
+});
 document.addEventListener("change", (ev) => {
+  const t = ev.target;
+  if (t.dataset && t.dataset.crsel) { const k = t.dataset.crsel; if (k === "country") cr.country = t.value; else cr.ov[k] = t.value === "" ? undefined : +t.value; return renderCreator(); }
+  if (t.dataset && t.dataset.crchk) { cr.ov[t.dataset.crchk] = t.checked; return renderCreator(); }
   if (ev.target.id === "regionSel") { tableRegion = ev.target.value; render(); }
   if (ev.target.id === "leagueSel") { leagueSel = +ev.target.value; render(); }
 });

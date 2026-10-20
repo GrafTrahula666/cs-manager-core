@@ -1,0 +1,1438 @@
+{
+ "note": "Все числа: игровые гипотезы. Эффекты каналов только про качество информации, подготовки и решений; ни один не меняет вероятность победы напрямую. Сумма значений по каналу ограничена cap.",
+ "branches": {
+  "strategist": {
+   "name": "Стратег",
+   "desc": "Побеждает подготовкой: улучшает качество информации о соперниках, а не шанс победы"
+  },
+  "motivator": {
+   "name": "Мотиватор",
+   "desc": "Лидер, управляющий людьми через эмоции, память и отношения"
+  },
+  "analyst": {
+   "name": "Аналитик",
+   "desc": "Скаутинг, статистика, демки и точные прогнозы"
+  },
+  "manager": {
+   "name": "Управленец",
+   "desc": "Строит организацию: контракты, штат, инфраструктура, деньги"
+  },
+  "intriguer": {
+   "name": "Интриган",
+   "desc": "Связи, информация и слабости людей. Каждое рискованное действие может вскрыться"
+  }
+ },
+ "channels": {
+  "prep.opponent_report": {
+   "label": "Точность отчётов о соперниках",
+   "cap": 0.4,
+   "hook": "meta.py / engine.py",
+   "status": "planned"
+  },
+  "prep.map_info": {
+   "label": "Информация о картах соперника",
+   "cap": 0.4,
+   "hook": "meta.py / engine.py",
+   "status": "planned"
+  },
+  "review.error_clarity": {
+   "label": "Ясность разбора ошибок",
+   "cap": 0.4,
+   "hook": "matchstats.py",
+   "status": "planned"
+  },
+  "prep.style_info": {
+   "label": "Распознавание стиля соперника",
+   "cap": 0.4,
+   "hook": "meta.py / engine.py",
+   "status": "planned"
+  },
+  "prep.weakness_info": {
+   "label": "Поиск слабых мест соперника",
+   "cap": 0.4,
+   "hook": "meta.py / engine.py",
+   "status": "planned"
+  },
+  "staff.coach_sync": {
+   "label": "Согласованность с главным тренером",
+   "cap": 0.4,
+   "hook": "contracts.py",
+   "status": "planned"
+  },
+  "prep.veto_info": {
+   "label": "Подсказки вето и пика",
+   "cap": 0.4,
+   "hook": "meta.py / engine.py",
+   "status": "planned"
+  },
+  "prep.counter_info": {
+   "label": "Контрпланы против типовых схем",
+   "cap": 0.4,
+   "hook": "meta.py / engine.py",
+   "status": "planned"
+  },
+  "prep.series_info": {
+   "label": "План на серию BO3/BO5",
+   "cap": 0.4,
+   "hook": "meta.py / engine.py",
+   "status": "planned"
+  },
+  "match.timeout_info": {
+   "label": "Подсказки по тайм-аутам",
+   "cap": 0.4,
+   "hook": "engine.py",
+   "status": "planned"
+  },
+  "prep.decider_info": {
+   "label": "Подготовка к решающим матчам",
+   "cap": 0.4,
+   "hook": "meta.py / engine.py",
+   "status": "planned"
+  },
+  "talk.effect": {
+   "label": "Сила разговора с игроком",
+   "cap": 0.4,
+   "hook": "talks.py",
+   "status": "planned"
+  },
+  "adapt.newcomer": {
+   "label": "Адаптация новичков",
+   "cap": 0.4,
+   "hook": "market.py",
+   "status": "planned"
+  },
+  "stress.relief": {
+   "label": "Снятие стресса",
+   "cap": 0.4,
+   "hook": "talks.py",
+   "status": "planned"
+  },
+  "conflict.early_warning": {
+   "label": "Раннее предупреждение конфликтов",
+   "cap": 0.4,
+   "hook": "emergent/manager_view.py",
+   "status": "planned"
+  },
+  "morale.recovery": {
+   "label": "Восстановление морали",
+   "cap": 0.4,
+   "hook": "squad.py",
+   "status": "planned"
+  },
+  "captain.sync": {
+   "label": "Связь с капитаном",
+   "cap": 0.4,
+   "hook": "squad.py",
+   "status": "planned"
+  },
+  "trust.gain": {
+   "label": "Рост доверия",
+   "cap": 0.4,
+   "hook": "promises.py",
+   "status": "planned"
+  },
+  "talk.hard_characters": {
+   "label": "Разговор со сложными характерами",
+   "cap": 0.4,
+   "hook": "talks.py",
+   "status": "planned"
+  },
+  "adapt.transfer": {
+   "label": "Адаптация после трансфера",
+   "cap": 0.4,
+   "hook": "market.py",
+   "status": "planned"
+  },
+  "team.discipline": {
+   "label": "Командная дисциплина",
+   "cap": 0.4,
+   "hook": "squad.py",
+   "status": "planned"
+  },
+  "crisis.recovery": {
+   "label": "Выход из кризиса",
+   "cap": 0.4,
+   "hook": "emergent/manager_view.py",
+   "status": "planned"
+  },
+  "scout.find_rate": {
+   "label": "Находки скаутов",
+   "cap": 0.4,
+   "hook": "scouting.py",
+   "status": "planned"
+  },
+  "scout.stat_precision": {
+   "label": "Точность оценки уровня",
+   "cap": 0.4,
+   "hook": "scouting.py",
+   "status": "planned"
+  },
+  "analysis.demo_depth": {
+   "label": "Глубина разбора демок",
+   "cap": 0.4,
+   "hook": "scouting.py",
+   "status": "planned"
+  },
+  "scout.potential_precision": {
+   "label": "Точность оценки потенциала",
+   "cap": 0.4,
+   "hook": "scouting.py",
+   "status": "planned"
+  },
+  "analysis.model_quality": {
+   "label": "Качество аналитических моделей",
+   "cap": 0.4,
+   "hook": "scouting.py",
+   "status": "planned"
+  },
+  "scout.chemistry_read": {
+   "label": "Оценка совместимости игроков",
+   "cap": 0.4,
+   "hook": "scouting.py",
+   "status": "planned"
+  },
+  "scout.growth_forecast": {
+   "label": "Прогноз развития",
+   "cap": 0.4,
+   "hook": "scouting.py",
+   "status": "planned"
+  },
+  "scout.error_cut": {
+   "label": "Меньше ошибок скаутинга",
+   "cap": 0.4,
+   "hook": "scouting.py",
+   "status": "planned"
+  },
+  "training.plan_quality": {
+   "label": "Качество тренировочных планов",
+   "cap": 0.4,
+   "hook": "development.py",
+   "status": "planned"
+  },
+  "staff.analyst_slots": {
+   "label": "Места аналитиков",
+   "cap": 0.4,
+   "hook": "contracts.py",
+   "status": "planned"
+  },
+  "neg.contract": {
+   "label": "Условия контрактов",
+   "cap": 0.12,
+   "hook": "contracts.py",
+   "status": "planned"
+  },
+  "hire.pool_quality": {
+   "label": "Качество рынка штата",
+   "cap": 0.4,
+   "hook": "market.py",
+   "status": "planned"
+  },
+  "cost.upkeep_cut": {
+   "label": "Скидка на содержание",
+   "cap": 0.12,
+   "hook": "economy.py",
+   "status": "planned"
+  },
+  "staff.sync": {
+   "label": "Согласованность штаба",
+   "cap": 0.4,
+   "hook": "contracts.py",
+   "status": "planned"
+  },
+  "infra.build_cost_cut": {
+   "label": "Скидка на стройку",
+   "cap": 0.12,
+   "hook": "economy.py",
+   "status": "planned"
+  },
+  "academy.intake": {
+   "label": "Качество набора в академию",
+   "cap": 0.4,
+   "hook": "legacy.py",
+   "status": "planned"
+  },
+  "sponsor.offer_quality": {
+   "label": "Условия спонсоров",
+   "cap": 0.2,
+   "hook": "economy.py",
+   "status": "planned"
+  },
+  "finance.loan_terms": {
+   "label": "Условия кредитов и инвесторов",
+   "cap": 0.15,
+   "hook": "economy.py",
+   "status": "planned"
+  },
+  "owner.patience": {
+   "label": "Терпение владельца",
+   "cap": 0.25,
+   "hook": "board.py",
+   "status": "planned"
+  },
+  "infra.build_time_cut": {
+   "label": "Скорость стройки",
+   "cap": 0.4,
+   "hook": "economy.py",
+   "status": "planned"
+  },
+  "staff.slots": {
+   "label": "Размер штаба без конфликтов",
+   "cap": 0.4,
+   "hook": "contracts.py",
+   "status": "planned"
+  },
+  "contacts.network": {
+   "label": "Личные связи",
+   "cap": 0.4,
+   "hook": "relations.py",
+   "status": "planned"
+  },
+  "neg.agent": {
+   "label": "Переговоры с агентами",
+   "cap": 0.15,
+   "hook": "contracts.py",
+   "status": "planned"
+  },
+  "press.tone": {
+   "label": "Тон прессы",
+   "cap": 0.4,
+   "hook": "talks.py",
+   "status": "planned"
+  },
+  "intel.rumour_accuracy": {
+   "label": "Точность слухов",
+   "cap": 0.4,
+   "hook": "secrets.py",
+   "status": "planned"
+  },
+  "talk.persuade": {
+   "label": "Убеждение",
+   "cap": 0.4,
+   "hook": "talks.py",
+   "status": "planned"
+  },
+  "reputation.damage_cut": {
+   "label": "Защита репутации",
+   "cap": 0.4,
+   "hook": "chronicle.py",
+   "status": "planned"
+  },
+  "diplomacy.club_relations": {
+   "label": "Отношения с клубами",
+   "cap": 0.4,
+   "hook": "rivalry.py",
+   "status": "planned"
+  },
+  "neg.transfer": {
+   "label": "Трансферные переговоры",
+   "cap": 0.15,
+   "hook": "contracts.py",
+   "status": "planned"
+  },
+  "leverage.conflicts": {
+   "label": "Использование чужих конфликтов",
+   "cap": 0.4,
+   "hook": "secrets.py",
+   "status": "planned"
+  },
+  "crisis.contacts": {
+   "label": "Кризисы через связи",
+   "cap": 0.4,
+   "hook": "emergent/manager_view.py",
+   "status": "planned"
+  },
+  "deals.long_term": {
+   "label": "Долгие договорённости",
+   "cap": 0.4,
+   "hook": "contracts.py",
+   "status": "planned"
+  }
+ },
+ "nodes": [
+  {
+   "id": "str_dossier",
+   "branch": "strategist",
+   "name": "Досье соперника",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.opponent_report",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Отчёты о соперниках точнее: диапазоны оценок уже."
+  },
+  {
+   "id": "str_maps",
+   "branch": "strategist",
+   "name": "Карты на столе",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.map_info",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Видно, какие карты соперник играет чаще и сильнее."
+  },
+  {
+   "id": "str_review",
+   "branch": "strategist",
+   "name": "Разбор ошибок",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "review.error_clarity",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "После матча понятнее, из-за чего проиграли: решение, экономика или дуэли."
+  },
+  {
+   "id": "str_styles",
+   "branch": "strategist",
+   "name": "Подготовка к стилям",
+   "tier": 2,
+   "requires": [
+    "str_dossier"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.style_info",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Отчёт называет стиль соперника: агрессия, дефолт, ранний раш."
+  },
+  {
+   "id": "str_weak",
+   "branch": "strategist",
+   "name": "Сильные и слабые стороны",
+   "tier": 2,
+   "requires": [
+    "str_dossier"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.weakness_info",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Видно, кто у соперника в плохой форме и где он уязвим."
+  },
+  {
+   "id": "str_sync",
+   "branch": "strategist",
+   "name": "Связь с главным тренером",
+   "tier": 2,
+   "requires": [
+    "str_review"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "staff.coach_sync",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Тренер лучше передаёт план игрокам: меньше потерь при смене тактики."
+  },
+  {
+   "id": "str_veto",
+   "branch": "strategist",
+   "name": "Вето и пик",
+   "tier": 2,
+   "requires": [
+    "str_maps"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.veto_info",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Подсказки для вето и пика карт в серии."
+  },
+  {
+   "id": "str_counter",
+   "branch": "strategist",
+   "name": "Против типовых схем",
+   "tier": 3,
+   "requires": [
+    "str_styles",
+    "str_weak"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.counter_info",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Предложения контрпланов против распространённых схем."
+  },
+  {
+   "id": "str_series",
+   "branch": "strategist",
+   "name": "Серии BO3 и BO5",
+   "tier": 3,
+   "requires": [
+    "str_veto",
+    "str_sync"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.series_info",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "План на серию: как менять подход между картами."
+  },
+  {
+   "id": "str_timeout",
+   "branch": "strategist",
+   "name": "Тайм-ауты",
+   "tier": 3,
+   "requires": [
+    "str_sync",
+    "str_weak"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "match.timeout_info",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Подсказка, когда стоит брать тайм-аут (информация, не бонус)."
+  },
+  {
+   "id": "str_decider",
+   "branch": "strategist",
+   "name": "Решающие матчи",
+   "tier": 3,
+   "requires": [
+    "str_weak",
+    "str_veto"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.decider_info",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Подготовка к финалам и последним картам: давление на команду учтено в плане."
+  },
+  {
+   "id": "str_grand",
+   "branch": "strategist",
+   "name": "Великий тактик",
+   "tier": 4,
+   "requires": [
+    "str_counter",
+    "str_series"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.opponent_report",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Раз в сезон: полный разбор одного соперника с проверкой каждой гипотезы.",
+   "capstone": true
+  },
+  {
+   "id": "mot_talk",
+   "branch": "motivator",
+   "name": "Личная беседа",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "talk.effect",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Разговор с игроком даёт сильнее и точнее эффект."
+  },
+  {
+   "id": "mot_rookies",
+   "branch": "motivator",
+   "name": "Поддержка новичков",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "adapt.newcomer",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Новички быстрее вливаются в команду."
+  },
+  {
+   "id": "mot_stress",
+   "branch": "motivator",
+   "name": "Работа со стрессом",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "stress.relief",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Стресс снижается быстрее после нагрузки и поражений."
+  },
+  {
+   "id": "mot_prevent",
+   "branch": "motivator",
+   "name": "Предупреждение конфликтов",
+   "tier": 2,
+   "requires": [
+    "mot_talk"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "conflict.early_warning",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Ситуации назревающих конфликтов приходят раньше."
+  },
+  {
+   "id": "mot_morale",
+   "branch": "motivator",
+   "name": "Восстановление морали",
+   "tier": 2,
+   "requires": [
+    "mot_stress"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "morale.recovery",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Мораль после провалов возвращается быстрее."
+  },
+  {
+   "id": "mot_captain",
+   "branch": "motivator",
+   "name": "Работа с капитаном",
+   "tier": 2,
+   "requires": [
+    "mot_talk"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "captain.sync",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Капитан лучше передаёт ваши решения в раздевалку."
+  },
+  {
+   "id": "mot_trust",
+   "branch": "motivator",
+   "name": "Повышение доверия",
+   "tier": 2,
+   "requires": [
+    "mot_rookies"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "trust.gain",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Доверие игроков растёт быстрее от выполненных обещаний."
+  },
+  {
+   "id": "mot_hard",
+   "branch": "motivator",
+   "name": "Сложные характеры",
+   "tier": 3,
+   "requires": [
+    "mot_trust",
+    "mot_captain"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "talk.hard_characters",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "С конфликтными и закрытыми игроками разговор срывается реже."
+  },
+  {
+   "id": "mot_transfer",
+   "branch": "motivator",
+   "name": "Адаптация после трансферов",
+   "tier": 3,
+   "requires": [
+    "mot_trust",
+    "mot_morale"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "adapt.transfer",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Купленные игроки не теряют форму из-за переезда."
+  },
+  {
+   "id": "mot_discipline",
+   "branch": "motivator",
+   "name": "Командная дисциплина",
+   "tier": 3,
+   "requires": [
+    "mot_captain",
+    "mot_prevent"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "team.discipline",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Меньше срывов режима: опозданий и ссор на тренировках."
+  },
+  {
+   "id": "mot_crisis",
+   "branch": "motivator",
+   "name": "Преодоление кризисов",
+   "tier": 3,
+   "requires": [
+    "mot_morale",
+    "mot_prevent"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "crisis.recovery",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Серия поражений не превращается в раскол."
+  },
+  {
+   "id": "mot_unbroken",
+   "branch": "motivator",
+   "name": "Несломленный коллектив",
+   "tier": 4,
+   "requires": [
+    "mot_hard",
+    "mot_crisis"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "crisis.recovery",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Раз в сезон: команда выдерживает один тяжёлый провал без потери доверия.",
+   "capstone": true
+  },
+  {
+   "id": "ana_scout",
+   "branch": "analyst",
+   "name": "Поиск перспективных",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "scout.find_rate",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Скауты чаще находят молодых игроков с высоким потолком."
+  },
+  {
+   "id": "ana_stats",
+   "branch": "analyst",
+   "name": "Анализ статистики",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "scout.stat_precision",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Диапазоны уровня на рынке уже."
+  },
+  {
+   "id": "ana_demo",
+   "branch": "analyst",
+   "name": "Изучение демок",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "analysis.demo_depth",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Разборы демок глубже: видно паттерны, а не только итоги."
+  },
+  {
+   "id": "ana_potential",
+   "branch": "analyst",
+   "name": "Скрытый потенциал",
+   "tier": 2,
+   "requires": [
+    "ana_scout"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "scout.potential_precision",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Потенциал виден точнее."
+  },
+  {
+   "id": "ana_models",
+   "branch": "analyst",
+   "name": "Аналитические модели",
+   "tier": 2,
+   "requires": [
+    "ana_stats"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "analysis.model_quality",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Сравнение игроков и составов даёт меньше шума."
+  },
+  {
+   "id": "ana_weak",
+   "branch": "analyst",
+   "name": "Слабые стороны",
+   "tier": 2,
+   "requires": [
+    "ana_demo"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "prep.weakness_info",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Находит уязвимости соперников в демках."
+  },
+  {
+   "id": "ana_chem",
+   "branch": "analyst",
+   "name": "Совместимость игроков",
+   "tier": 2,
+   "requires": [
+    "ana_stats"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "scout.chemistry_read",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Видно, подойдёт ли игрок характером вашему составу."
+  },
+  {
+   "id": "ana_forecast",
+   "branch": "analyst",
+   "name": "Прогнозы развития",
+   "tier": 3,
+   "requires": [
+    "ana_potential",
+    "ana_models"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "scout.growth_forecast",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Прогноз роста на 1-2 сезона с честными границами."
+  },
+  {
+   "id": "ana_errors",
+   "branch": "analyst",
+   "name": "Меньше ошибок скаутинга",
+   "tier": 3,
+   "requires": [
+    "ana_potential",
+    "ana_chem"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "scout.error_cut",
+     "value": 0.15,
+     "op": "add"
+    }
+   ],
+   "desc": "Реже ошибаетесь с трейтами и характером."
+  },
+  {
+   "id": "ana_plan",
+   "branch": "analyst",
+   "name": "Оптимизация тренировок",
+   "tier": 3,
+   "requires": [
+    "ana_models",
+    "ana_weak"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "training.plan_quality",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Тренировочные планы лучше учитывают роль и усталость."
+  },
+  {
+   "id": "ana_staff",
+   "branch": "analyst",
+   "name": "Большой аналитический штаб",
+   "tier": 3,
+   "requires": [
+    "ana_models",
+    "ana_chem"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "staff.analyst_slots",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Больше рабочих мест аналитиков с меньшими потерями на согласование."
+  },
+  {
+   "id": "ana_machine",
+   "branch": "analyst",
+   "name": "Машина анализа",
+   "tier": 4,
+   "requires": [
+    "ana_forecast",
+    "ana_plan"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "scout.error_cut",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Раз в сезон: полный аудит состава с оценкой рисков по каждому.",
+   "capstone": true
+  },
+  {
+   "id": "mgr_contracts",
+   "branch": "manager",
+   "name": "Переговоры по контрактам",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "neg.contract",
+     "value": 0.05,
+     "op": "add"
+    }
+   ],
+   "desc": "Чуть лучше условия в контрактах с игроками и штабом."
+  },
+  {
+   "id": "mgr_staffing",
+   "branch": "manager",
+   "name": "Подбор сотрудников",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "hire.pool_quality",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "На рынке штата больше кандидатов, видны их ключевые навыки."
+  },
+  {
+   "id": "mgr_costs",
+   "branch": "manager",
+   "name": "Контроль расходов",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "cost.upkeep_cut",
+     "value": 0.04,
+     "op": "add"
+    }
+   ],
+   "desc": "Содержание помещений дешевле (небольшой предел)."
+  },
+  {
+   "id": "mgr_roles",
+   "branch": "manager",
+   "name": "Распределение обязанностей",
+   "tier": 2,
+   "requires": [
+    "mgr_staffing"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "staff.sync",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Меньше трений между сотрудниками из-за зон ответственности."
+  },
+  {
+   "id": "mgr_infra",
+   "branch": "manager",
+   "name": "Управление инфраструктурой",
+   "tier": 2,
+   "requires": [
+    "mgr_costs"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "infra.build_cost_cut",
+     "value": 0.04,
+     "op": "add"
+    }
+   ],
+   "desc": "Стройка немного дешевле."
+  },
+  {
+   "id": "mgr_academy",
+   "branch": "manager",
+   "name": "Развитие академии",
+   "tier": 2,
+   "requires": [
+    "mgr_staffing"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "academy.intake",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Выше качество отбора в академию."
+  },
+  {
+   "id": "mgr_sponsor",
+   "branch": "manager",
+   "name": "Спонсорские переговоры",
+   "tier": 2,
+   "requires": [
+    "mgr_contracts"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "sponsor.offer_quality",
+     "value": 0.08,
+     "op": "add"
+    }
+   ],
+   "desc": "Спонсоры чуть лучше платят и реже обрывают договоры."
+  },
+  {
+   "id": "mgr_invest",
+   "branch": "manager",
+   "name": "Планирование инвестиций",
+   "tier": 3,
+   "requires": [
+    "mgr_infra",
+    "mgr_sponsor"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "finance.loan_terms",
+     "value": 0.06,
+     "op": "add"
+    }
+   ],
+   "desc": "Условия кредита и инвесторов лучше."
+  },
+  {
+   "id": "mgr_owner",
+   "branch": "manager",
+   "name": "Работа с владельцами",
+   "tier": 3,
+   "requires": [
+    "mgr_sponsor",
+    "mgr_infra"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "owner.patience",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Владелец терпеливее к временным провалам."
+  },
+  {
+   "id": "mgr_build",
+   "branch": "manager",
+   "name": "Организация базы",
+   "tier": 3,
+   "requires": [
+    "mgr_infra",
+    "mgr_roles"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "infra.build_time_cut",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Стройка заканчивается быстрее."
+  },
+  {
+   "id": "mgr_bigstaff",
+   "branch": "manager",
+   "name": "Крупный штаб",
+   "tier": 3,
+   "requires": [
+    "mgr_roles",
+    "mgr_academy"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "staff.slots",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Можно содержать больше сотрудников без роста конфликтов."
+  },
+  {
+   "id": "mgr_architect",
+   "branch": "manager",
+   "name": "Архитектор империи",
+   "tier": 4,
+   "requires": [
+    "mgr_invest",
+    "mgr_bigstaff"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "infra.build_cost_cut",
+     "value": 0.03,
+     "op": "add"
+    }
+   ],
+   "desc": "Раз в сезон: один инфраструктурный проект получает согласованный график и бюджет.",
+   "capstone": true
+  },
+  {
+   "id": "int_network",
+   "branch": "intriguer",
+   "name": "Личные связи",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "contacts.network",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Больше людей, готовых говорить с вами."
+  },
+  {
+   "id": "int_agents",
+   "branch": "intriguer",
+   "name": "Переговоры с агентами",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "neg.agent",
+     "value": 0.08,
+     "op": "add"
+    }
+   ],
+   "desc": "Агенты чаще идут навстречу, но знают цену своим клиентам."
+  },
+  {
+   "id": "int_press",
+   "branch": "intriguer",
+   "name": "Работа с журналистами",
+   "tier": 1,
+   "requires": [],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "press.tone",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Журналисты мягче пишут о клубе в трудные недели."
+  },
+  {
+   "id": "int_intel",
+   "branch": "intriguer",
+   "name": "Закрытая информация",
+   "tier": 2,
+   "requires": [
+    "int_network"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "intel.rumour_accuracy",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Слухи приходят точнее. Источники могут обидеться, если вскроется.",
+   "risk": "exposure"
+  },
+  {
+   "id": "int_influence",
+   "branch": "intriguer",
+   "name": "Влияние на игроков",
+   "tier": 2,
+   "requires": [
+    "int_network"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "talk.persuade",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Убеждение в разговоре работает на тех, кто вам доверяет."
+  },
+  {
+   "id": "int_rep",
+   "branch": "intriguer",
+   "name": "Репутационные стратегии",
+   "tier": 2,
+   "requires": [
+    "int_press"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "reputation.damage_cut",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Скандалы бьют по бренду слабее."
+  },
+  {
+   "id": "int_diplomacy",
+   "branch": "intriguer",
+   "name": "Дипломатия между клубами",
+   "tier": 2,
+   "requires": [
+    "int_agents"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "diplomacy.club_relations",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Отношения с клубами улучшаются от обмена услугами."
+  },
+  {
+   "id": "int_deals",
+   "branch": "intriguer",
+   "name": "Сложные трансферы",
+   "tier": 3,
+   "requires": [
+    "int_diplomacy",
+    "int_intel"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "neg.transfer",
+     "value": 0.08,
+     "op": "add"
+    }
+   ],
+   "desc": "Трансферные переговоры закрываются чаще, но цена внимания выше.",
+   "risk": "reputation"
+  },
+  {
+   "id": "int_leverage",
+   "branch": "intriguer",
+   "name": "Использование конфликтов",
+   "tier": 3,
+   "requires": [
+    "int_intel",
+    "int_influence"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "leverage.conflicts",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Можно использовать чужие конфликты. Риск: разоблачение и потеря доверия.",
+   "risk": "exposure"
+  },
+  {
+   "id": "int_fixer",
+   "branch": "intriguer",
+   "name": "Кризисы через связи",
+   "tier": 3,
+   "requires": [
+    "int_rep",
+    "int_influence"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "crisis.contacts",
+     "value": 0.12,
+     "op": "add"
+    }
+   ],
+   "desc": "Одна просьба к знакомому может остановить скандал.",
+   "risk": "reputation"
+  },
+  {
+   "id": "int_long",
+   "branch": "intriguer",
+   "name": "Долгие договорённости",
+   "tier": 3,
+   "requires": [
+    "int_diplomacy",
+    "int_rep"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "deals.long_term",
+     "value": 0.1,
+     "op": "add"
+    }
+   ],
+   "desc": "Договорённости работают дольше, но связывают обязательствами."
+  },
+  {
+   "id": "int_cardinal",
+   "branch": "intriguer",
+   "name": "Серый кардинал",
+   "tier": 4,
+   "requires": [
+    "int_leverage",
+    "int_long"
+   ],
+   "cost": 1,
+   "effects": [
+    {
+     "channel": "leverage.conflicts",
+     "value": 0.08,
+     "op": "add"
+    }
+   ],
+   "desc": "Раз в сезон: влияние на решение чужого клуба. Риск разоблачения высок.",
+   "risk": "exposure",
+   "capstone": true
+  }
+ ]
+}
