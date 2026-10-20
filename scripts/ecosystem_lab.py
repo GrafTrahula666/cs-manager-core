@@ -36,7 +36,7 @@ class AuditGame(ObservedGame):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.audit_open = {id(c): (c.cash, c.fans) for c in self.clubs}
+        self.audit_open = {id(c): (c.cash, c.fans, sum(c.money_season.values())) for c in self.clubs}
         self.audit_closed = []
         self.audit_market_cursor = len(self.sysm.market.journal)
         self.audit_market_events = []
@@ -64,9 +64,9 @@ class AuditGame(ObservedGame):
             money = dict(getattr(club, "money_season", {}))
             items.update(money)
             tier_items[club.tier].update(money)
-            opened_cash, opened_fans = self.audit_open.get(id(club), (None, None))
+            opened_cash, opened_fans, already_booked = self.audit_open.get(id(club), (None, None, 0.0))
             if opened_cash is not None:
-                residuals.append(club.cash - opened_cash - sum(money.values()))
+                residuals.append(club.cash - opened_cash - (sum(money.values()) - already_booked))
             if opened_fans and opened_fans > 0:
                 fan_growth.append(club.fans / opened_fans - 1)
             clubs.append({
@@ -93,7 +93,7 @@ class AuditGame(ObservedGame):
         })
         # Transactions in the rollover belong to next season, so record opening
         # cash *after* the real game's offseason actions.
-        self.audit_open = {id(c): (c.cash, c.fans) for c in self.clubs}
+        self.audit_open = {id(c): (c.cash, c.fans, sum(c.money_season.values())) for c in self.clubs}
         return notes
 
     def observe_week(self, absolute_week: int, season: int):
