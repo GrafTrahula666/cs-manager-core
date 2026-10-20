@@ -126,7 +126,8 @@ main { padding-block: 18px; display: grid; gap: 16px; }
 .line { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
 .pill { font: 600 .62rem/1.5 var(--mono); text-transform: uppercase; letter-spacing: .08em; padding: 1px 6px; border-radius: 3px; background: var(--chip); color: var(--muted); flex: none; }
 .pill.match { background: color-mix(in srgb, var(--ct) 18%, transparent); color: var(--ct); }
-.pill.story { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+.pill.emb { display: inline-block; width: 28px; height: 28px; vertical-align: middle; margin-right: 6px; background: var(--emb) 0 0 / 500% 100% no-repeat; border-radius: 6px; }
+.story { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
 .pill.club { background: color-mix(in srgb, var(--good) 18%, transparent); color: var(--good); }
 .pill.world { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
 .event { border-left: 3px solid var(--ct); padding: 2px 0 2px 12px; display: grid; gap: 6px; }
@@ -242,6 +243,11 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
 }
 @media (max-width: 520px) { .hide-sm { display: none; } }
 .creator { padding-block: 24px 60px; display: grid; gap: 16px; }
+#creator.art { background: linear-gradient(rgba(8,12,18,.72), rgba(8,12,18,.86)), var(--crart) center top / cover no-repeat; border-radius: 10px; padding-inline: 16px; }
+#creator.art .creator > h1, #creator.art .creator > p { color: #e7ebef; }
+.crframe { width: 200px; height: 266px; display: grid; place-items: center; background: var(--crframe) center / 100% 100% no-repeat; }
+.crframe svg.face { width: 150px !important; height: 150px !important; border: 0 !important; }
+.story { width: 100%; height: 150px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); margin-bottom: 10px; }
 .creator h1 { font: 800 1.5rem var(--display); margin: 0; }
 .crgrid { display: grid; gap: 16px; grid-template-columns: minmax(280px, 340px) 1fr; align-items: start; }
 @media (max-width: 820px) { .crgrid { grid-template-columns: 1fr; } }
@@ -271,14 +277,18 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
 .mhead .nm { display: grid; gap: 4px; min-width: 0; flex: 1; }
 .tree svg { width: 100%; height: auto; display: block; }
 
-.homesvg { width: 100%; max-width: 780px; margin: 0 auto; height: auto; display: block; }
-.fac { cursor: pointer; }
-.fac .ftop { stroke: rgba(255,255,255,.18); stroke-width: 1; }
-.fac.sel .ftop, .fac:hover .ftop { stroke: var(--accent); stroke-width: 2.5; }
-.fac.l0 .ftop { fill: rgba(95,160,220,.08); pointer-events: all; stroke: var(--line); stroke-dasharray: 5 4; stroke-width: 1.5; }
-.faclabel { cursor: pointer; } .faclabel text, .fac text { paint-order: stroke; stroke: var(--panel); stroke-width: 3px; font: 600 8.5px var(--body); fill: var(--text); text-anchor: middle; pointer-events: none; }
-.fac text.lv, .faclabel text.lv { font: 700 7px var(--mono); fill: var(--accent); }
-.fac .build { animation: pulse 1.6s ease-in-out infinite; }
+.housebar { display: flex; gap: 16px; align-items: center; margin-bottom: 14px; }
+.housebar img { width: min(360px, 45%); height: auto; }
+.housebar div { display: grid; gap: 4px; }
+.ftiles { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.ftile { display: grid; gap: 4px; padding: 8px; text-align: left; border: 1px solid var(--line); border-radius: 8px; background: var(--panel2); color: var(--fg); font: inherit; cursor: pointer; }
+.ftile.sel, .ftile:hover { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.ftile img { width: 100%; aspect-ratio: 3 / 2; object-fit: contain; background: radial-gradient(circle at 50% 60%, rgba(95,160,220,.18), transparent 70%); border-radius: 6px; }
+.ftile .ph { display: block; aspect-ratio: 3 / 2; background: var(--chip); border-radius: 6px; }
+.ftile.l0 img { opacity: .8; }
+.ftile b { font: 600 .85rem var(--display); }
+.ftile .lv { font: 700 .62rem var(--mono); color: var(--accent); letter-spacing: .04em; }
+.fdetail { width: 100%; max-height: 260px; object-fit: contain; }
 .reqrow { display: flex; gap: 8px; font-size: .82rem; }
 .reqrow.ok b { color: var(--good, #6fcf97); } .reqrow.no b { color: var(--bad, #eb5757); } .reqrow.soft b { color: var(--muted); }
 .lvbar { display: flex; gap: 4px; margin: 4px 0; } .lvbar i { flex: 1; height: 6px; border-radius: 3px; background: var(--panel2); } .lvbar i.on { background: var(--accent); }
@@ -397,6 +407,7 @@ async function loadArt() {
     if (!r.ok) return;
     ART = Object.assign(ART, await r.json());
     if (ART.logo) $("logo").innerHTML = `<img src="${esc(ART.logo)}" alt="CS MENEDGER">`;
+    if (ART.base) ART.start = "art/base/menu.webp";
     if (ART.start) { $("boot").classList.add("art"); $("boot").style.setProperty("--art", `url("${ART.start}")`); }
   } catch (e) {}
 }
@@ -605,9 +616,11 @@ function renderCreator() {
   const sw = SKIN.map((c, i) => `<button style="background:${c}" data-cr="skin" data-v="${i}" aria-pressed="${cr.ov.skin === i}" aria-label="оттенок кожи ${i + 1}"></button>`).join("");
   const hw = HAIR.map(([c], i) => `<button style="background:${c}" data-cr="hair" data-v="${i}" aria-pressed="${cr.ov.hair === i}" aria-label="цвет волос ${i + 1}"></button>`).join("");
   const opt = (arr, cur) => arr.map((n, i) => `<option value="${i}" ${cur === i ? "selected" : ""}>${n}</option>`).join("");
+  $("creator").classList.toggle("art", !!ART.base);
+  if (ART.base) { $("creator").style.setProperty("--crart", 'url("art/base/creator_bg.webp")'); $("creator").style.setProperty("--crframe", 'url("art/base/frame.webp")'); }
   $("creator").innerHTML = `<div class="creator"><h1>Кто вы?</h1><p class="muted">Создайте менеджера. От предыстории и черт зависит, что получается у вас с первого дня, а специализация задаёт ветку талантов. Лучшего варианта нет: у всех равная сумма навыков.</p>
   <div class="crgrid">
-   <section class="card"><h3>Внешность</h3><div class="crface"><span id="crPrev">${crFace()}</span>
+   <section class="card"><h3>Внешность</h3><div class="crface">${ART.base ? `<div class="crframe"><span id="crPrev">${crFace()}</span></div>` : `<span id="crPrev">${crFace()}</span>`}
      <button class="small" data-cr="reroll">Другое лицо</button>
      <div class="sw" title="Оттенок кожи">${sw}</div><div class="sw" title="Цвет волос">${hw}</div>
      <div class="crrow"><label>Причёска<select data-crsel="style"><option value="">случайная</option>${opt(HAIR_STYLES, cr.ov.style)}</select></label>
@@ -620,7 +633,7 @@ function renderCreator() {
       <label>Фамилия<input id="crSurname" value="${esc(cr.surname)}" maxlength="20" placeholder="Громов"></label>
       <label>Возраст<input id="crAge" type="number" min="25" max="65" value="${cr.age}" style="width:80px"></label>
       <label>Страна<select data-crsel="country">${MO.countries.map((c) => `<option ${c === cr.country ? "selected" : ""}>${c}</option>`).join("")}</select></label></div></section>
-    <section class="card"><h3>Предыстория</h3><div class="choices">${MO.backgrounds.map((b) => `<button class="choice" data-cr="bg" data-v="${b.id}" aria-pressed="${cr.bg === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span>${sbars(b.stats)}<span class="plus">+ ${esc(b.strength)}</span><span class="minus">− ${esc(b.weakness)}</span></button>`).join("")}</div></section>
+    <section class="card"><h3>Предыстория</h3>${ART.base ? `<img class="story" src="art/base/story_${cr.bg}.webp" alt="" loading="lazy">` : ""}<div class="choices">${MO.backgrounds.map((b) => `<button class="choice" data-cr="bg" data-v="${b.id}" aria-pressed="${cr.bg === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span>${sbars(b.stats)}<span class="plus">+ ${esc(b.strength)}</span><span class="minus">− ${esc(b.weakness)}</span></button>`).join("")}</div></section>
     <section class="card"><h3>Специализация</h3><div class="choices">${MO.branches.map((b) => `<button class="choice" data-cr="spec" data-v="${b.id}" aria-pressed="${cr.spec === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span><span class="why">+${MO.specialization_bonus} к навыку «${MO.stat_ru[b.stat]}»</span></button>`).join("")}</div></section>
     <section class="card"><h3>Характер: выберите две черты <span class="muted">(${cr.traits.length}/2)</span></h3><div class="choices">${MO.traits.map((t) => `<button class="choice" data-cr="trait" data-v="${t.id}" aria-pressed="${cr.traits.includes(t.id)}"><b>${esc(t.name)}</b><span class="plus">+ ${esc(t.plus)}</span><span class="minus">− ${esc(t.minus)}</span></button>`).join("")}</div></section>
     <section class="card"><h3>Ваши навыки на старте</h3>${sbars(base, fin)}<p class="muted">Светлая полоса: бонус специализации. Навыки усиливают соответствующие стороны игры, а таланты откроются по мере уровней.</p>
@@ -664,38 +677,18 @@ function treeSvg(L, bid) {
 }
 
 let selFac = "";
-const FAC_HUE = { training: 205, academy: 150, streaming: 285, psychology: 175, lounge: 30, analytics: 225, media: 330, medical: 0, office: 55 };
-function isoBox(cx, cy, hw, hh, h, hue, level, building) {
-  const top = `${cx},${cy - h - hh} ${cx + hw},${cy - h} ${cx},${cy - h + hh} ${cx - hw},${cy - h}`;
-  const left = `${cx - hw},${cy - h} ${cx},${cy - h + hh} ${cx},${cy + hh} ${cx - hw},${cy}`;
-  const right = `${cx + hw},${cy - h} ${cx},${cy - h + hh} ${cx},${cy + hh} ${cx + hw},${cy}`;
-  const sat = 18 + level * 9, lt = 24 + level * 4;
-  let g = `<polygon class="ftop" points="${top}" fill="hsl(${hue} ${sat}% ${lt + 14}%)"/><polygon points="${left}" fill="hsl(${hue} ${sat}% ${lt}%)"/><polygon points="${right}" fill="hsl(${hue} ${sat}% ${lt - 8}%)"/>`;
-  for (let i = 0; i < level; i++) {                       // lit windows: one more row per level
-    const wx = cx - hw + 10 + (i % 3) * 14, wy = cy - h + 8 + Math.floor(i / 3) * 0 + (i % 3) * 7;
-    g += `<polygon points="${wx},${wy} ${wx + 8},${wy + 4} ${wx + 8},${wy + 12} ${wx},${wy + 8}" fill="hsl(${hue + 20} 90% ${60 + level * 3}%)" opacity=".85"/>`;
-  }
-  if (level >= 3) g += `<polyline points="${cx - hw},${cy - h} ${cx},${cy - h + hh} ${cx + hw},${cy - h}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
-  if (level >= 4) g += `<rect x="${cx - 3}" y="${cy - h - hh - 16}" width="6" height="16" fill="hsl(${hue} 60% 55%)"/><circle cx="${cx}" cy="${cy - h - hh - 18}" r="3.5" fill="var(--accent)"/>`;
-  if (level >= 5) g += `<ellipse cx="${cx}" cy="${cy - h - 2}" rx="${hw * 0.45}" ry="${hh * 0.45}" fill="var(--accent)" opacity=".45"/>`;
-  if (building) g += `<g class="build" stroke="var(--accent)" stroke-width="2"><line x1="${cx - 18}" y1="${cy - h - hh + 4}" x2="${cx + 18}" y2="${cy - h - hh - 22}"/><line x1="${cx + 18}" y1="${cy - h - hh - 22}" x2="${cx + 18}" y2="${cy - h - hh - 4}"/></g>`;
-  return g;
+function facImg(f) {
+  const n = f.project ? "fac_construction" : f.level ? `fac_${f.id}_lvl${f.level}` : "fac_empty";
+  return `art/base/${n}.webp`;
 }
+function houseLevel(total) { return total < 6 ? 1 : total < 12 ? 2 : total < 22 ? 3 : total < 34 ? 4 : 5; }
 function homeSvg(H) {
-  const order = ["training_zone", "lounge", "academy", "analytics_center", "streaming_room", "psychology_center", "media_center", "medical_center", "headhunting_office"];
-  const byId = Object.fromEntries(H.facilities.map((f) => [f.id, f]));
-  const cells = order.map((id, k) => ({ f: byId[id], i: k % 3, j: Math.floor(k / 3) })).sort((a, b) => (a.i + a.j) - (b.i + b.j));
-  const pos = ({ i, j }) => ({ cx: 330 + (i - j) * 100, cy: 100 + (i + j) * 52 });
-  const boxes = cells.map((c) => {
-    const { f } = c, { cx, cy } = pos(c), lv = f.level, h = lv ? 10 + lv * 13 : 0;
-    return `<g class="fac l${lv} ${selFac === f.id ? "sel" : ""}" data-fac="${f.id}" tabindex="0" role="button" aria-label="${esc(f.name)}, уровень ${lv}">${isoBox(cx, cy, 84, 42, h, FAC_HUE[f.room], lv, !!f.project)}</g>`;
-  }).join("");
-  const labels = cells.map((c) => {
-    const { f } = c, { cx, cy } = pos(c), lv = f.level;
-    return `<g class="faclabel" data-fac="${f.id}"><text x="${cx}" y="${cy + 58}">${esc(f.name)}</text><text class="lv" x="${cx}" y="${cy + 70}">${f.project ? `СТРОЙКА → ${f.project.to} · ${f.project.weeks_left} нед.` : lv ? "УРОВЕНЬ " + lv : "НЕ ПОСТРОЕНО"}</text></g>`;
-  }).join("");
-  const body = boxes + labels;
-  return `<svg class="homesvg" viewBox="20 -20 620 450" role="group" aria-label="План базы">${body}</svg>`;
+  const hl = houseLevel(H.total_levels);
+  const banner = ART.base ? `<div class="housebar"><img src="art/base/house${hl}.webp" alt="Здание клуба"><div><b>Здание клуба: стадия ${hl} из 5</b><span class="muted">Растёт вместе с уровнями комнат. Сейчас ${H.total_levels} из ${H.max_levels}.</span></div></div>` : "";
+  const tiles = H.facilities.map((f) => `<button class="ftile ${selFac === f.id ? "sel" : ""} l${f.level}" data-fac="${f.id}" aria-label="${esc(f.name)}, уровень ${f.level}">
+      ${ART.base ? `<img src="${facImg(f)}" alt="" loading="lazy">` : `<i class="ph"></i>`}<b>${esc(f.name)}</b>
+      <span class="lv">${f.project ? `СТРОЙКА → ${f.project.to} · ${f.project.weeks_left} нед.` : f.level ? "УРОВЕНЬ " + f.level : "НЕ ПОСТРОЕНО"}</span></button>`).join("");
+  return banner + `<div class="ftiles">${tiles}</div>`;
 }
 function viewHome(s) {
   const H = call("home");
@@ -703,10 +696,11 @@ function viewHome(s) {
   const f = H.facilities.find((x) => x.id === selFac) || H.facilities[0], n = f.next;
   const bar = `<div class="lvbar">${[1, 2, 3, 4, 5].map((l) => `<i class="${l <= f.level ? "on" : ""}"></i>`).join("")}</div>`;
   const nowFx = f.now.map((e) => `<span class="plus">${esc(e.label)}: ${e.value > 0 && e.value < 1 ? "+" + Math.round(e.value * 100) + "%" : "+" + e.value}</span>`).join("");
-  const detail = `<section class="card detail"><b>${esc(f.name)}</b><span class="muted">${esc(f.level_name)}${f.project ? `, идёт стройка уровня ${f.project.to}: ещё ${f.project.weeks_left} нед.` : ""}</span>${bar}
+  const detail = `<section class="card detail">${ART.base ? `<img class="fdetail" src="${facImg(f)}" alt="">` : ""}<b>${esc(f.name)}</b><span class="muted">${esc(f.level_name)}${f.project ? `, идёт стройка уровня ${f.project.to}: ещё ${f.project.weeks_left} нед.` : ""}</span>${bar}
     ${nowFx || `<span class="muted">Пока ничего не даёт.</span>`}
     ${n ? `<hr><b>Уровень ${n.level}: ${esc(H.level_names[n.level])}</b>
       <span>Цена ${money(n.cost)} · стройка ${n.weeks} нед. · содержание ${money(n.upkeep_month)}/мес.</span>
+      ${ART.base ? `<img class="fdetail" style="max-height:150px;opacity:.9" src="art/base/fac_${f.id}_lvl${n.level}.webp" alt="Как будет выглядеть уровень ${n.level}">` : ""}
       ${n.effects.map((e) => `<span class="plus">${esc(e.label)}: +${e.value < 1 ? Math.round(e.value * 100) + "%" : e.value}</span>`).join("")}
       ${n.req.map((r) => `<div class="reqrow ${r.soft ? "soft" : r.ok ? "ok" : "no"}"><b>${r.soft ? "…" : r.ok ? "✓" : "✗"}</b><span>${esc(r.text)}</span></div>`).join("")}
       ${n.events.length ? `<span class="why">Риски уровня: ${n.events.map((e) => esc(e.split(":")[1] || e)).join("; ")}</span>` : ""}
@@ -729,7 +723,7 @@ function viewManager(s) {
       ${lastResults.talent ? `<span class="result">${esc(lastResults.talent)}</span>` : ""}</div>`
     : `<div class="detail"><b>Нажмите на талант</b><span class="muted">Таланты не дают процент к победе: они улучшают информацию, подготовку и управленческие решения. Всё не изучить: очков 39, а талантов 60.</span></div>`;
   const order = [L.specialization, ...Object.keys(L.branches).filter((b) => b !== L.specialization)];
-  const trees = order.map((b) => `<section class="card tree"><h3>${esc(L.branches[b].name)} ${b === L.specialization ? `<span class="pill story">ваша ветка</span>` : ""} <span class="muted">${L.nodes.filter((n) => n.branch === b && n.state === "unlocked").length}/12</span></h3><span class="muted">${esc(L.branches[b].desc)}</span>${treeSvg(L, b)}</section>`).join("");
+  const trees = order.map((b) => `<section class="card tree"><h3>${ART.base ? `<i class="emb" style="--emb:url(art/base/icons_branches.webp);background-position:${["strategist", "motivator", "analyst", "manager", "intriguer"].indexOf(b) * 25}% 0"></i>` : ""}${esc(L.branches[b].name)} ${b === L.specialization ? `<span class="pill story">ваша ветка</span>` : ""} <span class="muted">${L.nodes.filter((n) => n.branch === b && n.state === "unlocked").length}/12</span></h3><span class="muted">${esc(L.branches[b].desc)}</span>${treeSvg(L, b)}</section>`).join("");
   const ch = L.channels.map((c) => `<div class="chrow"><span>${esc(c.label)}</span><b class="${c.value >= 0 ? "plus" : "minus"}">${c.value >= 0 ? "+" : ""}${(c.value * 100).toFixed(1)}%</b><span class="why">${c.why.map(esc).join(" · ")}${c.status === "planned" ? " · подключится к игре в следующих этапах" : ""}</span></div>`).join("");
   const jr = L.journal.map((j) => `<div class="line"><span class="num muted">С${j.season}</span><span>${esc(j.why)}</span><span class="num plus">+${j.xp}</span></div>`).join("");
   return `<section class="card"><div class="mhead">${face({ name: L.name, age: L.age, face: L.face }, s.club, 96)}
