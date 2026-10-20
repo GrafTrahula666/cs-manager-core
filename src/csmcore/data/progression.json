@@ -1,0 +1,74 @@
+{
+ "note": "Кривая и награды: гипотезы для настройки в лабораториях. Опыт только за причины с уникальным ключом.",
+ "max_level": 40,
+ "points_per_level": 1,
+ "start_points": 0,
+ "xp_to_next": {
+  "base": 50,
+  "exponent": 1.3
+ },
+ "season_xp_cap": 2000,
+ "reasons": {
+  "owner_goal": {
+   "xp": 150,
+   "key": "season:goal_kind",
+   "once": true,
+   "desc": "Выполнена цель владельца"
+  },
+  "title_s": {
+   "xp": 400,
+   "key": "season:event",
+   "once": true,
+   "desc": "Титул турнира S-уровня"
+  },
+  "title_a": {
+   "xp": 200,
+   "key": "season:event",
+   "once": true,
+   "desc": "Титул турнира A-уровня"
+  },
+  "title_b": {
+   "xp": 80,
+   "key": "season:event",
+   "once": true,
+   "desc": "Титул турнира B-уровня"
+  },
+  "exceeded_rank": {
+   "xp": 120,
+   "key": "season",
+   "once": true,
+   "desc": "Сезон закончен минимум на 3 места выше цели"
+  },
+  "youth_graduate": {
+   "xp": 80,
+   "key": "player_id",
+   "once": true,
+   "desc": "Воспитанник сыграл 20 матчей в основе"
+  },
+  "conflict_resolved": {
+   "xp": 40,
+   "key": "situation_id",
+   "once": true,
+   "per_season_max": 3,
+   "desc": "Разрешён сложный конфликт"
+  },
+  "long_task": {
+   "xp": 150,
+   "key": "task_id",
+   "once": true,
+   "desc": "Выполнена долгосрочная управленческая задача"
+  },
+  "infra_project": {
+   "xp": 100,
+   "key": "project_id",
+   "once": true,
+   "desc": "Завершён инфраструктурный проект"
+  },
+  "career_milestone": {
+   "xp": 200,
+   "key": "milestone_id",
+   "once": true,
+   "desc": "Веха карьеры (первый титул, первый Major, кампус)"
+  }
+ }
+}
