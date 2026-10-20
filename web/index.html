@@ -144,6 +144,32 @@ main { padding-block: 18px; display: grid; gap: 16px; }
 .event.deck .pic { display: block; width: 100%; aspect-ratio: 3 / 2; max-height: 220px; object-fit: cover; border-bottom: 1px solid var(--line); }
 .event.offer { border-left-color: var(--good); }
 .why { font-size: .8rem; color: var(--muted); }
+.opt { display: grid; gap: 2px; justify-items: start; }
+.hint { display: flex; gap: 6px; flex-wrap: wrap; font: .68rem var(--mono); color: var(--muted); min-height: 1em; }
+.hint .plus, .hint .minus { font-weight: 600; }
+.fm { display: inline-flex; gap: 3px; }
+.fm i { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 3px; font: 600 .68rem var(--mono); font-style: normal; color: #fff; }
+.fm i.w { background: var(--good); } .fm i.l { background: var(--bad); }
+.mrow { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 8px; border-left: 3px solid var(--line); background: var(--panel2); border-radius: 3px; }
+.mrow.w { border-left-color: var(--good); } .mrow.l { border-left-color: var(--bad); }
+.mrow .sc { font: 600 1.05rem var(--mono); }
+.alert { border: 1px solid var(--bad); background: color-mix(in srgb, var(--bad) 10%, var(--panel)); border-radius: 6px; padding: 10px 14px; font-size: .9rem; }
+.alert.up { border-color: var(--good); background: color-mix(in srgb, var(--good) 10%, var(--panel)); }
+.report { border: 1px solid var(--accent); background: linear-gradient(180deg, var(--glow), var(--panel)); border-radius: 6px; padding: 14px 16px; display: grid; gap: 6px; }
+.obj { display: flex; gap: 8px; align-items: baseline; }
+.obj .dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--warn); }
+.obj .dot.ok { background: var(--good); } .obj .dot.no { background: var(--bad); }
+.urgent { color: var(--bad); font-weight: 600; }
+.hz { display: grid; grid-template-columns: 54px 1fr; gap: 10px; align-items: baseline; padding: 6px 8px; border: 0; background: var(--panel2); border-radius: 4px; text-align: left; width: 100%; font: inherit; color: var(--fg); }
+.hz b { font: 600 .9rem var(--mono); color: var(--muted); }
+.hz.soon b { color: var(--bad); } .hz.star { border-left: 3px solid var(--accent); }
+.hunt { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.hcard { display: grid; grid-template-columns: 84px 1fr; gap: 12px; padding: 12px; border: 1px solid color-mix(in srgb, var(--accent) 50%, var(--line)); border-radius: 6px; background: linear-gradient(180deg, var(--glow), transparent 70%); }
+.hcard .big { width: 84px; height: 84px; }
+.hcard .big svg.face { width: 84px; height: 84px; border-radius: 8px; display: block; }
+.hcard .info { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.hcard b { font: 600 1rem var(--display); }
+kbd { font: .68rem var(--mono); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; color: var(--muted); }
 .result { font-size: .86rem; background: var(--panel2); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
 
 .tablebox { overflow-x: auto; }
@@ -167,6 +193,11 @@ tr.bench td { opacity: .55; }
 .ava { flex: none; width: 40px; height: 40px; border-radius: 4px; display: grid; place-items: center; position: relative; color: #fff; }
 .ava img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
 .ava svg { width: 18px; height: 18px; }
+.ava.face { width: 48px; height: 48px; overflow: visible; }
+.ava.face svg.face { width: 48px; height: 48px; border-radius: 6px; display: block; }
+.ava .role { position: absolute; right: -4px; bottom: -4px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--panel); }
+.ava .role svg { width: 11px; height: 11px; }
+.ava.igl .role { background: #7b5cc4; } .ava.awp .role { background: #2f7d6d; } .ava.entry .role { background: #c4553c; } .ava.rifler .role { background: #3a6db0; } .ava.support .role { background: #6b7a3a; } .ava.lurker .role { background: #59606b; }
 .ava.igl { background: #7b5cc4; } .ava.awp { background: #2f7d6d; } .ava.entry { background: #c4553c; }
 .ava.rifler { background: #3a6db0; } .ava.support { background: #6b7a3a; } .ava.lurker { background: #59606b; }
 .ava .st { position: absolute; right: -5px; top: -7px; color: var(--accent); font-size: .9rem; text-shadow: 0 0 4px var(--bg); }
@@ -258,7 +289,8 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <div class="kpi hide-sm"><small>Репутация</small><span id="kRep">—</span></div>
         </div>
         <div class="go">
-          <button class="primary" id="nextBtn">Следующая неделя</button>
+          <button class="primary" id="nextBtn" title="Клавиша N или пробел">Следующая неделя</button>
+          <button id="toEventBtn" title="Играть недели до ближайшего турнира; остановится, если нужно ваше решение">До турнира</button>
           <button id="next4Btn" title="Остановится, если нужно ваше решение">+4</button>
         </div>
       </div>
@@ -289,7 +321,7 @@ const ITEM = { salaries: "зарплаты", staff: "персонал", sponsors
   release: "отступные", sponsor_bonus: "бонусы спонсоров", events: "события", signing_bonus: "подъёмные",
   agents: "агенты", win_bonuses: "премии за титулы", owner: "деньги владельца" };
 const SAVE_KEY = "csm-save-v1";
-let py, api, META, tab = "office", log = [], lastResults = {};
+let py, api, META, tab = "office", log = [], lastResults = {}, matches = [], seasonReport = null, curState = null;
 
 // Optional art: drop images into art/ and list them in art/manifest.json
 // ({"logo": "art/logo.png", "start": "art/start.jpg", "deck": {"deck_retreat": "art/deck_retreat.jpg"}, "role": {...}}).
@@ -335,11 +367,85 @@ const ROLE_ICON = {
   support: '<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/>',
   lurker: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/>',
 };
-function ava(p) {
-  const img = ART.role && ART.role[p.role];
-  const inner = img ? `<img src="${esc(img)}" alt="">` :
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${ROLE_ICON[p.role] || ROLE_ICON.rifler}</svg>`;
-  return `<span class="ava ${esc(p.role)}" title="${ROLE[p.role] || p.role}">${inner}${p.star ? `<span class="st">★</span>` : ""}</span>`;
+
+// Face generator: every player gets a face from his name, so he looks the same in every screen.
+// Skin tone, face shape, hair (style and colour), brows, eyes, nose, lips, facial hair, build,
+// headset/cap/glasses, scar and age lines all come from one seeded stream. Nothing is stored.
+function rng32(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const pickW = (r, items) => { const tot = items.reduce((a, x) => a + x[1], 0); let v = r() * tot; for (const [x, w] of items) { if ((v -= w) < 0) return x; } return items[0][0]; };
+const SKIN = ["#f7dcc8", "#f0cba9", "#e2b48c", "#cf9a6c", "#b27b4d", "#93603a", "#74462a", "#4f2e1d"];
+const HAIR = [["#17110d", 30], ["#2e1c12", 22], ["#5a3820", 16], ["#8c5a2b", 10], ["#c79a45", 8], ["#b8431f", 4], ["#8b8f94", 3], ["#e9e4d8", 2], ["#2d3a8c", 2], ["#7a2fa0", 1.5], ["#1f8f7a", 1.5]];
+const IRIS = ["#3b2a1d", "#4f3a22", "#2f5d8a", "#3f7a52", "#6b6f73", "#1d1d1d"];
+function shade(hex, k) { // k < 1 darkens, k > 1 lightens
+  const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.max(0, Math.min(255, Math.round(k < 1 ? v * k : v + (255 - v) * (k - 1)))));
+  return "#" + c.map((v) => v.toString(16).padStart(2, "0")).join("");
+}
+function faceTraits(name, age) {
+  const r = rng32(hash("face:" + name));
+  const skin = SKIN[pickW(r, [[0, 12], [1, 20], [2, 20], [3, 16], [4, 12], [5, 10], [6, 6], [7, 4]])];
+  let hair = pickW(r, HAIR);
+  if (age >= 29 && r() < 0.3) hair = "#8b8f94";
+  return {
+    skin, hair, iris: IRIS[Math.floor(r() * IRIS.length)],
+    hw: 14 + r() * 3.4, chinY: 44.5 + r() * 4, chinW: 5 + r() * 5, build: pickW(r, [[0, 3], [1, 5], [2, 3]]),
+    style: pickW(r, [[0, 4], [1, 12], [2, 16], [3, 12], [4, 10], [5, 7], [6, 8], [7, 4], [8, 5], [9, 5], [10, 6]]),
+    brow: Math.floor(r() * 3), eye: Math.floor(r() * 3), nose: Math.floor(r() * 4), lips: Math.floor(r() * 4),
+    beard: pickW(r, [[0, 46], [1, 16], [2, 14], [3, 12], [4, 12]]), headset: r() < 0.4, cap: r() < 0.13, glasses: r() < 0.1,
+    scar: r() < 0.05, earring: r() < 0.09, lines: age >= 28, freckles: r() < 0.1, tilt: (r() - 0.5) * 3,
+  };
+}
+function face(p, club, size = 40) {
+  const t = faceTraits(p.name, p.age || 22), h1 = hash(club || "free") % 360;
+  const cx = 32, hw = t.hw, top = 10, chinY = t.chinY, sk = t.skin, dk = shade(sk, 0.82), hc = t.hair;
+  const sw = [19, 23, 27][t.build], nw = [4.6, 5.6, 6.8][t.build];
+  const lip = shade(sk, 0.62).replace(/^#(..)(..)(..)$/, (m, a, b, c) => "#" + [Math.min(255, parseInt(a, 16) + 38), parseInt(b, 16) - 18, parseInt(c, 16) - 6].map((v) => Math.max(0, v).toString(16).padStart(2, "0")).join(""));
+  const head = `M${cx} ${top} C${cx + hw * .75} ${top} ${cx + hw} ${top + 8} ${cx + hw} 27 C${cx + hw} 36 ${cx + t.chinW + 3} ${chinY} ${cx} ${chinY} C${cx - t.chinW - 3} ${chinY} ${cx - hw} 36 ${cx - hw} 27 C${cx - hw} ${top + 8} ${cx - hw * .75} ${top} ${cx} ${top}Z`;
+  const cap = (y) => `M${cx - hw - .6} 25 C${cx - hw - 1} 11 ${cx - hw * .5} ${top - 2} ${cx} ${top - 2} C${cx + hw * .5} ${top - 2} ${cx + hw + 1} 11 ${cx + hw + .6} 25 C${cx + hw - 1} ${y + 2} ${cx + hw - 5} ${y} ${cx} ${y} C${cx - hw + 5} ${y} ${cx - hw + 1} ${y + 2} ${cx - hw - .6} 25Z`;
+  let back = "", front = "";
+  switch (t.style) {
+    case 1: front = `<path d="${cap(16)}" fill="${hc}" opacity=".78"/>`; break;
+    case 2: front = `<path d="${cap(15.5)}" fill="${hc}"/>`; break;
+    case 3: front = `<path d="${cap(14.5)}" fill="${hc}"/><path d="M${cx - hw + 2} 18 Q${cx + 2} 11 ${cx + hw - 1} 19 Q${cx + 2} 15 ${cx - hw + 2} 18Z" fill="${shade(hc, 1.25)}" opacity=".5"/>`; break;
+    case 4: front = `<path d="M${cx - hw - .5} 24 L${cx - hw + 1} 12 L${cx - hw * .55} 15 L${cx - hw * .3} 6 L${cx} 13 L${cx + hw * .3} 5 L${cx + hw * .55} 14 L${cx + hw - 1} 11 L${cx + hw + .5} 24 Q${cx} 15 ${cx - hw - .5} 24Z" fill="${hc}"/>`; break;
+    case 5: back = `<path d="M${cx - hw - 2} 22 Q${cx - hw - 5} 46 ${cx - hw + 1} 58 L${cx + hw - 1} 58 Q${cx + hw + 5} 46 ${cx + hw + 2} 22 Z" fill="${hc}"/>`; front = `<path d="${cap(15)}" fill="${hc}"/>`; break;
+    case 6: front = [-12, -7, -2, 3, 8, 12].map((x, i) => `<circle cx="${cx + x * hw / 14}" cy="${i % 2 ? 11.5 : 13}" r="4.6" fill="${hc}"/>`).join("") + `<path d="${cap(16.5)}" fill="${hc}"/>`; break;
+    case 7: front = `<path d="${cap(18)}" fill="${hc}" opacity=".45"/><path d="M${cx - 3.2} 21 L${cx - 2.6} 5 Q${cx} 2 ${cx + 2.6} 5 L${cx + 3.2} 21Z" fill="${hc}"/>`; break;
+    case 8: back = `<circle cx="${cx}" cy="5.5" r="5.2" fill="${hc}"/>`; front = `<path d="${cap(15.5)}" fill="${hc}"/>`; break;
+    case 9: back = `<circle cx="${cx}" cy="22" r="${hw + 6.5}" fill="${hc}"/>`; front = `<path d="${cap(17)}" fill="${hc}" opacity=".6"/>`; break;
+    case 10: front = `<path d="${cap(13.5)}" fill="${hc}"/><path d="M${cx - hw} 22 L${cx - hw - 1} 31 L${cx - hw + 2.4} 28 Z M${cx + hw} 22 L${cx + hw + 1} 31 L${cx + hw - 2.4} 28 Z" fill="${hc}"/>`; break;
+  }
+  const bc = shade(hc, .85), eyeY = 28.5, ex = 6.6 - (t.eye === 2 ? 0 : .2);
+  const brows = `<path d="M${cx - ex - 3.2} ${23.8 + t.tilt * .3} L${cx - ex + 2.8} ${23.2 - t.tilt * .3}" stroke="${bc}" stroke-width="${[1.1, 1.7, 2.3][t.brow]}" stroke-linecap="round" fill="none"/>
+    <path d="M${cx + ex - 2.8} ${23.2 - t.tilt * .3} L${cx + ex + 3.2} ${23.8 + t.tilt * .3}" stroke="${bc}" stroke-width="${[1.1, 1.7, 2.3][t.brow]}" stroke-linecap="round" fill="none"/>`;
+  const [erx, ery] = [[2.5, 1.8], [2.8, 1.25], [3, 2.1]][t.eye];
+  const eyes = [-ex, ex].map((x) => `<ellipse cx="${cx + x}" cy="${eyeY}" rx="${erx}" ry="${ery}" fill="#fbfbf8"/><circle cx="${cx + x}" cy="${eyeY}" r="${Math.min(ery, 1.45)}" fill="${t.iris}"/><circle cx="${cx + x + .5}" cy="${eyeY - .4}" r=".45" fill="#fff"/>`).join("");
+  const nose = ["M32 29 Q30.6 35.5 29.4 36.6 Q32 38 34.6 36.6", "M32 29 Q29.8 35.6 28 36.8 Q32 38.6 36 36.8", "M32 28.5 Q31 36 30.4 37 Q32 38 33.6 37", "M32 30 Q31 34 29.8 35.6 Q32 37.2 34.2 35.6"][t.nose];
+  const mw = [4.6, 5.4, 6.2, 5][t.lips], mt = [.9, 1.5, 2.1, 1.2][t.lips];
+  const mouth = `<path d="M${cx - mw} 41.2 Q${cx - mw / 2} ${41.2 - mt} ${cx} ${40.6 - mt * .4} Q${cx + mw / 2} ${41.2 - mt} ${cx + mw} 41.2 Q${cx} ${43.4 + mt * 1.5} ${cx - mw} 41.2Z" fill="${lip}"/><path d="M${cx - mw} 41.2 Q${cx} 42.2 ${cx + mw} 41.2" stroke="${shade(lip, .6)}" stroke-width=".5" fill="none"/>`;
+  const jaw = `M${cx - hw + .6} 30 C${cx - hw + .8} 38 ${cx - t.chinW - 2} ${chinY + .3} ${cx} ${chinY + .3} C${cx + t.chinW + 2} ${chinY + .3} ${cx + hw - .8} 38 ${cx + hw - .6} 30`;
+  let fh = "";
+  if (t.beard === 1) fh = `<path d="${jaw} L${cx + hw - 1} 33 Q${cx} 36 ${cx - hw + 1} 33Z" fill="${hc}" opacity=".3"/>`;
+  if (t.beard === 2) fh = `<path d="${jaw} C${cx + hw - 3} 36 ${cx + 7} 35.5 ${cx + 5.5} 38.3 Q${cx} 36.8 ${cx - 5.5} 38.3 C${cx - 7} 35.5 ${cx - hw + 3} 36 ${cx - hw + .6} 30Z" fill="${hc}"/>`;
+  if (t.beard === 3) fh = `<path d="M${cx - 5.4} 38 Q${cx} 36 ${cx + 5.4} 38 Q${cx + 4} 41 ${cx + 3.4} 44 Q${cx} 49 ${cx - 3.4} 44 Q${cx - 4} 41 ${cx - 5.4} 38Z" fill="${hc}"/>`;
+  if (t.beard === 4) fh = `<path d="M${cx - 7} 38.4 Q${cx - 3.5} 35.8 ${cx} 37.4 Q${cx + 3.5} 35.8 ${cx + 7} 38.4 Q${cx + 4} 39.6 ${cx} 38.8 Q${cx - 4} 39.6 ${cx - 7} 38.4Z" fill="${hc}"/>`;
+  const extra = (t.freckles ? [[-6, 33], [-3.5, 34.4], [3.5, 34.4], [6, 33], [-8, 31.8], [8, 31.8]].map(([x, y]) => `<circle cx="${cx + x}" cy="${y}" r=".6" fill="${shade(sk, .6)}" opacity=".7"/>`).join("") : "") +
+    (t.lines ? `<path d="M${cx - 6} 21 Q${cx} 19.6 ${cx + 6} 21 M${cx - 9} 34 Q${cx - 8} 38 ${cx - 6.4} 39.6 M${cx + 9} 34 Q${cx + 8} 38 ${cx + 6.4} 39.6" stroke="${dk}" stroke-width=".55" fill="none" opacity=".75"/>` : "") +
+    (t.scar ? `<path d="M${cx + 6} 22.5 L${cx + 9.6} 31" stroke="${shade(sk, .6)}" stroke-width=".8" stroke-linecap="round"/>` : "");
+  const glasses = t.glasses ? `<g fill="none" stroke="#1d232b" stroke-width="1"><rect x="${cx - ex - 4.4}" y="${eyeY - 3.2}" width="8.8" height="6.4" rx="2.2"/><rect x="${cx + ex - 4.4}" y="${eyeY - 3.2}" width="8.8" height="6.4" rx="2.2"/><path d="M${cx - ex + 4.4} ${eyeY - 1} H${cx + ex - 4.4}"/></g>` : "";
+  const headset = t.headset ? `<path d="M${cx - hw - 1.2} 27 C${cx - hw - 1.4} 3 ${cx + hw + 1.4} 3 ${cx + hw + 1.2} 27" stroke="#1b2027" stroke-width="2.1" fill="none"/><rect x="${cx - hw - 4}" y="24" width="4.4" height="9" rx="2" fill="#22272f"/><rect x="${cx + hw - .4}" y="24" width="4.4" height="9" rx="2" fill="#22272f"/><path d="M${cx - hw - 3} 32 Q${cx - hw - 1} 41 ${cx - 5} 41.8" stroke="#1b2027" stroke-width=".9" fill="none"/><circle cx="${cx - 5}" cy="41.8" r="1.5" fill="#22272f"/>` : "";
+  const capSvg = t.cap ? `<path d="M${cx - hw - 1} 23 C${cx - hw - 1} 6 ${cx + hw + 1} 6 ${cx + hw + 1} 23 Z" fill="hsl(${h1} 45% 30%)"/><path d="M${cx - hw - 1} 23 Q${cx} 27.5 ${cx + hw + 5} 23.2 L${cx + hw + 5} 21.8 Q${cx} 24.6 ${cx - hw - 1} 21.4Z" fill="hsl(${h1} 45% 22%)"/>` : "";
+  const ears = `<ellipse cx="${cx - hw}" cy="29" rx="2.4" ry="4" fill="${sk}"/><ellipse cx="${cx + hw}" cy="29" rx="2.4" ry="4" fill="${sk}"/>` + (t.earring ? `<circle cx="${cx - hw - .8}" cy="33.4" r="1" fill="#e3b341"/>` : "");
+  const body = `<path d="M${cx - sw} 64 V58 Q${cx - sw} 51.5 ${cx - nw - 5} 49.6 L${cx + nw + 5} 49.6 Q${cx + sw} 51.5 ${cx + sw} 58 V64Z" fill="hsl(${h1} 50% 34%)"/>
+    <path d="M${cx - nw - 5} 49.6 Q${cx} 58 ${cx + nw + 5} 49.6 Q${cx} 53 ${cx - nw - 5} 49.6Z" fill="hsl(${h1} 50% 24%)"/>
+    <rect x="${cx - nw}" y="42" width="${nw * 2}" height="10" fill="${dk}"/><path d="M${cx - nw - 5} 49.6 Q${cx} 57 ${cx + nw + 5} 49.6 L${cx + nw} 48 Q${cx} 52 ${cx - nw} 48Z" fill="${dk}"/>
+    <path d="M${cx - sw + 5} 64 V57" stroke="hsl(${h1} 60% 60%)" stroke-width="1.2" opacity=".55"/>`;
+  const star = p.star ? `<circle cx="32" cy="32" r="30" fill="none" stroke="#e3a63f" stroke-width="2.4"/>` : "";
+  return `<svg class="face" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="hsl(${h1} 35% 22%)"/>${back}${body}<path d="${head}" fill="${sk}"/>${ears}<path d="${head}" fill="none" stroke="${dk}" stroke-width=".6" opacity=".6"/>${brows}${eyes}<path d="${nose}" stroke="${shade(sk, .66)}" stroke-width="1" fill="none" stroke-linecap="round"/>${fh}${mouth}${extra}${front}${capSvg}${headset}${glasses}${star}</svg>`;
+}
+
+function ava(p, club) {
+  const badge = `<svg class="rb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">${ROLE_ICON[p.role] || ROLE_ICON.rifler}</svg>`;
+  return `<span class="ava face ${esc(p.role)}" title="${ROLE[p.role] || p.role}">${face(p, club === undefined ? (curState && curState.club) : club, 48)}<span class="role">${badge}</span>${p.star ? `<span class="st">★</span>` : ""}</span>`;
 }
 const OVR = (v) => `<span class="ovr ${v >= 90 ? "o90" : v >= 80 ? "o80" : v >= 70 ? "o70" : ""}">${v}</span>`;
 
@@ -409,12 +515,12 @@ async function boot() {
 async function startNew() {
   busy(true, "Создаю мир…");
   const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value));
-  busy(false); log = []; enterGame(s);
+  busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null; enterGame(s);
   toast(`Вы возглавили ${s.club}. Цели владельца: ${s.objectives.join("; ")}`);
 }
 async function loadFrom(text) {
   busy(true, "Загружаю…");
-  try { const s = await later(() => call("load_b64", text.replace(/^CSM1:/, "").trim())); log = []; enterGame(s); }
+  try { const s = await later(() => call("load_b64", text.replace(/^CSM1:/, "").trim())); log = []; matches = []; seasonReport = null; enterGame(s); }
   catch (e) { toast("Не получилось загрузить: " + (e.message || e).toString().slice(-160)); }
   busy(false);
 }
@@ -425,25 +531,52 @@ function autosave() {
 }
 
 async function advance(n) {
-  $("nextBtn").disabled = $("next4Btn").disabled = true;
+  if (!n || n < 1) n = 1;
+  const btns = ["nextBtn", "next4Btn", "toEventBtn"];
+  btns.forEach((i) => ($(i).disabled = true));
   busy(true, n > 1 ? "Идут недели…" : "Идёт неделя…");
   const res = await later(() => call("advance", n));
+  const club = curState && curState.club;
+  res.forEach((w) => w.lines.forEach((l) => { const m = parseMatch(l, club, w); if (m) matches.unshift(m); }));
+  matches = matches.slice(0, 30);
+  const end = res.flatMap((w) => w.lines).filter((l) => /^Сезон \d+ завершён/.test(l) || / (поднимается|вылетает) в /.test(l) || l.startsWith("Цели владельца"));
+  if (end.length) seasonReport = end;
   log = res.reverse().concat(log).slice(0, 40);
   const s = call("state");
   if (s.abs_week % 4 === 0) autosave();
   busy(false);
-  $("nextBtn").disabled = $("next4Btn").disabled = false;
+  btns.forEach((i) => ($(i).disabled = false));
   if (s.pending_events || s.offers) tab = "office";
   else if (s.situations) tab = "backstage";
   render(s);
   if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
 }
 
+function parseMatch(line, club, w) {
+  const m = /^матч: (.+?) (\d+):(\d+) (.+) \((.+)\)$/.exec(line);
+  if (!m || !club) return null;
+  const [, a, x, y, b, ev] = m;
+  const home = a === club, mine = home ? +x : +y, theirs = home ? +y : +x;
+  return { opp: home ? b : a, mine, theirs, win: mine > theirs, ev, season: w.season, week: w.week };
+}
+const formStrip = () => matches.length ? `<span class="fm" title="Последние матчи, новые слева">${matches.slice(0, 8).map((m) => `<i class="${m.win ? "w" : "l"}">${m.win ? "W" : "L"}</i>`).join("")}</span>` : "";
+const hintHtml = (h) => {
+  if (!h) return "";
+  const bits = [];
+  if (h.cash) bits.push(`<span class="${h.cash > 0 ? "plus" : "minus"}">${money(h.cash)}</span>`);
+  if (h.fans_pct) bits.push(`<span class="${h.fans_pct > 0 ? "plus" : "minus"}">фанаты ${h.fans_pct > 0 ? "+" : ""}${h.fans_pct}%</span>`);
+  if (h.brand) bits.push(`<span class="${h.brand > 0 ? "plus" : "minus"}">бренд ${h.brand > 0 ? "+" : ""}${h.brand}</span>`);
+  if (h.morale) bits.push(`<span class="${h.morale > 0 ? "plus" : "minus"}">мораль ${h.morale > 0 ? "+" : ""}${Math.round(h.morale)}</span>`);
+  if (h.risky) bits.push(`<span title="Есть неочевидные последствия или шанс">+ случай</span>`);
+  return bits.length ? bits.join(" ") : "без последствий";
+};
+
 const TABS = [["office", "Сводка"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
   ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
 
 function render(s) {
   s = s || call("state");
+  curState = s;
   $("clubName").textContent = s.club;
   $("clubCrest").innerHTML = crest(s.club, 42);
   $("seasonBar").innerHTML = `<i style="width:${(s.week / 52 * 100).toFixed(1)}%"></i>` +
@@ -456,12 +589,19 @@ function render(s) {
   $("kOwner").textContent = s.owner_confidence + "/100";
   $("kOwner").className = s.owner_confidence < 35 ? "money-neg" : "";
   $("kRep").textContent = s.manager.reputation;
+  const ne = s.next_events.find((x) => x.invited) || s.next_events[0];
+  $("toEventBtn").textContent = ne ? `До турнира · ${Math.max(1, ne.week - s.week)} нед.` : "До турнира";
+  $("toEventBtn").title = ne ? `Играть до «${ne.name}» (неделя ${ne.week}); остановится, если нужно ваше решение` : "";
   const due = s.pending_events + s.offers, sits = s.situations || 0;
   $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
   const views = { office: viewOffice, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
   $("main").innerHTML = views[tab](s);
 }
 
+function untilEvent(s) {
+  const e = s.next_events.find((x) => x.invited) || s.next_events[0];
+  return e ? Math.max(1, e.week - s.week) : 4;
+}
 function kind(line) {
   const k = line.split(":")[0];
   return { "матч": "match", "история": "story", "клуб": "club", "мир": "world", "закулисье": "story", "решение": "club" }[k] || "";
@@ -483,7 +623,8 @@ function viewOffice(s) {
       ${e.deck ? `<span class="pill story" style="justify-self:start">выбор недели</span>` : ""}
       <b>${esc(e.title)}</b><span>${esc(e.text)}</span>
       ${why.length ? `<span class="why">Почему: ${esc(why.join("; "))}</span>` : ""}
-      <div class="opts">${e.options.map((o, j) => `<button class="small" data-ev="${e.i}" data-opt="${j}">${esc(o)}</button>`).join("")}</div>
+      <div class="opts">${e.options.map((o, j) => `<div class="opt"><button class="small" data-ev="${e.i}" data-opt="${j}">${esc(o)}</button><span class="hint">${hintHtml(e.hints && e.hints[j])}</span></div>`).join("")}</div>
+      <span class="why ${e.left <= 1 ? "urgent" : ""}">${e.left <= 1 ? "Решите на этой неделе: иначе выберет ассистент" : "Можно подумать ещё " + e.left + " нед."}</span>
     </div></div>`;
   }).join("");
   const offers = ib.offers.map((o) => `<div class="event offer">
@@ -493,10 +634,19 @@ function viewOffice(s) {
     </div>`).join("");
   const next = s.next_events.map((e) => `<div class="line"><span class="num muted">н${e.week}</span><span>${esc(e.name)}</span>${e.invited ? `<span class="pill club">участвуем</span>` : `<span class="pill">не приглашены</span>`}</div>`).join("");
   const tones = Object.entries(META.tones).map(([k, v]) => `<button class="small" data-talk="${k}">${v}</button>`).join("");
-  return `<div class="grid2">
+  const rep = seasonReport ? `<div class="report"><b>Итоги сезона</b>${seasonReport.map((l) => `<div>${esc(l)}</div>`).join("")}<div><button class="small" data-closereport="1">Понятно</button></div></div>` : "";
+  const warn = s.zone === "down" ? `<div class="alert">Вы в зоне вылета лиги (${s.division_place}-е место). Очки идут со всех турниров: ищите, где можно набрать.</div>`
+    : s.zone === "up" ? `<div class="alert up">Вы в зоне повышения (${s.division_place}-е место). Удержите её до конца сезона.</div>` : "";
+  const objs = s.objective_status.map((o) => `<div class="obj"><span class="dot ${o.score >= 0.3 ? "ok" : o.score < 0 ? "no" : ""}"></span><span>${esc(o.text)} <span class="muted">${o.score >= 0.3 ? "идёт хорошо" : o.score < 0 ? "под угрозой" : "на грани"}</span></span></div>`).join("");
+  const mt = matches.slice(0, 6).map((m) => `<div class="mrow ${m.win ? "w" : "l"}"><span class="num muted">С${m.season} н${m.week}</span><span>${CL(m.opp, 18)} <span class="muted">${esc(m.ev)}</span></span><span class="sc">${m.mine}:${m.theirs}</span></div>`).join("");
+  const hz = call("horizon").map((x) => `<button class="hz ${x.in <= 2 ? "soon" : ""} ${x.star ? "star" : ""}" data-tab="${x.tab}"><b>${x.in <= 0 ? "сейчас" : "через " + x.in}</b><span>${esc(x.text)}</span></button>`).join("");
+  return `${rep}${warn}<div class="grid2">
+    <section class="card"><h3>Что впереди</h3><div style="display:grid;gap:6px">${hz}</div></section>
     <section class="card"><h3>Требует решения</h3>${events || offers ? events + offers : `<p class="muted">Ничего не ждёт. Нерешённое через 2 недели решит ассистент.</p>`}
       ${lastResults.inbox ? `<div class="result">${esc(lastResults.inbox)}</div>` : ""}</section>
-    <section class="card"><h3>Цели владельца</h3>${s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
+    <section class="card"><h3>Цели владельца</h3>${objs || s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
+      <div class="muted">Доверие владельца ${s.owner_confidence}/100${s.owner_confidence < 35 ? ` <span class="urgent">· ниже 12 уволят</span>` : ""}</div>
+      <h3>Матчи ${formStrip()}</h3>${mt || `<p class="muted">Матчей пока не было. Ближайший турнир в списке ниже.</p>`}
       <h3>Ближайшие турниры</h3>${next || `<p class="muted">До конца сезона турниров нет</p>`}
       <div class="muted">Патч: ${esc(s.patch)}</div></section>
   </div>
@@ -563,14 +713,20 @@ function viewSquad() {
 function viewMarket() {
   const m = call("market", 40);
   const rows = m.map((p) => `<tr>
-      <td><div class="pl">${ava(p)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span></span>
+      <td><div class="pl">${ava(p, p.club)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>${p.hot ? ` <span class="pill story">охота</span>` : ""}</span>
         ${traitChips(p.traits)}</div></div></td>
       <td>${p.club ? CL(p.club, 20) : `<span class="pill club">свободен</span>`}</td>
       <td class="r range">${p.ovr_range[0]}–${p.ovr_range[1]}</td><td class="r">${p.known}%</td><td class="r">${eloCell(p)}</td><td>${esc(p.potential)}</td>
       <td class="r">${money(p.salary_wish)}</td><td class="r">${p.fee ? money(p.fee) : "—"}</td>
       <td><button class="small" data-scout="${esc(p.name)}">скаут</button>
         <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"}</button></td></tr>`).join("");
-  return `<section class="card"><h2>Рынок</h2>
+  const hot = m.filter((p) => p.hot).slice(0, 4).map((p) => `<div class="hcard"><span class="big">${face({ name: p.name, age: p.age, star: p.star }, p.club, 84)}</span>
+      <div class="info"><b>${esc(p.name)}</b><span class="muted">${ROLE[p.role] || p.role}, ${p.age} · ${p.club ? esc(p.club) : "свободный агент"}</span>
+        <span>Уровень <span class="range">${p.ovr_range[0]}–${p.ovr_range[1]}</span> · потенциал ${esc(p.potential)}</span>
+        <span class="${p.rivals >= 5 ? "urgent" : "muted"}">${p.head_start ? `У вас фора ${p.head_start} нед.: потом вступят ${p.rivals} клубов` : p.rivals ? `Могут взять ещё ${p.rivals} клубов. Окно через ${p.window} нед.` : "Конкурентов пока не видно"}</span>
+        <span><button class="small" data-scout="${esc(p.name)}">скаут</button> <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"} ${p.fee ? money(p.fee) : money(p.salary_wish) + "/мес"}</button></span></div></div>`).join("");
+  return `<section class="card"><h3>Охота: лучшие цели рынка</h3><div class="hunt">${hot || `<p class="muted">Звёзд на рынке сейчас нет.</p>`}</div></section>
+  <section class="card"><h2>Рынок</h2>
     <p class="muted">Свободные агенты и игроки, которые просят трансфер. Уровень виден диапазоном: чем дольше смотрят скауты, тем он точнее. Предложение идёт по запрошенной цене и желаемой зарплате, решает сам игрок.</p>
     ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}
     <div class="tablebox"><table><thead><tr><th>Игрок</th><th>Клуб</th><th class="r">Уровень</th><th class="r">Изучен</th><th class="r" title="Публичный сигнал: Elo не равно уровню">HACEIT</th><th>Потенциал</th><th class="r">Хочет/мес</th><th class="r">Цена</th><th></th></tr></thead>
@@ -722,6 +878,8 @@ document.addEventListener("click", async (ev) => {
     if (b.id === "importBtn") return loadFrom($("importText").value);
     if (b.id === "nextBtn") return advance(1);
     if (b.id === "next4Btn") return advance(4);
+    if (b.id === "toEventBtn") return advance(untilEvent(curState));
+    if (d.closereport) { seasonReport = null; return render(); }
     if (d.tab) { tab = d.tab; return render(); }
     if (d.ev !== undefined) { lastResults.inbox = call("answer_event", +d.ev, +d.opt).join("; ") || "Решение принято"; return render(); }
     if (d.offer !== undefined) { lastResults.inbox = call("answer_offer", +d.offer, d.acc === "1"); return render(); }
@@ -766,6 +924,10 @@ document.addEventListener("click", async (ev) => {
 document.addEventListener("change", (ev) => {
   if (ev.target.id === "regionSel") { tableRegion = ev.target.value; render(); }
   if (ev.target.id === "leagueSel") { leagueSel = +ev.target.value; render(); }
+});
+document.addEventListener("keydown", (ev) => {
+  if ($("game").hidden || ev.target.closest("input, textarea, select") || ev.ctrlKey || ev.metaKey) return;
+  if ((ev.key === "n" || ev.key === "N" || ev.key === " ") && !$("nextBtn").disabled) { ev.preventDefault(); advance(1); }
 });
 boot();
 </script>

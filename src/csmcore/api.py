@@ -8,6 +8,7 @@ from __future__ import annotations
 import base64
 
 from . import circuit, contracts as contracts_mod, economy, save as save_mod
+from . import hunt as hunt_mod
 from .game import Game
 from .market import asking, expected_salary
 from .talks import PRESS, TONES
@@ -29,7 +30,9 @@ def _g() -> Game:
 def new_game(seed: int = 1, n_clubs: int = 120, director: str = "cassandra") -> dict:
     global G
     G = Game.new(seed=seed, n_clubs=n_clubs, director=director)
-    return state()
+    s = state()
+    s["opening_news"] = getattr(G, "opening_news", [])
+    return s
 
 
 def _money(x: float) -> int:
@@ -55,9 +58,47 @@ def state() -> dict:
         "sacked": g.sacked, "patch": g.sysm.meta.patch["name"] if g.sysm.meta else "",
         "facilities": {FACILITIES[k]: v for k, v in c.facilities.items() if k in FACILITIES},
         "situations": len(g.situations()),
+        "objective_status": [{"text": o.text, "score": round(owner._score(o, c), 2)} for o in owner.objectives] if owner else [],
+        "zone": _zone(g),
         "division": circuit.name(c.division), "division_place": circuit.standings(g.clubs, c.division).index(c) + 1,
         "season_points": round(c.season_points), "hltw_rank": g.sysm.hltw.place(c.name) if g.sysm.hltw else None,
     }
+
+
+def _zone(g: Game) -> str:
+    """'up' / 'down' when the club sits in a promotion / relegation place of its league now."""
+    k = g.club.division
+    rows = circuit.standings(g.clubs, k)
+    i = rows.index(g.club) + 1
+    up = circuit.SWAPS.get(k - 1, 0) if k > 1 else 0
+    down = circuit.SWAPS.get(k, 0) if k < 4 else 0
+    return "up" if i <= up else "down" if down and i > len(rows) - down else ""
+
+
+def _hints(club, effects: list[dict]) -> dict:
+    """What an option does to the club, read from its effects: sure numbers and 'maybe' flags."""
+    from .storylets import TIER_CASH
+    h = {"cash": 0, "fans_pct": 0, "brand": 0, "morale": 0, "risky": False}
+    for e in effects:
+        if "chance" in e or "follow" in e or "follow_random" in e or "sponsor_leaves" in e or "release" in e \
+                or "add_trait" in e or "secret" in e or "flag" in e:
+            h["risky"] = True
+        if "chance" in e:
+            continue
+        if "cash" in e:
+            h["cash"] += e["cash"]
+        elif "cash_scaled" in e:
+            h["cash"] += e["cash_scaled"] * TIER_CASH.get(club.tier, 1.0)
+        elif "fans_pct" in e:
+            h["fans_pct"] += e["fans_pct"]
+        elif "brand" in e:
+            h["brand"] += e["brand"]
+        elif "team_morale" in e:
+            h["morale"] += e["team_morale"]
+        elif e.get("state") == "morale" and e.get("who") != "b":
+            h["morale"] += e["add"] / 5
+    h["cash"] = _money(h["cash"])
+    return h
 
 
 def roster() -> list[dict]:
@@ -149,16 +190,90 @@ def inbox() -> dict:
     g = _g()
     st, mk = g.sysm.stories, g.sysm.market
     events = [{"i": i, "id": f.event_id, "deck": bool(st.events[f.event_id].get("deck")), "title": f.title,
-               "text": f.text, "options": f.options, "why": f.why[:4], "week": f.week}
+               "text": f.text, "options": f.options, "why": f.why[:4], "week": f.week,
+               "hints": [_hints(g.club, o.get("effects", [])) for o in st.events[f.event_id].get("options", [])],
+               "left": max(0, 2 - (g.week - f.week))}
               for i, f in enumerate(st.pending if st else [])]
     offers = [{"i": i, "buyer": o.buyer.name, "player": o.player.name, "fee": _money(o.fee), "salary": _money(o.salary)}
               for i, o in enumerate(mk.offers if mk else [])]
     return {"events": events, "offers": offers}
 
 
+ECHO_WEEKS = 6
+
+
+def _snapshot(g: Game) -> dict:
+    c = g.club
+    n = max(1, len(c.roster))
+    return {"morale": sum(p.s("morale") for p in c.roster) / n, "brand": c.brand, "fans": c.fans, "rank": c.rank,
+            "cash": c.cash}
+
+
 def answer_event(i: int, option: int) -> list[str]:
     g = _g()
-    return g.desk.answer_event(g.sysm.stories.pending[i], option)
+    f = g.sysm.stories.pending[i]
+    label = f.options[option] if option < len(f.options) else ""
+    out = g.desk.answer_event(f, option)
+    if not hasattr(g, "echoes"):
+        g.echoes = []
+    g.echoes.append({"week": g.week, "title": f.title, "choice": label, "then": _snapshot(g)})
+    return out
+
+
+def _echo_lines(g: Game) -> list[str]:
+    """A few weeks after a decision: what changed since, so a choice is not forgotten at once."""
+    out, keep = [], []
+    now = _snapshot(g)
+    for e in getattr(g, "echoes", []):
+        if g.week - e["week"] < ECHO_WEEKS:
+            keep.append(e)
+            continue
+        t = e["then"]
+        bits = []
+        if abs(now["morale"] - t["morale"]) >= 1:
+            bits.append(f"мораль {now['morale'] - t['morale']:+.0f}")
+        if abs(now["brand"] - t["brand"]) >= 1:
+            bits.append(f"бренд {now['brand'] - t['brand']:+.0f}")
+        if t["fans"] and abs(now["fans"] / t["fans"] - 1) >= 0.005:
+            bits.append(f"фанаты {(now['fans'] / t['fans'] - 1) * 100:+.1f}%")
+        if now["rank"] != t["rank"]:
+            bits.append(f"место #{t['rank']} → #{now['rank']}")
+        out.append(f"решение: {ECHO_WEEKS} недель назад вы выбрали «{e['choice']}» ({e['title']}). С тех пор: "
+                   + (", ".join(bits) or "почти ничего не изменилось"))
+    g.echoes = keep
+    return out
+
+
+def horizon() -> list[dict]:
+    """What is coming and how soon: the reason to press 'next week'. Soonest first."""
+    g = _g()
+    c, out = g.club, []
+    wk = g.week
+    for p in c.roster:
+        k = c.contracts.get(p.name)
+        if k is not None and 0 <= k.end_week - wk <= 14:
+            out.append({"in": k.end_week - wk, "kind": "contract", "text": f"контракт {p.name} заканчивается",
+                        "tab": "squad", "star": "star" in p.flags})
+    for w, n, inv in g.next_events(3):
+        out.append({"in": w - g.run.wk, "kind": "event", "text": f"{n}" + ("" if inv else " (вы не приглашены)"),
+                    "tab": "office", "star": False})
+    for s in c.sponsors:
+        if 0 <= s.end_week - wk <= 12:
+            out.append({"in": s.end_week - wk, "kind": "sponsor", "text": f"спонсор {s.name} закончит контракт",
+                        "tab": "money", "star": False})
+    nxt = 4 - wk % 4
+    out.append({"in": nxt, "kind": "window", "text": "трансферное окно: клубы ИИ делают предложения",
+                "tab": "market", "star": False})
+    hot = [p for p, seller in g.sysm.market.listed(g.clubs, wk) if "hunt_target" in p.flags and seller is None] \
+        if g.sysm.market else []
+    if hot:
+        left = max(p.__dict__.get("hunt_until", 0) for p in hot) - wk
+        out.append({"in": max(0, left), "kind": "hunt", "text": f"охота: {', '.join(p.name for p in hot[:2])}: потом в гонку вступят клубы ИИ",
+                    "tab": "market", "star": True})
+    if g.run.wk < 52:
+        out.append({"in": 52 - g.run.wk, "kind": "season", "text": "конец сезона: итоги, повышения и вылеты",
+                    "tab": "table", "star": False})
+    return sorted(out, key=lambda x: x["in"])[:7]
 
 
 def answer_offer(i: int, accept: bool) -> str:
@@ -181,11 +296,17 @@ def market(limit: int = 40) -> list[dict]:
         ask = 0 if seller is None else min(economy.market_value(p) * 0.9, k.buyout if k else float("inf"))
         out.append({"name": p.name, "role": p.role, "age": p.age, "club": seller.name if seller else None,
                     "star": "star" in p.flags,
+                    "hot": "hunt_target" in p.flags or "star" in p.flags or hi >= 84,
+                    "head_start": max(0, p.__dict__.get("hunt_until", 0) - g.week),
+                    "rivals": hunt_mod.rivals(g, p) if ("hunt_target" in p.flags or hi >= 84) else 0,
                     "ovr_range": [round(lo), round(hi)], "salary_wish": _money(asking(p, g.week) if seller is None else expected_salary(p)),
                     "fee": _money(ask), "known": round(g.desk.scouting.knowledge.get(p.name, 0)),
                     "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib],
                     **_haceit_card(p.name)})
-    return sorted(out, key=lambda r: -sum(r["ovr_range"]))[:limit]   # by the scouts' estimate, not truth
+    out.sort(key=lambda r: (not r["hot"], -sum(r["ovr_range"])))   # by the scouts' estimate, not truth
+    for r in out:
+        r["window"] = 4 - g.week % 4     # AI clubs shop every 4th week
+    return out[:limit]
 
 
 def scout(name: str) -> dict:
@@ -323,6 +444,7 @@ def advance(weeks: int = 1) -> list[dict]:
     out = []
     for _ in range(weeks):
         n = g.advance()
+        n.lines += _echo_lines(g)
         out.append({"season": n.season, "week": (n.week - 1) % economy.WEEKS_PER_YEAR + 1, "lines": n.lines})
         if g.sacked or (g.sysm.stories and g.sysm.stories.pending) or (g.sysm.market and g.sysm.market.offers) \
                 or g.situations():
