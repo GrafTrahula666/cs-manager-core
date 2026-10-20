@@ -270,6 +270,18 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
 .mhead svg.face { width: 96px; height: 96px; border-radius: 10px; border: 1px solid var(--line); }
 .mhead .nm { display: grid; gap: 4px; min-width: 0; flex: 1; }
 .tree svg { width: 100%; height: auto; display: block; }
+
+.homesvg { width: 100%; max-width: 780px; margin: 0 auto; height: auto; display: block; }
+.fac { cursor: pointer; }
+.fac .ftop { stroke: rgba(255,255,255,.18); stroke-width: 1; }
+.fac.sel .ftop, .fac:hover .ftop { stroke: var(--accent); stroke-width: 2.5; }
+.fac.l0 .ftop { fill: rgba(95,160,220,.08); pointer-events: all; stroke: var(--line); stroke-dasharray: 5 4; stroke-width: 1.5; }
+.faclabel { cursor: pointer; } .faclabel text, .fac text { paint-order: stroke; stroke: var(--panel); stroke-width: 3px; font: 600 8.5px var(--body); fill: var(--text); text-anchor: middle; pointer-events: none; }
+.fac text.lv, .faclabel text.lv { font: 700 7px var(--mono); fill: var(--accent); }
+.fac .build { animation: pulse 1.6s ease-in-out infinite; }
+.reqrow { display: flex; gap: 8px; font-size: .82rem; }
+.reqrow.ok b { color: var(--good, #6fcf97); } .reqrow.no b { color: var(--bad, #eb5757); } .reqrow.soft b { color: var(--muted); }
+.lvbar { display: flex; gap: 4px; margin: 4px 0; } .lvbar i { flex: 1; height: 6px; border-radius: 3px; background: var(--panel2); } .lvbar i.on { background: var(--accent); }
 .tnode { cursor: pointer; }
 .tnode circle.bg { fill: var(--panel2); stroke: var(--line); stroke-width: 2; }
 .tnode.unlocked circle.bg { fill: var(--accent); stroke: var(--accent); }
@@ -650,6 +662,61 @@ function treeSvg(L, bid) {
   }).join("");
   return `<svg viewBox="0 0 400 352" role="group" aria-label="Ветка талантов">${links}${nodes}</svg>`;
 }
+
+let selFac = "";
+const FAC_HUE = { training: 205, academy: 150, streaming: 285, psychology: 175, lounge: 30, analytics: 225, media: 330, medical: 0, office: 55 };
+function isoBox(cx, cy, hw, hh, h, hue, level, building) {
+  const top = `${cx},${cy - h - hh} ${cx + hw},${cy - h} ${cx},${cy - h + hh} ${cx - hw},${cy - h}`;
+  const left = `${cx - hw},${cy - h} ${cx},${cy - h + hh} ${cx},${cy + hh} ${cx - hw},${cy}`;
+  const right = `${cx + hw},${cy - h} ${cx},${cy - h + hh} ${cx},${cy + hh} ${cx + hw},${cy}`;
+  const sat = 18 + level * 9, lt = 24 + level * 4;
+  let g = `<polygon class="ftop" points="${top}" fill="hsl(${hue} ${sat}% ${lt + 14}%)"/><polygon points="${left}" fill="hsl(${hue} ${sat}% ${lt}%)"/><polygon points="${right}" fill="hsl(${hue} ${sat}% ${lt - 8}%)"/>`;
+  for (let i = 0; i < level; i++) {                       // lit windows: one more row per level
+    const wx = cx - hw + 10 + (i % 3) * 14, wy = cy - h + 8 + Math.floor(i / 3) * 0 + (i % 3) * 7;
+    g += `<polygon points="${wx},${wy} ${wx + 8},${wy + 4} ${wx + 8},${wy + 12} ${wx},${wy + 8}" fill="hsl(${hue + 20} 90% ${60 + level * 3}%)" opacity=".85"/>`;
+  }
+  if (level >= 3) g += `<polyline points="${cx - hw},${cy - h} ${cx},${cy - h + hh} ${cx + hw},${cy - h}" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+  if (level >= 4) g += `<rect x="${cx - 3}" y="${cy - h - hh - 16}" width="6" height="16" fill="hsl(${hue} 60% 55%)"/><circle cx="${cx}" cy="${cy - h - hh - 18}" r="3.5" fill="var(--accent)"/>`;
+  if (level >= 5) g += `<ellipse cx="${cx}" cy="${cy - h - 2}" rx="${hw * 0.45}" ry="${hh * 0.45}" fill="var(--accent)" opacity=".45"/>`;
+  if (building) g += `<g class="build" stroke="var(--accent)" stroke-width="2"><line x1="${cx - 18}" y1="${cy - h - hh + 4}" x2="${cx + 18}" y2="${cy - h - hh - 22}"/><line x1="${cx + 18}" y1="${cy - h - hh - 22}" x2="${cx + 18}" y2="${cy - h - hh - 4}"/></g>`;
+  return g;
+}
+function homeSvg(H) {
+  const order = ["training_zone", "lounge", "academy", "analytics_center", "streaming_room", "psychology_center", "media_center", "medical_center", "headhunting_office"];
+  const byId = Object.fromEntries(H.facilities.map((f) => [f.id, f]));
+  const cells = order.map((id, k) => ({ f: byId[id], i: k % 3, j: Math.floor(k / 3) })).sort((a, b) => (a.i + a.j) - (b.i + b.j));
+  const pos = ({ i, j }) => ({ cx: 330 + (i - j) * 100, cy: 100 + (i + j) * 52 });
+  const boxes = cells.map((c) => {
+    const { f } = c, { cx, cy } = pos(c), lv = f.level, h = lv ? 10 + lv * 13 : 0;
+    return `<g class="fac l${lv} ${selFac === f.id ? "sel" : ""}" data-fac="${f.id}" tabindex="0" role="button" aria-label="${esc(f.name)}, уровень ${lv}">${isoBox(cx, cy, 84, 42, h, FAC_HUE[f.room], lv, !!f.project)}</g>`;
+  }).join("");
+  const labels = cells.map((c) => {
+    const { f } = c, { cx, cy } = pos(c), lv = f.level;
+    return `<g class="faclabel" data-fac="${f.id}"><text x="${cx}" y="${cy + 58}">${esc(f.name)}</text><text class="lv" x="${cx}" y="${cy + 70}">${f.project ? `СТРОЙКА → ${f.project.to} · ${f.project.weeks_left} нед.` : lv ? "УРОВЕНЬ " + lv : "НЕ ПОСТРОЕНО"}</text></g>`;
+  }).join("");
+  const body = boxes + labels;
+  return `<svg class="homesvg" viewBox="20 -20 620 450" role="group" aria-label="План базы">${body}</svg>`;
+}
+function viewHome(s) {
+  const H = call("home");
+  if (!selFac) selFac = (H.facilities.find((f) => f.can && f.level === 0) || H.facilities[0]).id;
+  const f = H.facilities.find((x) => x.id === selFac) || H.facilities[0], n = f.next;
+  const bar = `<div class="lvbar">${[1, 2, 3, 4, 5].map((l) => `<i class="${l <= f.level ? "on" : ""}"></i>`).join("")}</div>`;
+  const nowFx = f.now.map((e) => `<span class="plus">${esc(e.label)}: ${e.value > 0 && e.value < 1 ? "+" + Math.round(e.value * 100) + "%" : "+" + e.value}</span>`).join("");
+  const detail = `<section class="card detail"><b>${esc(f.name)}</b><span class="muted">${esc(f.level_name)}${f.project ? `, идёт стройка уровня ${f.project.to}: ещё ${f.project.weeks_left} нед.` : ""}</span>${bar}
+    ${nowFx || `<span class="muted">Пока ничего не даёт.</span>`}
+    ${n ? `<hr><b>Уровень ${n.level}: ${esc(H.level_names[n.level])}</b>
+      <span>Цена ${money(n.cost)} · стройка ${n.weeks} нед. · содержание ${money(n.upkeep_month)}/мес.</span>
+      ${n.effects.map((e) => `<span class="plus">${esc(e.label)}: +${e.value < 1 ? Math.round(e.value * 100) + "%" : e.value}</span>`).join("")}
+      ${n.req.map((r) => `<div class="reqrow ${r.soft ? "soft" : r.ok ? "ok" : "no"}"><b>${r.soft ? "…" : r.ok ? "✓" : "✗"}</b><span>${esc(r.text)}</span></div>`).join("")}
+      ${n.events.length ? `<span class="why">Риски уровня: ${n.events.map((e) => esc(e.split(":")[1] || e)).join("; ")}</span>` : ""}
+      <div><button class="primary small" data-build="${f.id}" ${f.can ? "" : "disabled"}>Построить уровень ${n.level}</button></div>`
+      : `<span class="muted">${esc(f.why)}</span>`}
+    ${lastResults.build ? `<span class="result">${esc(lastResults.build)}</span>` : ""}
+    <span class="why">Эффекты зданий показываются честно, но подключатся к механикам в следующих этапах. Шанс победы здания напрямую не меняют.</span></section>`;
+  return `<section class="card"><h3>Мой дом <span class="muted">${H.total_levels}/${H.max_levels} уровней · содержание ${money(H.upkeep_month)}/мес.</span></h3>${homeSvg(H)}</section>
+    <div class="grid2">${detail}<section class="card"><h3>История базы</h3>${H.history.length ? H.history.map((x) => `<div class="line"><span>${esc(x)}</span></div>`).join("") : `<p class="muted">Здесь появится всё, что вы построите.</p>`}</section></div>`;
+}
 function viewManager(s) {
   const L = call("living");
   const sel = L.nodes.find((n) => n.id === selNode);
@@ -748,7 +815,7 @@ const hintHtml = (h) => {
   return bits.length ? bits.join(" ") : "без последствий";
 };
 
-const TABS = [["office", "Сводка"], ["manager", "Менеджер"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+const TABS = [["office", "Сводка"], ["manager", "Менеджер"], ["home", "Мой дом"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
   ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
 
 function render(s) {
@@ -772,7 +839,7 @@ function render(s) {
   $("toEventBtn").title = ne ? `Играть до «${ne.name}» (неделя ${ne.week}); остановится, если нужно ваше решение` : "";
   const due = s.pending_events + s.offers, sits = s.situations || 0;
   $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "manager" && s.talent_points ? `<span class="badge">${s.talent_points}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
-  const views = { office: viewOffice, manager: viewManager, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
+  const views = { office: viewOffice, manager: viewManager, home: viewHome, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
   $("main").innerHTML = views[tab](s);
 }
 
@@ -1047,6 +1114,8 @@ function viewCareer(s) {
 }
 
 document.addEventListener("click", async (ev) => {
+  const fc = ev.target.closest("[data-fac]");
+  if (fc) { selFac = fc.dataset.fac; lastResults.build = ""; return render(); }
   const nd = ev.target.closest("[data-node]");
   if (nd) { selNode = nd.dataset.node; lastResults.talent = ""; return render(); }
   const b = ev.target.closest("button");
@@ -1066,6 +1135,7 @@ document.addEventListener("click", async (ev) => {
     if (b.id === "newBtn") return openCreator();
     if (b.id === "crGo") return startCareer();
     if (b.id === "crBack") { $("creator").hidden = true; $("boot").hidden = false; return; }
+    if (d.build) { try { lastResults.build = call("build", d.build); } catch (e) { lastResults.build = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
     if (d.talent) { try { lastResults.talent = call("unlock_talent", d.talent); } catch (e) { lastResults.talent = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
     if (b.id === "contBtn") { let t = ""; try { t = localStorage.getItem(SAVE_KEY) || ""; } catch (e) {} return loadFrom(t); }
     if (b.id === "importBtn") return loadFrom($("importText").value);

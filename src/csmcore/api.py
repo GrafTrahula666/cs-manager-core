@@ -675,3 +675,38 @@ def living() -> dict:
 
 def unlock_talent(tid: str) -> str:
     return _g().ensure_living().unlock(tid)
+
+
+def home() -> dict:
+    """The base: every facility with level, the next level (price, weeks, requirements), active projects and monthly upkeep."""
+    from .base import fac_data
+    g = _g()
+    g.ensure_living()
+    b = g.base
+    names = livingdata.load("facilities")["level_names"]
+    items = []
+    for fid, f in fac_data().items():
+        cur = b.level(fid)
+        chk = b.check(g, fid)
+        proj = b.projects.get(fid)
+        items.append({"id": fid, "name": f["name"], "room": f["room"], "footprint": f["footprint"], "level": cur, "level_name": names[cur],
+                      "now": [{"label": e["label"], "value": e["value"]} for e in _fac_effects(f, cur)],
+                      "next": chk["next"], "can": chk["can"], "why": chk["why"],
+                      "project": {"to": proj["to"], "weeks_left": max(0, proj["done"] - g.week)} if proj else None})
+    return {"facilities": items, "level_names": names, "upkeep_month": _money(b.upkeep_month()), "cash": _money(g.club.cash),
+            "total_levels": b.total_levels(), "max_levels": 5 * len(items), "history": b.history[-8:]}
+
+
+def _fac_effects(f: dict, level: int) -> list[dict]:
+    from .base import EFFECT_RU
+    tot: dict[str, float] = {}
+    for lv in f["levels"][:level]:
+        for k, v in lv["effects"].items():
+            tot[k] = tot.get(k, 0) + v
+    return [{"label": EFFECT_RU.get(k, k), "value": round(v, 3)} for k, v in tot.items()]
+
+
+def build(fid: str) -> str:
+    g = _g()
+    g.ensure_living()
+    return g.base.start(g, fid)

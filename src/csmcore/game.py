@@ -116,6 +116,8 @@ class Game:
         season_week(self.run, self.clubs, self.graph, self.calendar, self.sysm, plans)
         news = WeekNews(self.week, self.season, self._collect())
         news.lines += self._living_week()
+        if getattr(self, "base", None) is not None:
+            news.lines += self.base.week(self)
         self.desk.plan = type(self.desk.plan)()   # plans last one week
         if self.run.wk >= economy.WEEKS_PER_YEAR:
             season_finish(self.run, self.clubs, self.sysm)
@@ -200,6 +202,9 @@ class Game:
             from . import progression
             self.living = progression.create(f"manager:{self.manager_name}", self.manager_name if len(self.manager_name) > 1 else "Менеджер",
                                              35, "", "rookie", "motivator", ["patient", "empath"])
+        if getattr(self, "base", None) is None:
+            from .base import Base
+            self.base = Base()
         if not hasattr(self, "_titles_seen"):
             ch = self.sysm.chronicle
             self._titles_seen = len(ch.titles.get(self.club_name, [])) if ch else 0
@@ -377,6 +382,8 @@ class Game:
         self.club_name = self.sysm.manager_club = club_name
         ch = self.sysm.chronicle
         self._titles_seen = len(ch.titles.get(club_name, [])) if ch else 0   # titles won earlier are not mine
+        from .base import Base
+        self.base = Base()                      # the base belongs to the club, not to the manager
         owner = (self.sysm.owners or {}).get(club_name)
         if owner:
             owner.fired, owner.confidence = False, 55.0
