@@ -2,7 +2,7 @@
 
 Building and upgrading cost real money through Club.book (item "construction"), take build weeks, and
 afterwards charge monthly upkeep (item "facilities"). Requirements come from data/facilities.json.
-Effects are shown and explained but stay `planned` until later stages wire them into the game; nothing
+Effects are shown with their status (EFFECT_STATUS, default `planned` = not active) until later stages wire them in; nothing
 here changes a win probability. The old Club.facilities dict (bootcamp/academy/studio) is untouched.
 """
 from __future__ import annotations
@@ -21,6 +21,15 @@ EFFECT_RU = {
 }
 
 
+# Status of each facility effect key (planned -> wired -> tested -> calibrated). Nothing is wired yet, so none of
+# them may be shown as an active bonus. Flip a key here in the PR that really connects it.
+EFFECT_STATUS: dict[str, str] = {}
+
+
+def effect_status(key: str) -> str:
+    return EFFECT_STATUS.get(key, "planned")
+
+
 def fac_data() -> dict:
     return {f["id"]: f for f in livingdata.load("facilities")["facilities"]}
 
@@ -37,9 +46,17 @@ class Base:
     def total_levels(self) -> int:
         return sum(self.levels.values())
 
+    def upkeep_of(self, fid: str, lv: int) -> float:
+        """Monthly upkeep of a level. The rooms a club starts with are already inside the old staff budget, so a
+        start level costs nothing extra: only what was built beyond it is charged (no hidden price rise at day one)."""
+        f = fac_data()[fid]
+        if not lv:
+            return 0.0
+        free = f["levels"][f["start_level"] - 1]["upkeep_month"] if f["start_level"] else 0.0
+        return max(0.0, f["levels"][lv - 1]["upkeep_month"] - free)
+
     def upkeep_month(self) -> float:
-        d = fac_data()
-        return sum(d[fid]["levels"][lv - 1]["upkeep_month"] for fid, lv in self.levels.items() if lv and fid in d)
+        return sum(self.upkeep_of(fid, lv) for fid, lv in self.levels.items() if fid in fac_data())
 
     # ---- requirements ----
     def check(self, game, fid: str) -> dict:
@@ -72,8 +89,8 @@ class Base:
         add(f"параллельных строек не больше {MAX_PARALLEL}", len(self.projects) < MAX_PARALLEL)
         ok = all(r["ok"] for r in rows)
         return {"can": ok, "why": "" if ok else next(r["text"] for r in rows if not r["ok"]),
-                "next": {"level": cur + 1, "cost": lv["cost"], "weeks": lv["build_weeks"], "upkeep_month": lv["upkeep_month"],
-                         "effects": [{"key": k, "label": EFFECT_RU.get(k, k), "value": v} for k, v in lv["effects"].items()],
+                "next": {"level": cur + 1, "cost": lv["cost"], "weeks": lv["build_weeks"], "upkeep_month": self.upkeep_of(fid, cur + 1) - self.upkeep_of(fid, cur),
+                         "effects": [{"key": k, "label": EFFECT_RU.get(k, k), "value": v, "active": livingdata.is_active(effect_status(k))} for k, v in lv["effects"].items()],
                          "events": lv["events"], "req": rows}}
 
     def big_titles(self, game) -> int:
@@ -103,8 +120,9 @@ class Base:
         out = []
         d = fac_data()
         for fid, lv in self.levels.items():
-            if lv:
-                game.club.book(game.week, "facilities", -d[fid]["levels"][lv - 1]["upkeep_month"] / WEEKS_PER_MONTH, f"{d[fid]['name']} ур. {lv}")
+            up = self.upkeep_of(fid, lv)
+            if up:
+                game.club.book(game.week, "facilities", -up / WEEKS_PER_MONTH, f"{d[fid]['name']} ур. {lv}")
         for fid, p in list(self.projects.items()):
             if game.week >= p["done"]:
                 self.levels[fid] = p["to"]

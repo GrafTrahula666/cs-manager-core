@@ -656,12 +656,13 @@ def living() -> dict:
         nodes.append({"id": n["id"], "branch": n["branch"], "name": n["name"], "tier": n["tier"], "requires": n["requires"],
                       "desc": n["desc"], "capstone": bool(n.get("capstone")), "risk": n.get("risk"), "state": state, "why": why,
                       "effect": [{"channel": e["channel"], "label": t["channels"][e["channel"]]["label"], "value": e["value"],
-                                  "cap": t["channels"][e["channel"]]["cap"]} for e in n["effects"]]})
+                                  "cap": t["channels"][e["channel"]]["cap"],
+                                  "active": livingdata.is_active(t["channels"][e["channel"]]["status"])} for e in n["effects"]]})
     chans = []
     for name, c in t["channels"].items():
         v = lv.channel(name)
         if abs(v) > 1e-9:
-            chans.append({"channel": name, "label": c["label"], "value": round(v, 3), "cap": c["cap"], "status": c["status"],
+            chans.append({"channel": name, "label": c["label"], "value": round(v, 3), "cap": c["cap"], "status": c["status"], "active": livingdata.is_active(c["status"]),
                           "why": lv.explain(name)})
     bg = next(b for b in livingdata.load("backgrounds")["backgrounds"] if b["id"] == lv.background)
     tr = {x["id"]: x for x in livingdata.load("backgrounds")["traits"]}
@@ -690,7 +691,7 @@ def home() -> dict:
         chk = b.check(g, fid)
         proj = b.projects.get(fid)
         items.append({"id": fid, "name": f["name"], "room": f["room"], "footprint": f["footprint"], "level": cur, "level_name": names[cur],
-                      "now": [{"label": e["label"], "value": e["value"]} for e in _fac_effects(f, cur)],
+                      "now": _fac_effects(f, cur),
                       "next": chk["next"], "can": chk["can"], "why": chk["why"],
                       "project": {"to": proj["to"], "weeks_left": max(0, proj["done"] - g.week)} if proj else None})
     return {"facilities": items, "level_names": names, "upkeep_month": _money(b.upkeep_month()), "cash": _money(g.club.cash),
@@ -698,12 +699,12 @@ def home() -> dict:
 
 
 def _fac_effects(f: dict, level: int) -> list[dict]:
-    from .base import EFFECT_RU
+    from .base import EFFECT_RU, effect_status
     tot: dict[str, float] = {}
     for lv in f["levels"][:level]:
         for k, v in lv["effects"].items():
             tot[k] = tot.get(k, 0) + v
-    return [{"label": EFFECT_RU.get(k, k), "value": round(v, 3)} for k, v in tot.items()]
+    return [{"label": EFFECT_RU.get(k, k), "value": round(v, 3), "active": livingdata.is_active(effect_status(k))} for k, v in tot.items()]
 
 
 def build(fid: str) -> str:
