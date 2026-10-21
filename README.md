@@ -44,6 +44,7 @@ Design overview (RU): [docs/core-design.md](docs/core-design.md).
 - `scripts/demo_analysis.py` – local CS2 demos -> round records (needs `pip install -e ".[data]"`; not yet run on a real demo)
 - `scripts/compare_sim_real.py` – simulation vs. demo records, side by side (`docs/match-engine-plan.md`)
 - `scripts/soak_world.py` – many seasons of the whole world: time, memory, save size, invariants
+- `src/csmcore/livingdata.py`, `progression.py`, `data/{talents,progression,backgrounds,staff_roles,facilities}.json` – LIVING CLUB: manager levels and 60 talents, staff roles, facility levels 0–5 (design: `docs/living-club.md`)
 - `tests/` – determinism and sanity tests (`pytest`)
 
 ## Status

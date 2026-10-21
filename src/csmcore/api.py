@@ -8,7 +8,10 @@ from __future__ import annotations
 import base64
 
 from . import circuit, contracts as contracts_mod, economy, save as save_mod
+from . import hunt as hunt_mod
+from . import livingdata
 from .game import Game
+from .progression import STAT_RU, xp_to_next
 from .market import asking, expected_salary
 from .talks import PRESS, TONES
 from .traits import library
@@ -26,10 +29,12 @@ def _g() -> Game:
     return G
 
 
-def new_game(seed: int = 1, n_clubs: int = 120, director: str = "cassandra") -> dict:
+def new_game(seed: int = 1, n_clubs: int = 120, director: str = "cassandra", profile: dict | None = None) -> dict:
     global G
-    G = Game.new(seed=seed, n_clubs=n_clubs, director=director)
-    return state()
+    G = Game.new(seed=seed, n_clubs=n_clubs, director=director, profile=profile)
+    s = state()
+    s["opening_news"] = getattr(G, "opening_news", [])
+    return s
 
 
 def _money(x: float) -> int:
@@ -57,12 +62,52 @@ def state() -> dict:
         "offers": len(g.sysm.market.offers) if g.sysm.market else 0,
         "manager": {"name": g.manager_name, "reputation": round(m.reputation) if m else None,
                     "titles": m.titles if m else 0},
+        "level": g.ensure_living().level, "xp": g.living.xp, "xp_next": xp_to_next(g.living.level) if g.living.level < g.living.max_level else 0,
+        "talent_points": g.living.available_points,
         "sacked": g.sacked, "patch": g.sysm.meta.patch["name"] if g.sysm.meta else "",
         "facilities": {FACILITIES[k]: v for k, v in c.facilities.items() if k in FACILITIES},
         "situations": len(g.situations()),
+        "objective_status": [{"text": o.text, "score": round(owner._score(o, c), 2)} for o in owner.objectives] if owner else [],
+        "zone": _zone(g),
         "division": circuit.name(c.division), "division_place": circuit.standings(g.clubs, c.division).index(c) + 1,
         "season_points": round(c.season_points), "hltw_rank": g.sysm.hltw.place(c.name) if g.sysm.hltw else None,
     }
+
+
+def _zone(g: Game) -> str:
+    """'up' / 'down' when the club sits in a promotion / relegation place of its league now."""
+    k = g.club.division
+    rows = circuit.standings(g.clubs, k)
+    i = rows.index(g.club) + 1
+    up = circuit.SWAPS.get(k - 1, 0) if k > 1 else 0
+    down = circuit.SWAPS.get(k, 0) if k < 4 else 0
+    return "up" if i <= up else "down" if down and i > len(rows) - down else ""
+
+
+def _hints(club, effects: list[dict]) -> dict:
+    """What an option does to the club, read from its effects: sure numbers and 'maybe' flags."""
+    from .storylets import TIER_CASH
+    h = {"cash": 0, "fans_pct": 0, "brand": 0, "morale": 0, "risky": False}
+    for e in effects:
+        if "chance" in e or "follow" in e or "follow_random" in e or "sponsor_leaves" in e or "release" in e \
+                or "add_trait" in e or "secret" in e or "flag" in e:
+            h["risky"] = True
+        if "chance" in e:
+            continue
+        if "cash" in e:
+            h["cash"] += e["cash"]
+        elif "cash_scaled" in e:
+            h["cash"] += e["cash_scaled"] * TIER_CASH.get(club.tier, 1.0)
+        elif "fans_pct" in e:
+            h["fans_pct"] += e["fans_pct"]
+        elif "brand" in e:
+            h["brand"] += e["brand"]
+        elif "team_morale" in e:
+            h["morale"] += e["team_morale"]
+        elif e.get("state") == "morale" and e.get("who") != "b":
+            h["morale"] += e["add"] / 5
+    h["cash"] = _money(h["cash"])
+    return h
 
 
 def roster() -> list[dict]:
@@ -155,16 +200,90 @@ def inbox() -> dict:
     g = _g()
     st, mk = g.sysm.stories, g.sysm.market
     events = [{"i": i, "id": f.event_id, "deck": bool(st.events[f.event_id].get("deck")), "title": f.title,
-               "text": f.text, "options": f.options, "why": f.why[:4], "week": f.week}
+               "text": f.text, "options": f.options, "why": f.why[:4], "week": f.week,
+               "hints": [_hints(g.club, o.get("effects", [])) for o in st.events[f.event_id].get("options", [])],
+               "left": max(0, 2 - (g.week - f.week))}
               for i, f in enumerate(st.pending if st else [])]
     offers = [{"i": i, "buyer": o.buyer.name, "player": o.player.name, "fee": _money(o.fee), "salary": _money(o.salary)}
               for i, o in enumerate(mk.offers if mk else [])]
     return {"events": events, "offers": offers}
 
 
+ECHO_WEEKS = 6
+
+
+def _snapshot(g: Game) -> dict:
+    c = g.club
+    n = max(1, len(c.roster))
+    return {"morale": sum(p.s("morale") for p in c.roster) / n, "brand": c.brand, "fans": c.fans, "rank": c.rank,
+            "cash": c.cash}
+
+
 def answer_event(i: int, option: int) -> list[str]:
     g = _g()
-    return g.desk.answer_event(g.sysm.stories.pending[i], option)
+    f = g.sysm.stories.pending[i]
+    label = f.options[option] if option < len(f.options) else ""
+    out = g.desk.answer_event(f, option)
+    if not hasattr(g, "echoes"):
+        g.echoes = []
+    g.echoes.append({"week": g.week, "title": f.title, "choice": label, "then": _snapshot(g)})
+    return out
+
+
+def _echo_lines(g: Game) -> list[str]:
+    """A few weeks after a decision: what changed since, so a choice is not forgotten at once."""
+    out, keep = [], []
+    now = _snapshot(g)
+    for e in getattr(g, "echoes", []):
+        if g.week - e["week"] < ECHO_WEEKS:
+            keep.append(e)
+            continue
+        t = e["then"]
+        bits = []
+        if abs(now["morale"] - t["morale"]) >= 1:
+            bits.append(f"мораль {now['morale'] - t['morale']:+.0f}")
+        if abs(now["brand"] - t["brand"]) >= 1:
+            bits.append(f"бренд {now['brand'] - t['brand']:+.0f}")
+        if t["fans"] and abs(now["fans"] / t["fans"] - 1) >= 0.005:
+            bits.append(f"фанаты {(now['fans'] / t['fans'] - 1) * 100:+.1f}%")
+        if now["rank"] != t["rank"]:
+            bits.append(f"место #{t['rank']} → #{now['rank']}")
+        out.append(f"решение: {ECHO_WEEKS} недель назад вы выбрали «{e['choice']}» ({e['title']}). С тех пор: "
+                   + (", ".join(bits) or "почти ничего не изменилось"))
+    g.echoes = keep
+    return out
+
+
+def horizon() -> list[dict]:
+    """What is coming and how soon: the reason to press 'next week'. Soonest first."""
+    g = _g()
+    c, out = g.club, []
+    wk = g.week
+    for p in c.roster:
+        k = c.contracts.get(p.name)
+        if k is not None and 0 <= k.end_week - wk <= 14:
+            out.append({"in": k.end_week - wk, "kind": "contract", "text": f"контракт {p.name} заканчивается",
+                        "tab": "squad", "star": "star" in p.flags})
+    for w, n, inv in g.next_events(3):
+        out.append({"in": w - g.run.wk, "kind": "event", "text": f"{n}" + ("" if inv else " (вы не приглашены)"),
+                    "tab": "office", "star": False})
+    for s in c.sponsors:
+        if 0 <= s.end_week - wk <= 12:
+            out.append({"in": s.end_week - wk, "kind": "sponsor", "text": f"спонсор {s.name} закончит контракт",
+                        "tab": "money", "star": False})
+    nxt = 4 - wk % 4
+    out.append({"in": nxt, "kind": "window", "text": "трансферное окно: клубы ИИ делают предложения",
+                "tab": "market", "star": False})
+    hot = [p for p, seller in g.sysm.market.listed(g.clubs, wk) if "hunt_target" in p.flags and seller is None] \
+        if g.sysm.market else []
+    if hot:
+        left = max(p.__dict__.get("hunt_until", 0) for p in hot) - wk
+        out.append({"in": max(0, left), "kind": "hunt", "text": f"охота: {', '.join(p.name for p in hot[:2])}: потом в гонку вступят клубы ИИ",
+                    "tab": "market", "star": True})
+    if g.run.wk < 52:
+        out.append({"in": 52 - g.run.wk, "kind": "season", "text": "конец сезона: итоги, повышения и вылеты",
+                    "tab": "table", "star": False})
+    return sorted(out, key=lambda x: x["in"])[:7]
 
 
 def answer_offer(i: int, accept: bool) -> str:
@@ -187,11 +306,17 @@ def market(limit: int = 40) -> list[dict]:
         ask = 0 if seller is None else min(economy.market_value(p, _scale(g)) * 0.9, k.buyout if k else float("inf"))
         out.append({"name": p.name, "role": p.role, "age": p.age, "club": seller.name if seller else None,
                     "star": "star" in p.flags,
+                    "hot": "hunt_target" in p.flags or "star" in p.flags or hi >= 84,
+                    "head_start": max(0, p.__dict__.get("hunt_until", 0) - g.week),
+                    "rivals": hunt_mod.rivals(g, p) if ("hunt_target" in p.flags or hi >= 84) else 0,
                     "ovr_range": [round(lo), round(hi)], "salary_wish": _money(asking(p, g.week, _scale(g)) if seller is None else expected_salary(p, _scale(g))),
                     "fee": _money(ask), "known": round(g.desk.scouting.knowledge.get(p.name, 0)),
                     "potential": rep.potential, "traits": [lib[t].name for t in rep.traits if t in lib],
                     **_haceit_card(p.name)})
-    return sorted(out, key=lambda r: -sum(r["ovr_range"]))[:limit]   # by the scouts' estimate, not truth
+    out.sort(key=lambda r: (not r["hot"], -sum(r["ovr_range"])))   # by the scouts' estimate, not truth
+    for r in out:
+        r["window"] = 4 - g.week % 4     # AI clubs shop every 4th week
+    return out[:limit]
 
 
 def scout(name: str) -> dict:
@@ -329,6 +454,7 @@ def advance(weeks: int = 1) -> list[dict]:
     out = []
     for _ in range(weeks):
         n = g.advance()
+        n.lines += _echo_lines(g)
         out.append({"season": n.season, "week": (n.week - 1) % economy.WEEKS_PER_YEAR + 1, "lines": n.lines})
         if g.sacked or (g.sysm.stories and g.sysm.stories.pending) or (g.sysm.market and g.sysm.market.offers) \
                 or g.situations():
@@ -364,6 +490,7 @@ def save_b64() -> str:
 def load_b64(data: str) -> dict:
     global G
     G = save_mod.loads(base64.b64decode(data))
+    G.ensure_living()
     return state()
 
 
@@ -508,3 +635,84 @@ def haceit(n: int = 25) -> dict:
                "age": ages.get(name), "hpl": name in hc.hpl} for i, (name, e) in enumerate(hc.ladder(n), 1)]
     mine = [{"player": p.name, **hc.card(p.name)} for p in g.club.roster if p.name in hc.elo]
     return {"ladder": ladder, "mine": mine, "hpl": len(hc.hpl)}
+
+
+# ---------- LIVING CLUB: manager creation and talents ----------
+COUNTRIES = ["RU", "UA", "KZ", "BY", "PL", "SE", "DK", "FR", "DE", "BR", "US", "CN"]
+
+
+def manager_options() -> dict:
+    """Everything the creation screen needs: backgrounds, branches, character traits."""
+    bg, t = livingdata.load("backgrounds"), livingdata.load("talents")
+    return {"stats": bg["stats"], "stat_ru": STAT_RU, "specialization_bonus": bg["specialization_bonus"],
+            "specialization_stat": bg["specialization_stat"], "traits": bg["traits"], "backgrounds": bg["backgrounds"],
+            "branches": [{"id": k, **v, "stat": bg["specialization_stat"][k]} for k, v in t["branches"].items()],
+            "countries": COUNTRIES, "max_level": livingdata.load("progression")["max_level"]}
+
+
+def living() -> dict:
+    """Level, XP, talent tree with the state of every node and what the manager's channels add up to."""
+    g = _g()
+    lv = g.ensure_living()
+    t = livingdata.load("talents")
+    nodes = []
+    for n in t["nodes"]:
+        ok, why = lv.can_unlock(n["id"])
+        state = "unlocked" if n["id"] in lv.unlocked else "available" if ok else "locked"
+        nodes.append({"id": n["id"], "branch": n["branch"], "name": n["name"], "tier": n["tier"], "requires": n["requires"],
+                      "desc": n["desc"], "capstone": bool(n.get("capstone")), "risk": n.get("risk"), "state": state, "why": why,
+                      "effect": [{"channel": e["channel"], "label": t["channels"][e["channel"]]["label"], "value": e["value"],
+                                  "cap": t["channels"][e["channel"]]["cap"]} for e in n["effects"]]})
+    chans = []
+    for name, c in t["channels"].items():
+        v = lv.channel(name)
+        if abs(v) > 1e-9:
+            chans.append({"channel": name, "label": c["label"], "value": round(v, 3), "cap": c["cap"], "status": c["status"],
+                          "why": lv.explain(name)})
+    bg = next(b for b in livingdata.load("backgrounds")["backgrounds"] if b["id"] == lv.background)
+    tr = {x["id"]: x for x in livingdata.load("backgrounds")["traits"]}
+    return {"name": lv.name, "age": lv.age, "country": lv.country, "face": lv.face, "background": bg["name"], "strength": bg["strength"],
+            "weakness": bg["weakness"], "specialization": lv.specialization, "stats": lv.stats, "stat_ru": STAT_RU,
+            "traits": [tr[i] for i in lv.traits], "level": lv.level, "max_level": lv.max_level, "xp": lv.xp,
+            "xp_next": xp_to_next(lv.level) if lv.level < lv.max_level else 0, "points": lv.available_points,
+            "spent": lv.spent_points, "branches": t["branches"], "nodes": nodes, "channels": sorted(chans, key=lambda x: x["label"]),
+            "journal": [j for j in lv.journal if j["xp"]][-12:][::-1]}
+
+
+def unlock_talent(tid: str) -> str:
+    return _g().ensure_living().unlock(tid)
+
+
+def home() -> dict:
+    """The base: every facility with level, the next level (price, weeks, requirements), active projects and monthly upkeep."""
+    from .base import fac_data
+    g = _g()
+    g.ensure_living()
+    b = g.base
+    names = livingdata.load("facilities")["level_names"]
+    items = []
+    for fid, f in fac_data().items():
+        cur = b.level(fid)
+        chk = b.check(g, fid)
+        proj = b.projects.get(fid)
+        items.append({"id": fid, "name": f["name"], "room": f["room"], "footprint": f["footprint"], "level": cur, "level_name": names[cur],
+                      "now": [{"label": e["label"], "value": e["value"]} for e in _fac_effects(f, cur)],
+                      "next": chk["next"], "can": chk["can"], "why": chk["why"],
+                      "project": {"to": proj["to"], "weeks_left": max(0, proj["done"] - g.week)} if proj else None})
+    return {"facilities": items, "level_names": names, "upkeep_month": _money(b.upkeep_month()), "cash": _money(g.club.cash),
+            "total_levels": b.total_levels(), "max_levels": 5 * len(items), "history": b.history[-8:]}
+
+
+def _fac_effects(f: dict, level: int) -> list[dict]:
+    from .base import EFFECT_RU
+    tot: dict[str, float] = {}
+    for lv in f["levels"][:level]:
+        for k, v in lv["effects"].items():
+            tot[k] = tot.get(k, 0) + v
+    return [{"label": EFFECT_RU.get(k, k), "value": round(v, 3)} for k, v in tot.items()]
+
+
+def build(fid: str) -> str:
+    g = _g()
+    g.ensure_living()
+    return g.base.start(g, fid)

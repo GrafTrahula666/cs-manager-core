@@ -1,0 +1,204 @@
+{
+ "note": "salary_tier1 - ориентир месячной зарплаты специалиста среднего уровня в клубе Тир 1 (гипотеза), масштабируется LevelScale из PR #7. phase: 1 - первый срез, 2 - после, 3 - позже. Личность: те же 10 осей, что у игроков (player.PERSONALITY), плюс loyalty/ambition/discipline как поля.",
+ "fields": [
+  "skills",
+  "potential",
+  "age",
+  "experience",
+  "reputation",
+  "salary_expectation",
+  "loyalty",
+  "ambition",
+  "discipline",
+  "attitude_to_manager",
+  "compatibility",
+  "club_history",
+  "contract",
+  "work_conditions",
+  "personality"
+ ],
+ "roles": [
+  {
+   "id": "head_coach",
+   "name": "Главный тренер",
+   "skills": [
+    "tactics",
+    "discipline",
+    "communication",
+    "development"
+   ],
+   "workplace": "training_zone",
+   "phase": 1,
+   "salary_tier1": 12000
+  },
+  {
+   "id": "assistant_coach",
+   "name": "Второй тренер",
+   "skills": [
+    "tactics",
+    "discipline",
+    "communication",
+    "development"
+   ],
+   "workplace": "training_zone",
+   "phase": 2,
+   "salary_tier1": 7000
+  },
+  {
+   "id": "tactical_analyst",
+   "name": "Тактический аналитик",
+   "skills": [
+    "demo_review",
+    "opponent_prep",
+    "map_knowledge",
+    "communication"
+   ],
+   "workplace": "analytics_center",
+   "phase": 1,
+   "salary_tier1": 9000
+  },
+  {
+   "id": "psychologist",
+   "name": "Психолог",
+   "skills": [
+    "stress_work",
+    "conflict_mediation",
+    "trust_building",
+    "burnout_prevention"
+   ],
+   "workplace": "psychology_center",
+   "phase": 1,
+   "salary_tier1": 9000
+  },
+  {
+   "id": "scout",
+   "name": "Скаут",
+   "skills": [
+    "talent_eye",
+    "potential_read",
+    "stat_reading",
+    "network"
+   ],
+   "workplace": "office",
+   "phase": 1,
+   "salary_tier1": 6000
+  },
+  {
+   "id": "head_hunter",
+   "name": "Head Hunter",
+   "skills": [
+    "staff_search",
+    "negotiation",
+    "evaluation",
+    "network"
+   ],
+   "workplace": "office",
+   "phase": 1,
+   "salary_tier1": 10000
+  },
+  {
+   "id": "sports_director",
+   "name": "Спортивный директор",
+   "skills": [
+    "squad_planning",
+    "transfer_market",
+    "negotiation",
+    "vision"
+   ],
+   "workplace": "office",
+   "phase": 2,
+   "salary_tier1": 14000
+  },
+  {
+   "id": "academy_head",
+   "name": "Руководитель академии",
+   "skills": [
+    "youth_selection",
+    "development",
+    "discipline",
+    "finance"
+   ],
+   "workplace": "academy",
+   "phase": 2,
+   "salary_tier1": 11000
+  },
+  {
+   "id": "youth_coach",
+   "name": "Молодёжный тренер",
+   "skills": [
+    "development",
+    "tactics",
+    "communication",
+    "patience"
+   ],
+   "workplace": "academy",
+   "phase": 2,
+   "salary_tier1": 6000
+  },
+  {
+   "id": "media_manager",
+   "name": "Медиа-менеджер",
+   "skills": [
+    "press",
+    "content",
+    "crisis_comms",
+    "brand"
+   ],
+   "workplace": "media_center",
+   "phase": 2,
+   "salary_tier1": 8000
+  },
+  {
+   "id": "streaming_specialist",
+   "name": "Специалист по стримингу",
+   "skills": [
+    "production",
+    "scheduling",
+    "sponsor_integration",
+    "audience"
+   ],
+   "workplace": "streaming_room",
+   "phase": 2,
+   "salary_tier1": 7000
+  },
+  {
+   "id": "physio",
+   "name": "Специалист по восстановлению",
+   "skills": [
+    "recovery",
+    "injury_prevention",
+    "sleep",
+    "nutrition"
+   ],
+   "workplace": "medical_center",
+   "phase": 3,
+   "salary_tier1": 8000
+  },
+  {
+   "id": "finance_director",
+   "name": "Финансовый директор",
+   "skills": [
+    "budgeting",
+    "investment",
+    "reporting",
+    "negotiation"
+   ],
+   "workplace": "office",
+   "phase": 3,
+   "salary_tier1": 13000
+  },
+  {
+   "id": "commercial_director",
+   "name": "Коммерческий директор",
+   "skills": [
+    "sponsors",
+    "merch",
+    "partnerships",
+    "pricing"
+   ],
+   "workplace": "office",
+   "phase": 3,
+   "salary_tier1": 12000
+  }
+ ]
+}

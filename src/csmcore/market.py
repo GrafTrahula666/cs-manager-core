@@ -146,7 +146,7 @@ class Market:
             self.short_since.setdefault(c.name, week)
         if not window and not short:
             return notes
-        pool = self.listed(clubs, week)
+        pool = [(p, c) for p, c in self.listed(clubs, week) if p.__dict__.get("hunt_until", 0) <= week]   # see hunt.py
         buyers = sorted(clubs if window else short, key=lambda c: (contracts.staying(c) >= 5, c.rank))
         buyers = [(b, extra) for b in buyers for extra in range(3 if contracts.staying(b) < 5 else 1)]
         for buyer, extra in buyers:   # a short club gets three tries: a refusal is not the end
