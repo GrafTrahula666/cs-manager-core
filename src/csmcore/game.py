@@ -118,6 +118,8 @@ class Game:
         news.lines += self._living_week()
         if getattr(self, "base", None) is not None:
             news.lines += self.base.week(self)
+        if getattr(self, "staff", None) is not None:
+            news.lines += self.staff.week(self)
         self.desk.plan = type(self.desk.plan)()   # plans last one week
         if self.run.wk >= economy.WEEKS_PER_YEAR:
             season_finish(self.run, self.clubs, self.sysm)
@@ -205,6 +207,10 @@ class Game:
         if getattr(self, "base", None) is None:
             from .base import Base
             self.base = Base()
+        if getattr(self, "staff", None) is None:
+            from .staff import StaffWorld
+            self.staff = StaffWorld(self.seed)
+            self.staff.seed_market(self)
         if not hasattr(self, "_titles_seen"):
             ch = self.sysm.chronicle
             self._titles_seen = len(ch.titles.get(self.club_name, [])) if ch else 0
@@ -384,6 +390,7 @@ class Game:
         self._titles_seen = len(ch.titles.get(club_name, [])) if ch else 0   # titles won earlier are not mine
         from .base import Base
         self.base = Base()                      # the base belongs to the club, not to the manager
+        self.staff = None                       # so does the staff: contracts end with the job (ensure_living makes a new market)
         owner = (self.sysm.owners or {}).get(club_name)
         if owner:
             owner.fired, owner.confidence = False, 55.0

@@ -712,6 +712,32 @@ function viewHome(s) {
   return `<section class="card"><h3>Мой дом <span class="muted">${H.total_levels}/${H.max_levels} уровней · содержание ${money(H.upkeep_month)}/мес.</span></h3>${homeSvg(H)}</section>
     <div class="grid2">${detail}<section class="card"><h3>История базы</h3>${H.history.length ? H.history.map((x) => `<div class="line"><span>${esc(x)}</span></div>`).join("") : `<p class="muted">Здесь появится всё, что вы построите.</p>`}</section></div>`;
 }
+
+function stCard(m, mine) {
+  const wire = m.wired ? `<span class="plus">работает в игре</span>` : `<span class="muted">пока ничего не меняет в игре</span>`;
+  const bar = `<div class="lvbar" title="Мастерство ${m.skill}"><i class="on" style="flex:${m.skill}"></i><i style="flex:${100 - m.skill}"></i></div>`;
+  return `<div class="ftile" style="cursor:default"><b>${esc(m.name)}</b><span class="muted">${esc(m.role_name)}, ${m.age} лет · мастерство ${m.skill}</span>${bar}${wire}
+    ${mine ? `<span>${money(m.salary)}/мес. · договор ещё ${m.weeks_left} нед.${m.workplace ? " · на рабочем месте" : " · без рабочего места"}</span>
+       <div class="controls">${m.workplace ? "" : `<button class="small primary" data-sassign="${m.id}">На рабочее место</button>`}<button class="small" data-srelease="${m.id}">Уволить</button></div>`
+     : `<span>Просит ${money(m.expectation)}/мес.</span><div class="controls"><select id="mo_${m.id}" class="small">${ST.months.map((x) => `<option value="${x}" ${x === 12 ? "selected" : ""}>${x} мес.</option>`).join("")}</select><button class="small primary" data-shire="${m.id}">Нанять</button></div>`}</div>`;
+}
+let ST = null;
+function viewStaff(s) {
+  ST = call("staff");
+  const dos = ST.target ? call("dossier", ST.target) : null;
+  const byRole = Object.keys(ST.roles).map((r) => {
+    const c = ST.candidates.filter((m) => m.role === r);
+    return c.length ? `<h4 style="margin:14px 0 6px">${esc(ST.roles[r])}</h4><div class="ftiles">${c.map((m) => stCard(m, false)).join("")}</div>` : "";
+  }).join("");
+  const tgt = `<div class="controls"><select id="stTarget">${ST.targets.map((c) => `<option value="${esc(c.name)}" ${c.name === ST.target ? "selected" : ""}>#${c.rank} ${esc(c.name)}</option>`).join("")}</select><button class="small primary" data-stset="1">Изучать этого соперника</button>${ST.target ? `<button class="small" data-stclear="1">Снять цель</button>` : ""}</div>`;
+  const dtab = dos ? `<div class="muted">Изучено ${dos.knowledge}% · клуб #${dos.rank}</div>` + dos.players.map((p) => `<div class="line"><span>${esc(p.name)} <span class="muted">${esc(p.role)}</span></span><span class="num">${p.ovr_range[0]}–${p.ovr_range[1]}</span><span class="muted">знаем ${p.known}%</span></div>`).join("") : `<p class="muted">Выберите соперника. Аналитик каждую неделю изучает его состав, диапазоны оценок сужаются.</p>`;
+  const noAn = !ST.mine.some((m) => m.role === "tactical_analyst" && m.workplace);
+  return `<section class="card"><h3>Штаб <span class="muted">зарплаты ${money(ST.payroll_month)}/мес. · аналитический центр: уровень ${ST.analytics_level}</span></h3>
+      ${ST.mine.length ? `<div class="ftiles">${ST.mine.map((m) => stCard(m, true)).join("")}</div>` : `<p class="muted">Пока никого. Наймите аналитика (нужно здание «Аналитический центр» во вкладке «Мой дом»).</p>`}
+      ${lastResults.staff ? `<div class="result">${esc(lastResults.staff)}</div>` : ""}</section>
+    <div class="grid2"><section class="card"><h3>Досье на соперника</h3>${noAn ? `<p class="why">Аналитик не работает: ${ST.analytics_level ? "назначьте аналитика на рабочее место" : "постройте аналитический центр и наймите аналитика"}. Без него досье не собирается.</p>` : `<p class="plus">Скорость анализа ×${ST.analyst_power}</p>`}${tgt}${dtab}</section>
+    <section class="card"><h3>Рынок специалистов</h3><p class="muted">Все договорные деньги идут через финансы. Договор нельзя разорвать бесплатно: увольнение стоит половину оставшейся зарплаты. Работают в игре пока только аналитики.</p>${byRole}</section></div>`;
+}
 function viewManager(s) {
   const L = call("living");
   const sel = L.nodes.find((n) => n.id === selNode);
@@ -813,7 +839,7 @@ const hintHtml = (h) => {
   return bits.length ? bits.join(" ") : "без последствий";
 };
 
-const TABS = [["office", "Сводка"], ["manager", "Менеджер"], ["home", "Мой дом"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+const TABS = [["office", "Сводка"], ["manager", "Менеджер"], ["home", "Мой дом"], ["staff", "Штаб"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
   ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
 
 function render(s) {
@@ -837,7 +863,7 @@ function render(s) {
   $("toEventBtn").title = ne ? `Играть до «${ne.name}» (неделя ${ne.week}); остановится, если нужно ваше решение` : "";
   const due = s.pending_events + s.offers, sits = s.situations || 0;
   $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "manager" && s.talent_points ? `<span class="badge">${s.talent_points}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
-  const views = { office: viewOffice, manager: viewManager, home: viewHome, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
+  const views = { office: viewOffice, manager: viewManager, home: viewHome, staff: viewStaff, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
   $("main").innerHTML = views[tab](s);
 }
 
@@ -1133,6 +1159,11 @@ document.addEventListener("click", async (ev) => {
     if (b.id === "newBtn") return openCreator();
     if (b.id === "crGo") return startCareer();
     if (b.id === "crBack") { $("creator").hidden = true; $("boot").hidden = false; return; }
+    if (d.shire) { try { lastResults.staff = call("staff_hire", d.shire, +$("mo_" + d.shire).value); } catch (e) { lastResults.staff = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
+    if (d.sassign || d.srelease || d.stset || d.stclear) {
+      try { lastResults.staff = d.sassign ? call("staff_assign", d.sassign) : d.srelease ? call("staff_release", d.srelease) : d.stset ? call("staff_target", $("stTarget").value) : call("staff_target", null); }
+      catch (e) { lastResults.staff = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render();
+    }
     if (d.build) { try { lastResults.build = call("build", d.build); } catch (e) { lastResults.build = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
     if (d.talent) { try { lastResults.talent = call("unlock_talent", d.talent); } catch (e) { lastResults.talent = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
     if (b.id === "contBtn") { let t = ""; try { t = localStorage.getItem(SAVE_KEY) || ""; } catch (e) {} return loadFrom(t); }

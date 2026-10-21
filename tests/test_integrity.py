@@ -32,7 +32,8 @@ def test_api_marks_inactive_talent_effects(g):
 
 def test_facility_effects_are_inactive_until_wired(g, monkeypatch):
     h = api.home()
-    assert all(not e["active"] for f in h["facilities"] if f["next"] for e in f["next"]["effects"])
+    assert all(not e["active"] for f in h["facilities"] if f["next"] for e in f["next"]["effects"]
+               if e["key"] not in ("analysis.demo_depth", "analysis.slots"))   # these two are wired in staff.py
     f = next(x for x in h["facilities"] if x["id"] == "training_zone")
     assert f["now"] and all(not e["active"] for e in f["now"])
     monkeypatch.setitem(base.EFFECT_STATUS, "training.quality", "wired")

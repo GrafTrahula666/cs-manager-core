@@ -23,7 +23,10 @@ EFFECT_RU = {
 
 # Status of each facility effect key (planned -> wired -> tested -> calibrated). Nothing is wired yet, so none of
 # them may be shown as an active bonus. Flip a key here in the PR that really connects it.
-EFFECT_STATUS: dict[str, str] = {}
+EFFECT_STATUS: dict[str, str] = {
+    # wired in staff.py: the analytics centre speeds up the analyst's dossier on a rival club (information only)
+    "analysis.demo_depth": "wired", "analysis.slots": "wired",
+}
 
 
 def effect_status(key: str) -> str:
