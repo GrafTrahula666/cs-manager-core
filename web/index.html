@@ -695,19 +695,20 @@ function viewHome(s) {
   if (!selFac) selFac = (H.facilities.find((f) => f.can && f.level === 0) || H.facilities[0]).id;
   const f = H.facilities.find((x) => x.id === selFac) || H.facilities[0], n = f.next;
   const bar = `<div class="lvbar">${[1, 2, 3, 4, 5].map((l) => `<i class="${l <= f.level ? "on" : ""}"></i>`).join("")}</div>`;
-  const nowFx = f.now.map((e) => `<span class="plus">${esc(e.label)}: ${e.value > 0 && e.value < 1 ? "+" + Math.round(e.value * 100) + "%" : "+" + e.value}</span>`).join("");
+  const fx = (e) => `<span class="${e.active ? "plus" : "muted"}">${esc(e.label)}: ${e.value > 0 && e.value < 1 ? "+" + Math.round(e.value * 100) + "%" : "+" + e.value}${e.active ? "" : " · пока не действует"}</span>`;
+  const nowFx = f.now.map(fx).join("");
   const detail = `<section class="card detail">${ART.base ? `<img class="fdetail" src="${facImg(f)}" alt="">` : ""}<b>${esc(f.name)}</b><span class="muted">${esc(f.level_name)}${f.project ? `, идёт стройка уровня ${f.project.to}: ещё ${f.project.weeks_left} нед.` : ""}</span>${bar}
     ${nowFx || `<span class="muted">Пока ничего не даёт.</span>`}
     ${n ? `<hr><b>Уровень ${n.level}: ${esc(H.level_names[n.level])}</b>
-      <span>Цена ${money(n.cost)} · стройка ${n.weeks} нед. · содержание ${money(n.upkeep_month)}/мес.</span>
+      <span>Цена ${money(n.cost)} · стройка ${n.weeks} нед. · содержание +${money(n.upkeep_month)}/мес.</span>
       ${ART.base ? `<img class="fdetail" style="max-height:150px;opacity:.9" src="art/base/fac_${f.id}_lvl${n.level}.webp" alt="Как будет выглядеть уровень ${n.level}">` : ""}
-      ${n.effects.map((e) => `<span class="plus">${esc(e.label)}: +${e.value < 1 ? Math.round(e.value * 100) + "%" : e.value}</span>`).join("")}
+      ${n.effects.map((e) => fx({ label: e.label, value: e.value, active: e.active })).join("")}
       ${n.req.map((r) => `<div class="reqrow ${r.soft ? "soft" : r.ok ? "ok" : "no"}"><b>${r.soft ? "…" : r.ok ? "✓" : "✗"}</b><span>${esc(r.text)}</span></div>`).join("")}
       ${n.events.length ? `<span class="why">Риски уровня: ${n.events.map((e) => esc(e.split(":")[1] || e)).join("; ")}</span>` : ""}
       <div><button class="primary small" data-build="${f.id}" ${f.can ? "" : "disabled"}>Построить уровень ${n.level}</button></div>`
       : `<span class="muted">${esc(f.why)}</span>`}
     ${lastResults.build ? `<span class="result">${esc(lastResults.build)}</span>` : ""}
-    <span class="why">Эффекты зданий показываются честно, но подключатся к механикам в следующих этапах. Шанс победы здания напрямую не меняют.</span></section>`;
+    <span class="why">Серые эффекты пока не действуют: они ещё не подключены к игре. Шанс победы здания напрямую не меняют.</span></section>`;
   return `<section class="card"><h3>Мой дом <span class="muted">${H.total_levels}/${H.max_levels} уровней · содержание ${money(H.upkeep_month)}/мес.</span></h3>${homeSvg(H)}</section>
     <div class="grid2">${detail}<section class="card"><h3>История базы</h3>${H.history.length ? H.history.map((x) => `<div class="line"><span>${esc(x)}</span></div>`).join("") : `<p class="muted">Здесь появится всё, что вы построите.</p>`}</section></div>`;
 }
@@ -716,7 +717,7 @@ function viewManager(s) {
   const sel = L.nodes.find((n) => n.id === selNode);
   const pct = L.xp_next ? Math.round(L.xp / L.xp_next * 100) : 100;
   const detail = sel ? `<div class="detail"><b>${esc(sel.name)}${sel.capstone ? " ★" : ""}</b><span class="muted">${esc(L.branches[sel.branch].name)}, ${sel.tier} уровень</span>
-      <span>${esc(sel.desc)}</span>${sel.effect.map((e) => `<span class="plus">${esc(e.label)}: +${Math.round(e.value * 100)}% (общий предел ${Math.round(e.cap * 100)}%)</span>`).join("")}
+      <span>${esc(sel.desc)}</span>${sel.effect.map((e) => `<span class="${e.active ? "plus" : "muted"}">${esc(e.label)}: +${Math.round(e.value * 100)}% (общий предел ${Math.round(e.cap * 100)}%)${e.active ? "" : " · пока не действует: ещё не подключено к игре"}</span>`).join("")}
       ${sel.risk ? `<span class="flag">Риск: может вскрыться (${esc(sel.risk === "exposure" ? "разоблачение" : "репутация")})</span>` : ""}
       ${sel.requires.length ? `<span class="why">Нужно: ${sel.requires.map((r) => esc(L.nodes.find((n) => n.id === r).name)).join(", ")}</span>` : ""}
       ${sel.state === "unlocked" ? `<span class="plus">Изучен</span>` : sel.state === "available" ? `<div><button class="primary small" data-talent="${sel.id}">Изучить за 1 очко</button></div>` : `<span class="why">${esc(sel.why)}</span>`}
@@ -724,7 +725,10 @@ function viewManager(s) {
     : `<div class="detail"><b>Нажмите на талант</b><span class="muted">Таланты не дают процент к победе: они улучшают информацию, подготовку и управленческие решения. Всё не изучить: очков 39, а талантов 60.</span></div>`;
   const order = [L.specialization, ...Object.keys(L.branches).filter((b) => b !== L.specialization)];
   const trees = order.map((b) => `<section class="card tree"><h3>${ART.base ? `<i class="emb" style="--emb:url(art/base/icons_branches.webp);background-position:${["strategist", "motivator", "analyst", "manager", "intriguer"].indexOf(b) * 25}% 0"></i>` : ""}${esc(L.branches[b].name)} ${b === L.specialization ? `<span class="pill story">ваша ветка</span>` : ""} <span class="muted">${L.nodes.filter((n) => n.branch === b && n.state === "unlocked").length}/12</span></h3><span class="muted">${esc(L.branches[b].desc)}</span>${treeSvg(L, b)}</section>`).join("");
-  const ch = L.channels.map((c) => `<div class="chrow"><span>${esc(c.label)}</span><b class="${c.value >= 0 ? "plus" : "minus"}">${c.value >= 0 ? "+" : ""}${(c.value * 100).toFixed(1)}%</b><span class="why">${c.why.map(esc).join(" · ")}${c.status === "planned" ? " · подключится к игре в следующих этапах" : ""}</span></div>`).join("");
+  const chRow = (c) => `<div class="chrow"><span>${esc(c.label)}</span><b class="${c.active ? (c.value >= 0 ? "plus" : "minus") : "muted"}">${c.value >= 0 ? "+" : ""}${(c.value * 100).toFixed(1)}%</b><span class="why">${c.why.map(esc).join(" · ")}</span></div>`;
+  const chOn = L.channels.filter((c) => c.active), chOff = L.channels.filter((c) => !c.active);
+  const ch = (chOn.length ? chOn.map(chRow).join("") : `<p class="muted">Пока ни один талант не влияет на игру.</p>`) +
+    (chOff.length ? `<h4 class="muted" style="margin:12px 0 4px">Пока не действуют (ещё не подключены к игре)</h4><div style="opacity:.65">${chOff.map(chRow).join("")}</div>` : "");
   const jr = L.journal.map((j) => `<div class="line"><span class="num muted">С${j.season}</span><span>${esc(j.why)}</span><span class="num plus">+${j.xp}</span></div>`).join("");
   return `<section class="card"><div class="mhead">${face({ name: L.name, age: L.age, face: L.face }, s.club, 96)}
       <div class="nm"><b style="font:700 1.3rem var(--display)">${esc(L.name)}</b><span class="muted">${esc(L.background)}, ${L.age} лет, ${esc(L.country)} · ${esc(L.branches[L.specialization].name)}</span>
@@ -734,7 +738,7 @@ function viewManager(s) {
         <span class="${L.points ? "plus" : "muted"}"><b>Очков талантов: ${L.points}</b></span></div></div>
     <div class="sbars">${Object.keys(L.stats).map((k) => `<div class="sbar"><span>${L.stat_ru[k]}</span><i><u style="width:${L.stats[k] * 14}%"></u></i><span>${L.stats[k]}</span></div>`).join("")}</div></section>
   <div class="grid2"><div style="display:grid;gap:16px;align-content:start">${detail}
-      <section class="card"><h3>Что это даёт сейчас</h3>${ch || `<p class="muted">Пока только базовые навыки.</p>`}</section>
+      <section class="card"><h3>Что это даёт сейчас</h3>${ch}</section>
       <section class="card"><h3>За что вы получали опыт</h3>${jr || `<p class="muted">Опыт дают цели владельца, титулы, выход за ожидания, решённые конфликты. За пропуск недели опыта нет.</p>`}</section></div>
     <div style="display:grid;gap:16px;align-content:start">${trees}</div></div>`;
 }
