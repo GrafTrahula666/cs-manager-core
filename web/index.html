@@ -126,7 +126,8 @@ main { padding-block: 18px; display: grid; gap: 16px; }
 .line { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
 .pill { font: 600 .62rem/1.5 var(--mono); text-transform: uppercase; letter-spacing: .08em; padding: 1px 6px; border-radius: 3px; background: var(--chip); color: var(--muted); flex: none; }
 .pill.match { background: color-mix(in srgb, var(--ct) 18%, transparent); color: var(--ct); }
-.pill.story { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+.pill.emb { display: inline-block; width: 28px; height: 28px; vertical-align: middle; margin-right: 6px; background: var(--emb) 0 0 / 500% 100% no-repeat; border-radius: 6px; }
+.story { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
 .pill.club { background: color-mix(in srgb, var(--good) 18%, transparent); color: var(--good); }
 .pill.world { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
 .event { border-left: 3px solid var(--ct); padding: 2px 0 2px 12px; display: grid; gap: 6px; }
@@ -144,6 +145,32 @@ main { padding-block: 18px; display: grid; gap: 16px; }
 .event.deck .pic { display: block; width: 100%; aspect-ratio: 3 / 2; max-height: 220px; object-fit: cover; border-bottom: 1px solid var(--line); }
 .event.offer { border-left-color: var(--good); }
 .why { font-size: .8rem; color: var(--muted); }
+.opt { display: grid; gap: 2px; justify-items: start; }
+.hint { display: flex; gap: 6px; flex-wrap: wrap; font: .68rem var(--mono); color: var(--muted); min-height: 1em; }
+.hint .plus, .hint .minus { font-weight: 600; }
+.fm { display: inline-flex; gap: 3px; }
+.fm i { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 3px; font: 600 .68rem var(--mono); font-style: normal; color: #fff; }
+.fm i.w { background: var(--good); } .fm i.l { background: var(--bad); }
+.mrow { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 6px 8px; border-left: 3px solid var(--line); background: var(--panel2); border-radius: 3px; }
+.mrow.w { border-left-color: var(--good); } .mrow.l { border-left-color: var(--bad); }
+.mrow .sc { font: 600 1.05rem var(--mono); }
+.alert { border: 1px solid var(--bad); background: color-mix(in srgb, var(--bad) 10%, var(--panel)); border-radius: 6px; padding: 10px 14px; font-size: .9rem; }
+.alert.up { border-color: var(--good); background: color-mix(in srgb, var(--good) 10%, var(--panel)); }
+.report { border: 1px solid var(--accent); background: linear-gradient(180deg, var(--glow), var(--panel)); border-radius: 6px; padding: 14px 16px; display: grid; gap: 6px; }
+.obj { display: flex; gap: 8px; align-items: baseline; }
+.obj .dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--warn); }
+.obj .dot.ok { background: var(--good); } .obj .dot.no { background: var(--bad); }
+.urgent { color: var(--bad); font-weight: 600; }
+.hz { display: grid; grid-template-columns: 54px 1fr; gap: 10px; align-items: baseline; padding: 6px 8px; border: 0; background: var(--panel2); border-radius: 4px; text-align: left; width: 100%; font: inherit; color: var(--fg); }
+.hz b { font: 600 .9rem var(--mono); color: var(--muted); }
+.hz.soon b { color: var(--bad); } .hz.star { border-left: 3px solid var(--accent); }
+.hunt { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.hcard { display: grid; grid-template-columns: 84px 1fr; gap: 12px; padding: 12px; border: 1px solid color-mix(in srgb, var(--accent) 50%, var(--line)); border-radius: 6px; background: linear-gradient(180deg, var(--glow), transparent 70%); }
+.hcard .big { width: 84px; height: 84px; }
+.hcard .big svg.face { width: 84px; height: 84px; border-radius: 8px; display: block; }
+.hcard .info { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.hcard b { font: 600 1rem var(--display); }
+kbd { font: .68rem var(--mono); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; color: var(--muted); }
 .result { font-size: .86rem; background: var(--panel2); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
 
 .tablebox { overflow-x: auto; }
@@ -167,6 +194,11 @@ tr.bench td { opacity: .55; }
 .ava { flex: none; width: 40px; height: 40px; border-radius: 4px; display: grid; place-items: center; position: relative; color: #fff; }
 .ava img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
 .ava svg { width: 18px; height: 18px; }
+.ava.face { width: 48px; height: 48px; overflow: visible; }
+.ava.face svg.face { width: 48px; height: 48px; border-radius: 6px; display: block; }
+.ava .role { position: absolute; right: -4px; bottom: -4px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--panel); }
+.ava .role svg { width: 11px; height: 11px; }
+.ava.igl .role { background: #7b5cc4; } .ava.awp .role { background: #2f7d6d; } .ava.entry .role { background: #c4553c; } .ava.rifler .role { background: #3a6db0; } .ava.support .role { background: #6b7a3a; } .ava.lurker .role { background: #59606b; }
 .ava.igl { background: #7b5cc4; } .ava.awp { background: #2f7d6d; } .ava.entry { background: #c4553c; }
 .ava.rifler { background: #3a6db0; } .ava.support { background: #6b7a3a; } .ava.lurker { background: #59606b; }
 .ava .st { position: absolute; right: -5px; top: -7px; color: var(--accent); font-size: .9rem; text-shadow: 0 0 4px var(--bg); }
@@ -210,6 +242,77 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
   .go { width: 100%; } .go .primary { flex: 1; }
 }
 @media (max-width: 520px) { .hide-sm { display: none; } }
+.creator { padding-block: 24px 60px; display: grid; gap: 16px; }
+#creator.art { background: linear-gradient(rgba(8,12,18,.72), rgba(8,12,18,.86)), var(--crart) center top / cover no-repeat; border-radius: 10px; padding-inline: 16px; }
+#creator.art .creator > h1, #creator.art .creator > p { color: #e7ebef; }
+.crframe { width: 200px; height: 266px; display: grid; place-items: center; background: var(--crframe) center / 100% 100% no-repeat; }
+.crframe svg.face { width: 150px !important; height: 150px !important; border: 0 !important; }
+.story { width: 100%; height: 150px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); margin-bottom: 10px; }
+.creator h1 { font: 800 1.5rem var(--display); margin: 0; }
+.crgrid { display: grid; gap: 16px; grid-template-columns: minmax(280px, 340px) 1fr; align-items: start; }
+@media (max-width: 820px) { .crgrid { grid-template-columns: 1fr; } }
+.crface { display: grid; gap: 10px; justify-items: center; }
+.crface svg.face { width: 180px; height: 180px; border-radius: 10px; border: 1px solid var(--line); }
+.sw { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.sw button { width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 2px solid transparent; }
+.sw button[aria-pressed="true"] { border-color: var(--fg); }
+.crrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+.crrow label { display: grid; gap: 4px; font-size: .78rem; color: var(--muted); }
+.choices { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.choice { text-align: left; display: grid; gap: 6px; padding: 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel2); color: var(--fg); font: inherit; align-content: start; }
+.choice[aria-pressed="true"] { border-color: var(--accent); background: linear-gradient(180deg, var(--glow), var(--panel2)); box-shadow: inset 0 0 0 1px var(--accent); }
+.choice b { font: 600 .95rem var(--display); }
+.choice .plus, .choice .minus { font-size: .8rem; }
+.sbars { display: grid; gap: 3px; }
+.sbar { display: grid; grid-template-columns: 74px 1fr 18px; gap: 6px; align-items: center; font-size: .74rem; color: var(--muted); }
+.sbar i { display: block; height: 6px; border-radius: 3px; background: var(--chip); position: relative; }
+.sbar i u { position: absolute; inset: 0 auto 0 0; background: var(--ct); border-radius: 3px; }
+.sbar i u.up { background: var(--accent); }
+.sbar span:last-child { font-family: var(--mono); text-align: right; }
+.lvlring { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; font: 800 1.5rem var(--display); background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--chip) 0); position: relative; flex: none; }
+.lvlring::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: var(--panel); }
+.lvlring b { position: relative; }
+.mhead { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.mhead svg.face { width: 96px; height: 96px; border-radius: 10px; border: 1px solid var(--line); }
+.mhead .nm { display: grid; gap: 4px; min-width: 0; flex: 1; }
+.tree svg { width: 100%; height: auto; display: block; }
+
+.housebar { display: flex; gap: 16px; align-items: center; margin-bottom: 14px; }
+.housebar img { width: min(360px, 45%); height: auto; }
+.housebar div { display: grid; gap: 4px; }
+.ftiles { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.ftile { display: grid; gap: 4px; padding: 8px; text-align: left; border: 1px solid var(--line); border-radius: 8px; background: var(--panel2); color: var(--fg); font: inherit; cursor: pointer; }
+.ftile.sel, .ftile:hover { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.ftile img { width: 100%; aspect-ratio: 3 / 2; object-fit: contain; background: radial-gradient(circle at 50% 60%, rgba(95,160,220,.18), transparent 70%); border-radius: 6px; }
+.ftile .ph { display: block; aspect-ratio: 3 / 2; background: var(--chip); border-radius: 6px; }
+.ftile.l0 img { opacity: .8; }
+.ftile b { font: 600 .85rem var(--display); }
+.ftile .lv { font: 700 .62rem var(--mono); color: var(--accent); letter-spacing: .04em; }
+.fdetail { width: 100%; max-height: 260px; object-fit: contain; }
+.reqrow { display: flex; gap: 8px; font-size: .82rem; }
+.reqrow.ok b { color: var(--good, #6fcf97); } .reqrow.no b { color: var(--bad, #eb5757); } .reqrow.soft b { color: var(--muted); }
+.lvbar { display: flex; gap: 4px; margin: 4px 0; } .lvbar i { flex: 1; height: 6px; border-radius: 3px; background: var(--panel2); } .lvbar i.on { background: var(--accent); }
+.tnode { cursor: pointer; }
+.tnode circle.bg { fill: var(--panel2); stroke: var(--line); stroke-width: 2; }
+.tnode.unlocked circle.bg { fill: var(--accent); stroke: var(--accent); }
+.tnode.available circle.bg { stroke: var(--accent); stroke-width: 3; animation: pulse 1.8s ease-in-out infinite; }
+.tnode.sel circle.bg { stroke: var(--fg); stroke-width: 3.5; animation: none; }
+.tnode text.ic { fill: var(--muted); font: 700 13px var(--mono); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.tnode.unlocked text.ic { fill: var(--accent-fg); }
+.tnode text.lb { fill: var(--fg); font: 500 10.5px var(--body); text-anchor: middle; pointer-events: none; }
+.tnode.locked text.lb { fill: var(--muted); }
+.tnode .cap { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.tlink { stroke: var(--line); stroke-width: 2; fill: none; }
+.tlink.on { stroke: var(--accent); }
+@keyframes pulse { 50% { stroke-opacity: .35; } }
+.detail { border: 1px solid var(--accent); border-radius: 6px; padding: 14px; display: grid; gap: 6px; background: linear-gradient(180deg, var(--glow), var(--panel)); }
+.lvlup { position: fixed; inset: 0; display: grid; place-items: center; z-index: 12; background: rgba(8, 12, 18, .72); }
+.lvlup .box { background: var(--panel); border: 2px solid var(--accent); border-radius: 12px; padding: 28px 34px; display: grid; gap: 10px; justify-items: center; text-align: center; max-width: min(92vw, 420px); animation: pop .5s cubic-bezier(.2, 1.4, .4, 1); }
+.lvlup .big { font: 800 4.2rem/1 var(--display); color: var(--accent); text-shadow: 0 0 30px var(--glow); }
+.lvlup .rays { position: absolute; width: 520px; height: 520px; border-radius: 50%; background: repeating-conic-gradient(from 0deg, var(--glow) 0 8deg, transparent 8deg 22deg); animation: spin 16s linear infinite; -webkit-mask-image: radial-gradient(circle, #000 0 30%, transparent 70%); mask-image: radial-gradient(circle, #000 0 30%, transparent 70%); pointer-events: none; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+.chrow { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: .86rem; }
+.chrow .why { grid-column: 1 / -1; }
 </style>
 
 <div class="wrap" id="app">
@@ -246,6 +349,8 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
     </div>
   </section>
 
+  <section id="creator" hidden></section>
+
   <div id="game" hidden>
     <header class="strip">
       <div class="top">
@@ -256,9 +361,11 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <div class="kpi"><small>Касса</small><span id="kCash">—</span></div>
           <div class="kpi"><small>Владелец</small><span id="kOwner">—</span></div>
           <div class="kpi hide-sm"><small>Репутация</small><span id="kRep">—</span></div>
+          <div class="kpi" title="Уровень менеджера и опыт"><small>Менеджер</small><span id="kLvl">—</span></div>
         </div>
         <div class="go">
-          <button class="primary" id="nextBtn">Следующая неделя</button>
+          <button class="primary" id="nextBtn" title="Клавиша N или пробел">Следующая неделя</button>
+          <button id="toEventBtn" title="Играть недели до ближайшего турнира; остановится, если нужно ваше решение">До турнира</button>
           <button id="next4Btn" title="Остановится, если нужно ваше решение">+4</button>
         </div>
       </div>
@@ -289,7 +396,7 @@ const ITEM = { salaries: "зарплаты", staff: "персонал", sponsors
   release: "отступные", sponsor_bonus: "бонусы спонсоров", events: "события", signing_bonus: "подъёмные",
   agents: "агенты", win_bonuses: "премии за титулы", owner: "деньги владельца" };
 const SAVE_KEY = "csm-save-v1";
-let py, api, META, tab = "office", log = [], lastResults = {};
+let py, api, META, tab = "office", log = [], lastResults = {}, matches = [], seasonReport = null, curState = null;
 
 // Optional art: drop images into art/ and list them in art/manifest.json
 // ({"logo": "art/logo.png", "start": "art/start.jpg", "deck": {"deck_retreat": "art/deck_retreat.jpg"}, "role": {...}}).
@@ -300,6 +407,7 @@ async function loadArt() {
     if (!r.ok) return;
     ART = Object.assign(ART, await r.json());
     if (ART.logo) $("logo").innerHTML = `<img src="${esc(ART.logo)}" alt="CS MENEDGER">`;
+    if (ART.base) ART.start = "art/base/menu.webp";
     if (ART.start) { $("boot").classList.add("art"); $("boot").style.setProperty("--art", `url("${ART.start}")`); }
   } catch (e) {}
 }
@@ -335,11 +443,91 @@ const ROLE_ICON = {
   support: '<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/>',
   lurker: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/>',
 };
-function ava(p) {
-  const img = ART.role && ART.role[p.role];
-  const inner = img ? `<img src="${esc(img)}" alt="">` :
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${ROLE_ICON[p.role] || ROLE_ICON.rifler}</svg>`;
-  return `<span class="ava ${esc(p.role)}" title="${ROLE[p.role] || p.role}">${inner}${p.star ? `<span class="st">★</span>` : ""}</span>`;
+
+// Face generator: every player gets a face from his name, so he looks the same in every screen.
+// Skin tone, face shape, hair (style and colour), brows, eyes, nose, lips, facial hair, build,
+// headset/cap/glasses, scar and age lines all come from one seeded stream. Nothing is stored.
+function rng32(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const pickW = (r, items) => { const tot = items.reduce((a, x) => a + x[1], 0); let v = r() * tot; for (const [x, w] of items) { if ((v -= w) < 0) return x; } return items[0][0]; };
+const SKIN = ["#f7dcc8", "#f0cba9", "#e2b48c", "#cf9a6c", "#b27b4d", "#93603a", "#74462a", "#4f2e1d"];
+const HAIR = [["#17110d", 30], ["#2e1c12", 22], ["#5a3820", 16], ["#8c5a2b", 10], ["#c79a45", 8], ["#b8431f", 4], ["#8b8f94", 3], ["#e9e4d8", 2], ["#2d3a8c", 2], ["#7a2fa0", 1.5], ["#1f8f7a", 1.5]];
+const IRIS = ["#3b2a1d", "#4f3a22", "#2f5d8a", "#3f7a52", "#6b6f73", "#1d1d1d"];
+function shade(hex, k) { // k < 1 darkens, k > 1 lightens
+  const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.max(0, Math.min(255, Math.round(k < 1 ? v * k : v + (255 - v) * (k - 1)))));
+  return "#" + c.map((v) => v.toString(16).padStart(2, "0")).join("");
+}
+function faceTraits(name, age, ov = {}) {
+  const r = rng32(hash("face:" + (ov.seed || name)));
+  const skin = SKIN[pickW(r, [[0, 12], [1, 20], [2, 20], [3, 16], [4, 12], [5, 10], [6, 6], [7, 4]])];
+  let hair = pickW(r, HAIR);
+  if (age >= 29 && r() < 0.3) hair = "#8b8f94";
+  const t = {
+    skin, hair, iris: IRIS[Math.floor(r() * IRIS.length)],
+    hw: 14 + r() * 3.4, chinY: 44.5 + r() * 4, chinW: 5 + r() * 5, build: pickW(r, [[0, 3], [1, 5], [2, 3]]),
+    style: pickW(r, [[0, 4], [1, 12], [2, 16], [3, 12], [4, 10], [5, 7], [6, 8], [7, 4], [8, 5], [9, 5], [10, 6]]),
+    brow: Math.floor(r() * 3), eye: Math.floor(r() * 3), nose: Math.floor(r() * 4), lips: Math.floor(r() * 4),
+    beard: pickW(r, [[0, 46], [1, 16], [2, 14], [3, 12], [4, 12]]), headset: r() < 0.4, cap: r() < 0.13, glasses: r() < 0.1,
+    scar: r() < 0.05, earring: r() < 0.09, lines: age >= 28, freckles: r() < 0.1, tilt: (r() - 0.5) * 3,
+  };
+  if (ov.skin != null) t.skin = SKIN[ov.skin];
+  if (ov.hair != null) t.hair = HAIR[ov.hair][0];
+  if (ov.style != null && ov.style !== "") t.style = +ov.style;
+  if (ov.beard != null && ov.beard !== "") t.beard = +ov.beard;
+  for (const k of ["glasses", "headset", "cap"]) if (ov[k] != null) t[k] = !!ov[k];
+  return t;
+}
+function face(p, club, size = 40) {
+  const t = faceTraits(p.name, p.age || 22, p.face || {}), h1 = hash(club || "free") % 360;
+  const cx = 32, hw = t.hw, top = 10, chinY = t.chinY, sk = t.skin, dk = shade(sk, 0.82), hc = t.hair;
+  const sw = [19, 23, 27][t.build], nw = [4.6, 5.6, 6.8][t.build];
+  const lip = shade(sk, 0.62).replace(/^#(..)(..)(..)$/, (m, a, b, c) => "#" + [Math.min(255, parseInt(a, 16) + 38), parseInt(b, 16) - 18, parseInt(c, 16) - 6].map((v) => Math.max(0, v).toString(16).padStart(2, "0")).join(""));
+  const head = `M${cx} ${top} C${cx + hw * .75} ${top} ${cx + hw} ${top + 8} ${cx + hw} 27 C${cx + hw} 36 ${cx + t.chinW + 3} ${chinY} ${cx} ${chinY} C${cx - t.chinW - 3} ${chinY} ${cx - hw} 36 ${cx - hw} 27 C${cx - hw} ${top + 8} ${cx - hw * .75} ${top} ${cx} ${top}Z`;
+  const cap = (y) => `M${cx - hw - .6} 25 C${cx - hw - 1} 11 ${cx - hw * .5} ${top - 2} ${cx} ${top - 2} C${cx + hw * .5} ${top - 2} ${cx + hw + 1} 11 ${cx + hw + .6} 25 C${cx + hw - 1} ${y + 2} ${cx + hw - 5} ${y} ${cx} ${y} C${cx - hw + 5} ${y} ${cx - hw + 1} ${y + 2} ${cx - hw - .6} 25Z`;
+  let back = "", front = "";
+  switch (t.style) {
+    case 1: front = `<path d="${cap(16)}" fill="${hc}" opacity=".78"/>`; break;
+    case 2: front = `<path d="${cap(15.5)}" fill="${hc}"/>`; break;
+    case 3: front = `<path d="${cap(14.5)}" fill="${hc}"/><path d="M${cx - hw + 2} 18 Q${cx + 2} 11 ${cx + hw - 1} 19 Q${cx + 2} 15 ${cx - hw + 2} 18Z" fill="${shade(hc, 1.25)}" opacity=".5"/>`; break;
+    case 4: front = `<path d="M${cx - hw - .5} 24 L${cx - hw + 1} 12 L${cx - hw * .55} 15 L${cx - hw * .3} 6 L${cx} 13 L${cx + hw * .3} 5 L${cx + hw * .55} 14 L${cx + hw - 1} 11 L${cx + hw + .5} 24 Q${cx} 15 ${cx - hw - .5} 24Z" fill="${hc}"/>`; break;
+    case 5: back = `<path d="M${cx - hw - 2} 22 Q${cx - hw - 5} 46 ${cx - hw + 1} 58 L${cx + hw - 1} 58 Q${cx + hw + 5} 46 ${cx + hw + 2} 22 Z" fill="${hc}"/>`; front = `<path d="${cap(15)}" fill="${hc}"/>`; break;
+    case 6: front = [-12, -7, -2, 3, 8, 12].map((x, i) => `<circle cx="${cx + x * hw / 14}" cy="${i % 2 ? 11.5 : 13}" r="4.6" fill="${hc}"/>`).join("") + `<path d="${cap(16.5)}" fill="${hc}"/>`; break;
+    case 7: front = `<path d="${cap(18)}" fill="${hc}" opacity=".45"/><path d="M${cx - 3.2} 21 L${cx - 2.6} 5 Q${cx} 2 ${cx + 2.6} 5 L${cx + 3.2} 21Z" fill="${hc}"/>`; break;
+    case 8: back = `<circle cx="${cx}" cy="5.5" r="5.2" fill="${hc}"/>`; front = `<path d="${cap(15.5)}" fill="${hc}"/>`; break;
+    case 9: back = `<circle cx="${cx}" cy="22" r="${hw + 6.5}" fill="${hc}"/>`; front = `<path d="${cap(17)}" fill="${hc}" opacity=".6"/>`; break;
+    case 10: front = `<path d="${cap(13.5)}" fill="${hc}"/><path d="M${cx - hw} 22 L${cx - hw - 1} 31 L${cx - hw + 2.4} 28 Z M${cx + hw} 22 L${cx + hw + 1} 31 L${cx + hw - 2.4} 28 Z" fill="${hc}"/>`; break;
+  }
+  const bc = shade(hc, .85), eyeY = 28.5, ex = 6.6 - (t.eye === 2 ? 0 : .2);
+  const brows = `<path d="M${cx - ex - 3.2} ${23.8 + t.tilt * .3} L${cx - ex + 2.8} ${23.2 - t.tilt * .3}" stroke="${bc}" stroke-width="${[1.1, 1.7, 2.3][t.brow]}" stroke-linecap="round" fill="none"/>
+    <path d="M${cx + ex - 2.8} ${23.2 - t.tilt * .3} L${cx + ex + 3.2} ${23.8 + t.tilt * .3}" stroke="${bc}" stroke-width="${[1.1, 1.7, 2.3][t.brow]}" stroke-linecap="round" fill="none"/>`;
+  const [erx, ery] = [[2.5, 1.8], [2.8, 1.25], [3, 2.1]][t.eye];
+  const eyes = [-ex, ex].map((x) => `<ellipse cx="${cx + x}" cy="${eyeY}" rx="${erx}" ry="${ery}" fill="#fbfbf8"/><circle cx="${cx + x}" cy="${eyeY}" r="${Math.min(ery, 1.45)}" fill="${t.iris}"/><circle cx="${cx + x + .5}" cy="${eyeY - .4}" r=".45" fill="#fff"/>`).join("");
+  const nose = ["M32 29 Q30.6 35.5 29.4 36.6 Q32 38 34.6 36.6", "M32 29 Q29.8 35.6 28 36.8 Q32 38.6 36 36.8", "M32 28.5 Q31 36 30.4 37 Q32 38 33.6 37", "M32 30 Q31 34 29.8 35.6 Q32 37.2 34.2 35.6"][t.nose];
+  const mw = [4.6, 5.4, 6.2, 5][t.lips], mt = [.9, 1.5, 2.1, 1.2][t.lips];
+  const mouth = `<path d="M${cx - mw} 41.2 Q${cx - mw / 2} ${41.2 - mt} ${cx} ${40.6 - mt * .4} Q${cx + mw / 2} ${41.2 - mt} ${cx + mw} 41.2 Q${cx} ${43.4 + mt * 1.5} ${cx - mw} 41.2Z" fill="${lip}"/><path d="M${cx - mw} 41.2 Q${cx} 42.2 ${cx + mw} 41.2" stroke="${shade(lip, .6)}" stroke-width=".5" fill="none"/>`;
+  const jaw = `M${cx - hw + .6} 30 C${cx - hw + .8} 38 ${cx - t.chinW - 2} ${chinY + .3} ${cx} ${chinY + .3} C${cx + t.chinW + 2} ${chinY + .3} ${cx + hw - .8} 38 ${cx + hw - .6} 30`;
+  let fh = "";
+  if (t.beard === 1) fh = `<path d="${jaw} L${cx + hw - 1} 33 Q${cx} 36 ${cx - hw + 1} 33Z" fill="${hc}" opacity=".3"/>`;
+  if (t.beard === 2) fh = `<path d="${jaw} C${cx + hw - 3} 36 ${cx + 7} 35.5 ${cx + 5.5} 38.3 Q${cx} 36.8 ${cx - 5.5} 38.3 C${cx - 7} 35.5 ${cx - hw + 3} 36 ${cx - hw + .6} 30Z" fill="${hc}"/>`;
+  if (t.beard === 3) fh = `<path d="M${cx - 5.4} 38 Q${cx} 36 ${cx + 5.4} 38 Q${cx + 4} 41 ${cx + 3.4} 44 Q${cx} 49 ${cx - 3.4} 44 Q${cx - 4} 41 ${cx - 5.4} 38Z" fill="${hc}"/>`;
+  if (t.beard === 4) fh = `<path d="M${cx - 7} 38.4 Q${cx - 3.5} 35.8 ${cx} 37.4 Q${cx + 3.5} 35.8 ${cx + 7} 38.4 Q${cx + 4} 39.6 ${cx} 38.8 Q${cx - 4} 39.6 ${cx - 7} 38.4Z" fill="${hc}"/>`;
+  const extra = (t.freckles ? [[-6, 33], [-3.5, 34.4], [3.5, 34.4], [6, 33], [-8, 31.8], [8, 31.8]].map(([x, y]) => `<circle cx="${cx + x}" cy="${y}" r=".6" fill="${shade(sk, .6)}" opacity=".7"/>`).join("") : "") +
+    (t.lines ? `<path d="M${cx - 6} 21 Q${cx} 19.6 ${cx + 6} 21 M${cx - 9} 34 Q${cx - 8} 38 ${cx - 6.4} 39.6 M${cx + 9} 34 Q${cx + 8} 38 ${cx + 6.4} 39.6" stroke="${dk}" stroke-width=".55" fill="none" opacity=".75"/>` : "") +
+    (t.scar ? `<path d="M${cx + 6} 22.5 L${cx + 9.6} 31" stroke="${shade(sk, .6)}" stroke-width=".8" stroke-linecap="round"/>` : "");
+  const glasses = t.glasses ? `<g fill="none" stroke="#1d232b" stroke-width="1"><rect x="${cx - ex - 4.4}" y="${eyeY - 3.2}" width="8.8" height="6.4" rx="2.2"/><rect x="${cx + ex - 4.4}" y="${eyeY - 3.2}" width="8.8" height="6.4" rx="2.2"/><path d="M${cx - ex + 4.4} ${eyeY - 1} H${cx + ex - 4.4}"/></g>` : "";
+  const headset = t.headset ? `<path d="M${cx - hw - 1.2} 27 C${cx - hw - 1.4} 3 ${cx + hw + 1.4} 3 ${cx + hw + 1.2} 27" stroke="#1b2027" stroke-width="2.1" fill="none"/><rect x="${cx - hw - 4}" y="24" width="4.4" height="9" rx="2" fill="#22272f"/><rect x="${cx + hw - .4}" y="24" width="4.4" height="9" rx="2" fill="#22272f"/><path d="M${cx - hw - 3} 32 Q${cx - hw - 1} 41 ${cx - 5} 41.8" stroke="#1b2027" stroke-width=".9" fill="none"/><circle cx="${cx - 5}" cy="41.8" r="1.5" fill="#22272f"/>` : "";
+  const capSvg = t.cap ? `<path d="M${cx - hw - 1} 23 C${cx - hw - 1} 6 ${cx + hw + 1} 6 ${cx + hw + 1} 23 Z" fill="hsl(${h1} 45% 30%)"/><path d="M${cx - hw - 1} 23 Q${cx} 27.5 ${cx + hw + 5} 23.2 L${cx + hw + 5} 21.8 Q${cx} 24.6 ${cx - hw - 1} 21.4Z" fill="hsl(${h1} 45% 22%)"/>` : "";
+  const ears = `<ellipse cx="${cx - hw}" cy="29" rx="2.4" ry="4" fill="${sk}"/><ellipse cx="${cx + hw}" cy="29" rx="2.4" ry="4" fill="${sk}"/>` + (t.earring ? `<circle cx="${cx - hw - .8}" cy="33.4" r="1" fill="#e3b341"/>` : "");
+  const body = `<path d="M${cx - sw} 64 V58 Q${cx - sw} 51.5 ${cx - nw - 5} 49.6 L${cx + nw + 5} 49.6 Q${cx + sw} 51.5 ${cx + sw} 58 V64Z" fill="hsl(${h1} 50% 34%)"/>
+    <path d="M${cx - nw - 5} 49.6 Q${cx} 58 ${cx + nw + 5} 49.6 Q${cx} 53 ${cx - nw - 5} 49.6Z" fill="hsl(${h1} 50% 24%)"/>
+    <rect x="${cx - nw}" y="42" width="${nw * 2}" height="10" fill="${dk}"/><path d="M${cx - nw - 5} 49.6 Q${cx} 57 ${cx + nw + 5} 49.6 L${cx + nw} 48 Q${cx} 52 ${cx - nw} 48Z" fill="${dk}"/>
+    <path d="M${cx - sw + 5} 64 V57" stroke="hsl(${h1} 60% 60%)" stroke-width="1.2" opacity=".55"/>`;
+  const star = p.star ? `<circle cx="32" cy="32" r="30" fill="none" stroke="#e3a63f" stroke-width="2.4"/>` : "";
+  return `<svg class="face" width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="hsl(${h1} 35% 22%)"/>${back}${body}<path d="${head}" fill="${sk}"/>${ears}<path d="${head}" fill="none" stroke="${dk}" stroke-width=".6" opacity=".6"/>${brows}${eyes}<path d="${nose}" stroke="${shade(sk, .66)}" stroke-width="1" fill="none" stroke-linecap="round"/>${fh}${mouth}${extra}${front}${capSvg}${headset}${glasses}${star}</svg>`;
+}
+
+function ava(p, club) {
+  const badge = `<svg class="rb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">${ROLE_ICON[p.role] || ROLE_ICON.rifler}</svg>`;
+  return `<span class="ava face ${esc(p.role)}" title="${ROLE[p.role] || p.role}">${face(p, club === undefined ? (curState && curState.club) : club, 48)}<span class="role">${badge}</span>${p.star ? `<span class="st">★</span>` : ""}</span>`;
 }
 const OVR = (v) => `<span class="ovr ${v >= 90 ? "o90" : v >= 80 ? "o80" : v >= 70 ? "o70" : ""}">${v}</span>`;
 
@@ -406,15 +594,169 @@ async function boot() {
   }
 }
 
+// ---------- LIVING CLUB: manager creation ----------
+let MO = null, cr = null, selNode = null;
+const HAIR_STYLES = ["лысина", "ёжик", "короткая", "с пробором", "шипы", "длинные", "кудри", "ирокез", "пучок", "афро", "растрёпанная"];
+const BEARDS = ["нет", "щетина", "борода", "эспаньолка", "усы"];
+function crFace() { return face({ name: (cr.name + " " + cr.surname).trim() || "менеджер", age: cr.age, face: cr.ov }, "Вы", 180); }
+function openCreator() {
+  MO = MO || call("manager_options");
+  if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
+  $("boot").hidden = true; $("creator").hidden = false; renderCreator();
+}
+function crStats() {
+  const b = MO.backgrounds.find((x) => x.id === cr.bg), s = Object.assign({}, b.stats);
+  s[MO.specialization_stat[cr.spec]] += MO.specialization_bonus;
+  return [b.stats, s];
+}
+function crValid() { return (cr.name + cr.surname).trim().length >= 2 && cr.traits.length === 2; }
+function renderCreator() {
+  const [base, fin] = crStats();
+  const sbars = (a, b) => `<div class="sbars">${MO.stats.map((k) => `<div class="sbar"><span>${MO.stat_ru[k]}</span><i><u style="width:${a[k] * 16}%"></u>${b && b[k] > a[k] ? `<u class="up" style="width:${b[k] * 16}%;opacity:.45"></u>` : ""}</i><span>${b ? b[k] : a[k]}</span></div>`).join("")}</div>`;
+  const sw = SKIN.map((c, i) => `<button style="background:${c}" data-cr="skin" data-v="${i}" aria-pressed="${cr.ov.skin === i}" aria-label="оттенок кожи ${i + 1}"></button>`).join("");
+  const hw = HAIR.map(([c], i) => `<button style="background:${c}" data-cr="hair" data-v="${i}" aria-pressed="${cr.ov.hair === i}" aria-label="цвет волос ${i + 1}"></button>`).join("");
+  const opt = (arr, cur) => arr.map((n, i) => `<option value="${i}" ${cur === i ? "selected" : ""}>${n}</option>`).join("");
+  $("creator").classList.toggle("art", !!ART.base);
+  if (ART.base) { $("creator").style.setProperty("--crart", 'url("art/base/creator_bg.webp")'); $("creator").style.setProperty("--crframe", 'url("art/base/frame.webp")'); }
+  $("creator").innerHTML = `<div class="creator"><h1>Кто вы?</h1><p class="muted">Создайте менеджера. От предыстории и черт зависит, что получается у вас с первого дня, а специализация задаёт ветку талантов. Лучшего варианта нет: у всех равная сумма навыков.</p>
+  <div class="crgrid">
+   <section class="card"><h3>Внешность</h3><div class="crface">${ART.base ? `<div class="crframe"><span id="crPrev">${crFace()}</span></div>` : `<span id="crPrev">${crFace()}</span>`}
+     <button class="small" data-cr="reroll">Другое лицо</button>
+     <div class="sw" title="Оттенок кожи">${sw}</div><div class="sw" title="Цвет волос">${hw}</div>
+     <div class="crrow"><label>Причёска<select data-crsel="style"><option value="">случайная</option>${opt(HAIR_STYLES, cr.ov.style)}</select></label>
+       <label>Борода<select data-crsel="beard"><option value="">случайная</option>${opt(BEARDS, cr.ov.beard)}</select></label></div>
+     <div class="crrow">${[["glasses", "очки"], ["headset", "гарнитура"], ["cap", "кепка"]].map(([k, n]) => `<label><span><input type="checkbox" data-crchk="${k}" ${cr.ov[k] ? "checked" : ""}> ${n}</span></label>`).join("")}</div>
+   </div></section>
+   <div style="display:grid;gap:16px">
+    <section class="card"><h3>Имя и биография</h3><div class="crrow">
+      <label>Имя<input id="crName" value="${esc(cr.name)}" maxlength="20" placeholder="Иван"></label>
+      <label>Фамилия<input id="crSurname" value="${esc(cr.surname)}" maxlength="20" placeholder="Громов"></label>
+      <label>Возраст<input id="crAge" type="number" min="25" max="65" value="${cr.age}" style="width:80px"></label>
+      <label>Страна<select data-crsel="country">${MO.countries.map((c) => `<option ${c === cr.country ? "selected" : ""}>${c}</option>`).join("")}</select></label></div></section>
+    <section class="card"><h3>Предыстория</h3>${ART.base ? `<img class="story" src="art/base/story_${cr.bg}.webp" alt="" loading="lazy">` : ""}<div class="choices">${MO.backgrounds.map((b) => `<button class="choice" data-cr="bg" data-v="${b.id}" aria-pressed="${cr.bg === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span>${sbars(b.stats)}<span class="plus">+ ${esc(b.strength)}</span><span class="minus">− ${esc(b.weakness)}</span></button>`).join("")}</div></section>
+    <section class="card"><h3>Специализация</h3><div class="choices">${MO.branches.map((b) => `<button class="choice" data-cr="spec" data-v="${b.id}" aria-pressed="${cr.spec === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span><span class="why">+${MO.specialization_bonus} к навыку «${MO.stat_ru[b.stat]}»</span></button>`).join("")}</div></section>
+    <section class="card"><h3>Характер: выберите две черты <span class="muted">(${cr.traits.length}/2)</span></h3><div class="choices">${MO.traits.map((t) => `<button class="choice" data-cr="trait" data-v="${t.id}" aria-pressed="${cr.traits.includes(t.id)}"><b>${esc(t.name)}</b><span class="plus">+ ${esc(t.plus)}</span><span class="minus">− ${esc(t.minus)}</span></button>`).join("")}</div></section>
+    <section class="card"><h3>Ваши навыки на старте</h3>${sbars(base, fin)}<p class="muted">Светлая полоса: бонус специализации. Навыки усиливают соответствующие стороны игры, а таланты откроются по мере уровней.</p>
+      <div class="controls"><button class="primary" id="crGo" ${crValid() ? "" : "disabled"}>Начать карьеру</button><button id="crBack">Назад</button>
+      <span class="muted">${crValid() ? "" : "Нужны имя и две черты характера"}</span></div></section>
+   </div></div></div>`;
+}
+function crUpdateGo() { const b = $("crGo"); if (b) b.disabled = !crValid(); const p = $("crPrev"); if (p) p.innerHTML = crFace(); }
+async function startCareer() {
+  const profile = { name: (cr.name + " " + cr.surname).trim(), age: cr.age, country: cr.country, background: cr.bg, specialization: cr.spec, traits: cr.traits, face: cr.ov };
+  $("creator").hidden = true; busy(true, "Создаю мир…");
+  try {
+    const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value, profile));
+    busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null;
+    tab = "manager"; selNode = null; enterGame(s);
+    toast(`${profile.name}, вы возглавили ${s.club}. Откройте «Менеджер»: первые таланты появятся на втором уровне.`);
+  } catch (e) { busy(false); $("creator").hidden = false; toast("Не получилось: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]); }
+}
+
+// ---------- LIVING CLUB: manager screen and talent tree ----------
+const BR_ICON = { strategist: "▲", motivator: "●", analyst: "◆", manager: "■", intriguer: "✦" };
+function treeSvg(L, bid) {
+  const ns = L.nodes.filter((n) => n.branch === bid), by = Object.fromEntries(ns.map((n) => [n.id, n]));
+  const pos = {};
+  for (let t = 1; t <= 4; t++) {
+    const row = ns.filter((n) => n.tier === t);
+    const bary = (n) => n.requires.length ? n.requires.reduce((a, r) => a + pos[r].x, 0) / n.requires.length : 0;
+    row.sort((a, b) => bary(a) - bary(b));
+    row.forEach((n, i) => { pos[n.id] = { x: row.length === 1 ? 200 : 48 + i * (304 / (row.length - 1)), y: 38 + (t - 1) * 88 }; });
+  }
+  const links = ns.flatMap((n) => n.requires.map((r) => `<path class="tlink ${by[r].state === "unlocked" && n.state === "unlocked" ? "on" : ""}" d="M${pos[r].x} ${pos[r].y} C${pos[r].x} ${(pos[r].y + pos[n.id].y) / 2} ${pos[n.id].x} ${(pos[r].y + pos[n.id].y) / 2} ${pos[n.id].x} ${pos[n.id].y}"/>`)).join("");
+  const nodes = ns.map((n) => {
+    const { x, y } = pos[n.id], words = n.name.split(" "), l1 = [], l2 = [];
+    words.forEach((w) => ((l1.join(" ") + " " + w).trim().length <= 15 && !l2.length ? l1 : l2).push(w));
+    return `<g class="tnode ${n.state} ${selNode === n.id ? "sel" : ""}" data-node="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)}, ${n.state}">
+      ${n.capstone ? `<circle class="cap" cx="${x}" cy="${y}" r="29"/>` : ""}<circle class="bg" cx="${x}" cy="${y}" r="22"/>
+      <text class="ic" x="${x}" y="${y}">${n.state === "unlocked" ? "✓" : BR_ICON[bid]}</text>
+      <text class="lb" x="${x}" y="${y + 36}">${esc(l1.join(" "))}</text>${l2.length ? `<text class="lb" x="${x}" y="${y + 48}">${esc(l2.join(" "))}</text>` : ""}</g>`;
+  }).join("");
+  return `<svg viewBox="0 0 400 352" role="group" aria-label="Ветка талантов">${links}${nodes}</svg>`;
+}
+
+let selFac = "";
+function facImg(f) {
+  const n = f.project ? "fac_construction" : f.level ? `fac_${f.id}_lvl${f.level}` : "fac_empty";
+  return `art/base/${n}.webp`;
+}
+function houseLevel(total) { return total < 6 ? 1 : total < 12 ? 2 : total < 22 ? 3 : total < 34 ? 4 : 5; }
+function homeSvg(H) {
+  const hl = houseLevel(H.total_levels);
+  const banner = ART.base ? `<div class="housebar"><img src="art/base/house${hl}.webp" alt="Здание клуба"><div><b>Здание клуба: стадия ${hl} из 5</b><span class="muted">Растёт вместе с уровнями комнат. Сейчас ${H.total_levels} из ${H.max_levels}.</span></div></div>` : "";
+  const tiles = H.facilities.map((f) => `<button class="ftile ${selFac === f.id ? "sel" : ""} l${f.level}" data-fac="${f.id}" aria-label="${esc(f.name)}, уровень ${f.level}">
+      ${ART.base ? `<img src="${facImg(f)}" alt="" loading="lazy">` : `<i class="ph"></i>`}<b>${esc(f.name)}</b>
+      <span class="lv">${f.project ? `СТРОЙКА → ${f.project.to} · ${f.project.weeks_left} нед.` : f.level ? "УРОВЕНЬ " + f.level : "НЕ ПОСТРОЕНО"}</span></button>`).join("");
+  return banner + `<div class="ftiles">${tiles}</div>`;
+}
+function viewHome(s) {
+  const H = call("home");
+  if (!selFac) selFac = (H.facilities.find((f) => f.can && f.level === 0) || H.facilities[0]).id;
+  const f = H.facilities.find((x) => x.id === selFac) || H.facilities[0], n = f.next;
+  const bar = `<div class="lvbar">${[1, 2, 3, 4, 5].map((l) => `<i class="${l <= f.level ? "on" : ""}"></i>`).join("")}</div>`;
+  const nowFx = f.now.map((e) => `<span class="plus">${esc(e.label)}: ${e.value > 0 && e.value < 1 ? "+" + Math.round(e.value * 100) + "%" : "+" + e.value}</span>`).join("");
+  const detail = `<section class="card detail">${ART.base ? `<img class="fdetail" src="${facImg(f)}" alt="">` : ""}<b>${esc(f.name)}</b><span class="muted">${esc(f.level_name)}${f.project ? `, идёт стройка уровня ${f.project.to}: ещё ${f.project.weeks_left} нед.` : ""}</span>${bar}
+    ${nowFx || `<span class="muted">Пока ничего не даёт.</span>`}
+    ${n ? `<hr><b>Уровень ${n.level}: ${esc(H.level_names[n.level])}</b>
+      <span>Цена ${money(n.cost)} · стройка ${n.weeks} нед. · содержание ${money(n.upkeep_month)}/мес.</span>
+      ${ART.base ? `<img class="fdetail" style="max-height:150px;opacity:.9" src="art/base/fac_${f.id}_lvl${n.level}.webp" alt="Как будет выглядеть уровень ${n.level}">` : ""}
+      ${n.effects.map((e) => `<span class="plus">${esc(e.label)}: +${e.value < 1 ? Math.round(e.value * 100) + "%" : e.value}</span>`).join("")}
+      ${n.req.map((r) => `<div class="reqrow ${r.soft ? "soft" : r.ok ? "ok" : "no"}"><b>${r.soft ? "…" : r.ok ? "✓" : "✗"}</b><span>${esc(r.text)}</span></div>`).join("")}
+      ${n.events.length ? `<span class="why">Риски уровня: ${n.events.map((e) => esc(e.split(":")[1] || e)).join("; ")}</span>` : ""}
+      <div><button class="primary small" data-build="${f.id}" ${f.can ? "" : "disabled"}>Построить уровень ${n.level}</button></div>`
+      : `<span class="muted">${esc(f.why)}</span>`}
+    ${lastResults.build ? `<span class="result">${esc(lastResults.build)}</span>` : ""}
+    <span class="why">Эффекты зданий показываются честно, но подключатся к механикам в следующих этапах. Шанс победы здания напрямую не меняют.</span></section>`;
+  return `<section class="card"><h3>Мой дом <span class="muted">${H.total_levels}/${H.max_levels} уровней · содержание ${money(H.upkeep_month)}/мес.</span></h3>${homeSvg(H)}</section>
+    <div class="grid2">${detail}<section class="card"><h3>История базы</h3>${H.history.length ? H.history.map((x) => `<div class="line"><span>${esc(x)}</span></div>`).join("") : `<p class="muted">Здесь появится всё, что вы построите.</p>`}</section></div>`;
+}
+function viewManager(s) {
+  const L = call("living");
+  const sel = L.nodes.find((n) => n.id === selNode);
+  const pct = L.xp_next ? Math.round(L.xp / L.xp_next * 100) : 100;
+  const detail = sel ? `<div class="detail"><b>${esc(sel.name)}${sel.capstone ? " ★" : ""}</b><span class="muted">${esc(L.branches[sel.branch].name)}, ${sel.tier} уровень</span>
+      <span>${esc(sel.desc)}</span>${sel.effect.map((e) => `<span class="plus">${esc(e.label)}: +${Math.round(e.value * 100)}% (общий предел ${Math.round(e.cap * 100)}%)</span>`).join("")}
+      ${sel.risk ? `<span class="flag">Риск: может вскрыться (${esc(sel.risk === "exposure" ? "разоблачение" : "репутация")})</span>` : ""}
+      ${sel.requires.length ? `<span class="why">Нужно: ${sel.requires.map((r) => esc(L.nodes.find((n) => n.id === r).name)).join(", ")}</span>` : ""}
+      ${sel.state === "unlocked" ? `<span class="plus">Изучен</span>` : sel.state === "available" ? `<div><button class="primary small" data-talent="${sel.id}">Изучить за 1 очко</button></div>` : `<span class="why">${esc(sel.why)}</span>`}
+      ${lastResults.talent ? `<span class="result">${esc(lastResults.talent)}</span>` : ""}</div>`
+    : `<div class="detail"><b>Нажмите на талант</b><span class="muted">Таланты не дают процент к победе: они улучшают информацию, подготовку и управленческие решения. Всё не изучить: очков 39, а талантов 60.</span></div>`;
+  const order = [L.specialization, ...Object.keys(L.branches).filter((b) => b !== L.specialization)];
+  const trees = order.map((b) => `<section class="card tree"><h3>${ART.base ? `<i class="emb" style="--emb:url(art/base/icons_branches.webp);background-position:${["strategist", "motivator", "analyst", "manager", "intriguer"].indexOf(b) * 25}% 0"></i>` : ""}${esc(L.branches[b].name)} ${b === L.specialization ? `<span class="pill story">ваша ветка</span>` : ""} <span class="muted">${L.nodes.filter((n) => n.branch === b && n.state === "unlocked").length}/12</span></h3><span class="muted">${esc(L.branches[b].desc)}</span>${treeSvg(L, b)}</section>`).join("");
+  const ch = L.channels.map((c) => `<div class="chrow"><span>${esc(c.label)}</span><b class="${c.value >= 0 ? "plus" : "minus"}">${c.value >= 0 ? "+" : ""}${(c.value * 100).toFixed(1)}%</b><span class="why">${c.why.map(esc).join(" · ")}${c.status === "planned" ? " · подключится к игре в следующих этапах" : ""}</span></div>`).join("");
+  const jr = L.journal.map((j) => `<div class="line"><span class="num muted">С${j.season}</span><span>${esc(j.why)}</span><span class="num plus">+${j.xp}</span></div>`).join("");
+  return `<section class="card"><div class="mhead">${face({ name: L.name, age: L.age, face: L.face }, s.club, 96)}
+      <div class="nm"><b style="font:700 1.3rem var(--display)">${esc(L.name)}</b><span class="muted">${esc(L.background)}, ${L.age} лет, ${esc(L.country)} · ${esc(L.branches[L.specialization].name)}</span>
+      <div class="traits">${L.traits.map((t) => `<span title="+ ${esc(t.plus)}; − ${esc(t.minus)}">${esc(t.name)}</span>`).join("")}</div></div>
+      <div class="lvlring" style="--p:${pct}" title="Опыт ${L.xp} из ${L.xp_next}"><b>${L.level}</b></div>
+      <div style="display:grid;gap:2px"><b>Уровень ${L.level} из ${L.max_level}</b><span class="muted">${L.xp_next ? `Опыт ${L.xp} / ${L.xp_next}` : "Максимум"}</span>
+        <span class="${L.points ? "plus" : "muted"}"><b>Очков талантов: ${L.points}</b></span></div></div>
+    <div class="sbars">${Object.keys(L.stats).map((k) => `<div class="sbar"><span>${L.stat_ru[k]}</span><i><u style="width:${L.stats[k] * 14}%"></u></i><span>${L.stats[k]}</span></div>`).join("")}</div></section>
+  <div class="grid2"><div style="display:grid;gap:16px;align-content:start">${detail}
+      <section class="card"><h3>Что это даёт сейчас</h3>${ch || `<p class="muted">Пока только базовые навыки.</p>`}</section>
+      <section class="card"><h3>За что вы получали опыт</h3>${jr || `<p class="muted">Опыт дают цели владельца, титулы, выход за ожидания, решённые конфликты. За пропуск недели опыта нет.</p>`}</section></div>
+    <div style="display:grid;gap:16px;align-content:start">${trees}</div></div>`;
+}
+function showLevelUp(level, points) {
+  const d = document.createElement("div"); d.className = "lvlup"; d.setAttribute("role", "dialog"); d.setAttribute("aria-label", "Новый уровень");
+  d.innerHTML = `<div class="rays"></div><div class="box"><span class="muted" style="font:600 .7rem var(--mono);letter-spacing:.14em">НОВЫЙ УРОВЕНЬ</span><div class="big">${level}</div>
+    <b>${points ? `Свободных очков талантов: ${points}` : "Продолжайте"}</b><span class="muted">Выберите, каким менеджером вы станете.</span>
+    <div class="controls"><button class="primary" id="lvlGo">К талантам</button><button id="lvlClose">Позже</button></div></div>`;
+  document.body.appendChild(d);
+  d.addEventListener("click", (e) => { const id = e.target.id; if (id === "lvlGo") { tab = "manager"; d.remove(); render(); } else if (id === "lvlClose" || e.target === d) d.remove(); });
+  $("lvlGo").focus();
+}
+
 async function startNew() {
   busy(true, "Создаю мир…");
   const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value));
-  busy(false); log = []; enterGame(s);
+  busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null; enterGame(s);
   toast(`Вы возглавили ${s.club}. Цели владельца: ${s.objectives.join("; ")}`);
 }
 async function loadFrom(text) {
   busy(true, "Загружаю…");
-  try { const s = await later(() => call("load_b64", text.replace(/^CSM1:/, "").trim())); log = []; enterGame(s); }
+  try { const s = await later(() => call("load_b64", text.replace(/^CSM1:/, "").trim())); log = []; matches = []; seasonReport = null; enterGame(s); }
   catch (e) { toast("Не получилось загрузить: " + (e.message || e).toString().slice(-160)); }
   busy(false);
 }
@@ -425,25 +767,54 @@ function autosave() {
 }
 
 async function advance(n) {
-  $("nextBtn").disabled = $("next4Btn").disabled = true;
+  if (!n || n < 1) n = 1;
+  const btns = ["nextBtn", "next4Btn", "toEventBtn"];
+  btns.forEach((i) => ($(i).disabled = true));
   busy(true, n > 1 ? "Идут недели…" : "Идёт неделя…");
   const res = await later(() => call("advance", n));
+  const club = curState && curState.club;
+  res.forEach((w) => w.lines.forEach((l) => { const m = parseMatch(l, club, w); if (m) matches.unshift(m); }));
+  matches = matches.slice(0, 30);
+  const end = res.flatMap((w) => w.lines).filter((l) => /^Сезон \d+ завершён/.test(l) || / (поднимается|вылетает) в /.test(l) || l.startsWith("Цели владельца"));
+  if (end.length) seasonReport = end;
   log = res.reverse().concat(log).slice(0, 40);
   const s = call("state");
+  const lvlBefore = curState ? curState.level : s.level;
   if (s.abs_week % 4 === 0) autosave();
   busy(false);
-  $("nextBtn").disabled = $("next4Btn").disabled = false;
+  btns.forEach((i) => ($(i).disabled = false));
   if (s.pending_events || s.offers) tab = "office";
   else if (s.situations) tab = "backstage";
   render(s);
+  if (s.level > lvlBefore) showLevelUp(s.level, s.talent_points);
   if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
 }
 
-const TABS = [["office", "Сводка"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+function parseMatch(line, club, w) {
+  const m = /^матч: (.+?) (\d+):(\d+) (.+) \((.+)\)$/.exec(line);
+  if (!m || !club) return null;
+  const [, a, x, y, b, ev] = m;
+  const home = a === club, mine = home ? +x : +y, theirs = home ? +y : +x;
+  return { opp: home ? b : a, mine, theirs, win: mine > theirs, ev, season: w.season, week: w.week };
+}
+const formStrip = () => matches.length ? `<span class="fm" title="Последние матчи, новые слева">${matches.slice(0, 8).map((m) => `<i class="${m.win ? "w" : "l"}">${m.win ? "W" : "L"}</i>`).join("")}</span>` : "";
+const hintHtml = (h) => {
+  if (!h) return "";
+  const bits = [];
+  if (h.cash) bits.push(`<span class="${h.cash > 0 ? "plus" : "minus"}">${money(h.cash)}</span>`);
+  if (h.fans_pct) bits.push(`<span class="${h.fans_pct > 0 ? "plus" : "minus"}">фанаты ${h.fans_pct > 0 ? "+" : ""}${h.fans_pct}%</span>`);
+  if (h.brand) bits.push(`<span class="${h.brand > 0 ? "plus" : "minus"}">бренд ${h.brand > 0 ? "+" : ""}${h.brand}</span>`);
+  if (h.morale) bits.push(`<span class="${h.morale > 0 ? "plus" : "minus"}">мораль ${h.morale > 0 ? "+" : ""}${Math.round(h.morale)}</span>`);
+  if (h.risky) bits.push(`<span title="Есть неочевидные последствия или шанс">+ случай</span>`);
+  return bits.length ? bits.join(" ") : "без последствий";
+};
+
+const TABS = [["office", "Сводка"], ["manager", "Менеджер"], ["home", "Мой дом"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
   ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
 
 function render(s) {
   s = s || call("state");
+  curState = s;
   $("clubName").textContent = s.club;
   $("clubCrest").innerHTML = crest(s.club, 42);
   $("seasonBar").innerHTML = `<i style="width:${(s.week / 52 * 100).toFixed(1)}%"></i>` +
@@ -456,12 +827,20 @@ function render(s) {
   $("kOwner").textContent = s.owner_confidence + "/100";
   $("kOwner").className = s.owner_confidence < 35 ? "money-neg" : "";
   $("kRep").textContent = s.manager.reputation;
+  $("kLvl").textContent = `Ур. ${s.level}` + (s.talent_points ? ` · ${s.talent_points}★` : "");
+  const ne = s.next_events.find((x) => x.invited) || s.next_events[0];
+  $("toEventBtn").textContent = ne ? `До турнира · ${Math.max(1, ne.week - s.week)} нед.` : "До турнира";
+  $("toEventBtn").title = ne ? `Играть до «${ne.name}» (неделя ${ne.week}); остановится, если нужно ваше решение` : "";
   const due = s.pending_events + s.offers, sits = s.situations || 0;
-  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
-  const views = { office: viewOffice, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
+  $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "manager" && s.talent_points ? `<span class="badge">${s.talent_points}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
+  const views = { office: viewOffice, manager: viewManager, home: viewHome, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
   $("main").innerHTML = views[tab](s);
 }
 
+function untilEvent(s) {
+  const e = s.next_events.find((x) => x.invited) || s.next_events[0];
+  return e ? Math.max(1, e.week - s.week) : 4;
+}
 function kind(line) {
   const k = line.split(":")[0];
   return { "матч": "match", "история": "story", "клуб": "club", "мир": "world", "закулисье": "story", "решение": "club" }[k] || "";
@@ -483,7 +862,8 @@ function viewOffice(s) {
       ${e.deck ? `<span class="pill story" style="justify-self:start">выбор недели</span>` : ""}
       <b>${esc(e.title)}</b><span>${esc(e.text)}</span>
       ${why.length ? `<span class="why">Почему: ${esc(why.join("; "))}</span>` : ""}
-      <div class="opts">${e.options.map((o, j) => `<button class="small" data-ev="${e.i}" data-opt="${j}">${esc(o)}</button>`).join("")}</div>
+      <div class="opts">${e.options.map((o, j) => `<div class="opt"><button class="small" data-ev="${e.i}" data-opt="${j}">${esc(o)}</button><span class="hint">${hintHtml(e.hints && e.hints[j])}</span></div>`).join("")}</div>
+      <span class="why ${e.left <= 1 ? "urgent" : ""}">${e.left <= 1 ? "Решите на этой неделе: иначе выберет ассистент" : "Можно подумать ещё " + e.left + " нед."}</span>
     </div></div>`;
   }).join("");
   const offers = ib.offers.map((o) => `<div class="event offer">
@@ -493,10 +873,19 @@ function viewOffice(s) {
     </div>`).join("");
   const next = s.next_events.map((e) => `<div class="line"><span class="num muted">н${e.week}</span><span>${esc(e.name)}</span>${e.invited ? `<span class="pill club">участвуем</span>` : `<span class="pill">не приглашены</span>`}</div>`).join("");
   const tones = Object.entries(META.tones).map(([k, v]) => `<button class="small" data-talk="${k}">${v}</button>`).join("");
-  return `<div class="grid2">
+  const rep = seasonReport ? `<div class="report"><b>Итоги сезона</b>${seasonReport.map((l) => `<div>${esc(l)}</div>`).join("")}<div><button class="small" data-closereport="1">Понятно</button></div></div>` : "";
+  const warn = s.zone === "down" ? `<div class="alert">Вы в зоне вылета лиги (${s.division_place}-е место). Очки идут со всех турниров: ищите, где можно набрать.</div>`
+    : s.zone === "up" ? `<div class="alert up">Вы в зоне повышения (${s.division_place}-е место). Удержите её до конца сезона.</div>` : "";
+  const objs = s.objective_status.map((o) => `<div class="obj"><span class="dot ${o.score >= 0.3 ? "ok" : o.score < 0 ? "no" : ""}"></span><span>${esc(o.text)} <span class="muted">${o.score >= 0.3 ? "идёт хорошо" : o.score < 0 ? "под угрозой" : "на грани"}</span></span></div>`).join("");
+  const mt = matches.slice(0, 6).map((m) => `<div class="mrow ${m.win ? "w" : "l"}"><span class="num muted">С${m.season} н${m.week}</span><span>${CL(m.opp, 18)} <span class="muted">${esc(m.ev)}</span></span><span class="sc">${m.mine}:${m.theirs}</span></div>`).join("");
+  const hz = call("horizon").map((x) => `<button class="hz ${x.in <= 2 ? "soon" : ""} ${x.star ? "star" : ""}" data-tab="${x.tab}"><b>${x.in <= 0 ? "сейчас" : "через " + x.in}</b><span>${esc(x.text)}</span></button>`).join("");
+  return `${rep}${warn}<div class="grid2">
+    <section class="card"><h3>Что впереди</h3><div style="display:grid;gap:6px">${hz}</div></section>
     <section class="card"><h3>Требует решения</h3>${events || offers ? events + offers : `<p class="muted">Ничего не ждёт. Нерешённое через 2 недели решит ассистент.</p>`}
       ${lastResults.inbox ? `<div class="result">${esc(lastResults.inbox)}</div>` : ""}</section>
-    <section class="card"><h3>Цели владельца</h3>${s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
+    <section class="card"><h3>Цели владельца</h3>${objs || s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
+      <div class="muted">Доверие владельца ${s.owner_confidence}/100${s.owner_confidence < 35 ? ` <span class="urgent">· ниже 12 уволят</span>` : ""}</div>
+      <h3>Матчи ${formStrip()}</h3>${mt || `<p class="muted">Матчей пока не было. Ближайший турнир в списке ниже.</p>`}
       <h3>Ближайшие турниры</h3>${next || `<p class="muted">До конца сезона турниров нет</p>`}
       <div class="muted">Патч: ${esc(s.patch)}</div></section>
   </div>
@@ -563,14 +952,20 @@ function viewSquad() {
 function viewMarket() {
   const m = call("market", 40);
   const rows = m.map((p) => `<tr>
-      <td><div class="pl">${ava(p)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span></span>
+      <td><div class="pl">${ava(p, p.club)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>${p.hot ? ` <span class="pill story">охота</span>` : ""}</span>
         ${traitChips(p.traits)}</div></div></td>
       <td>${p.club ? CL(p.club, 20) : `<span class="pill club">свободен</span>`}</td>
       <td class="r range">${p.ovr_range[0]}–${p.ovr_range[1]}</td><td class="r">${p.known}%</td><td class="r">${eloCell(p)}</td><td>${esc(p.potential)}</td>
       <td class="r">${money(p.salary_wish)}</td><td class="r">${p.fee ? money(p.fee) : "—"}</td>
       <td><button class="small" data-scout="${esc(p.name)}">скаут</button>
         <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"}</button></td></tr>`).join("");
-  return `<section class="card"><h2>Рынок</h2>
+  const hot = m.filter((p) => p.hot).slice(0, 4).map((p) => `<div class="hcard"><span class="big">${face({ name: p.name, age: p.age, star: p.star }, p.club, 84)}</span>
+      <div class="info"><b>${esc(p.name)}</b><span class="muted">${ROLE[p.role] || p.role}, ${p.age} · ${p.club ? esc(p.club) : "свободный агент"}</span>
+        <span>Уровень <span class="range">${p.ovr_range[0]}–${p.ovr_range[1]}</span> · потенциал ${esc(p.potential)}</span>
+        <span class="${p.rivals >= 5 ? "urgent" : "muted"}">${p.head_start ? `У вас фора ${p.head_start} нед.: потом вступят ${p.rivals} клубов` : p.rivals ? `Могут взять ещё ${p.rivals} клубов. Окно через ${p.window} нед.` : "Конкурентов пока не видно"}</span>
+        <span><button class="small" data-scout="${esc(p.name)}">скаут</button> <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"} ${p.fee ? money(p.fee) : money(p.salary_wish) + "/мес"}</button></span></div></div>`).join("");
+  return `<section class="card"><h3>Охота: лучшие цели рынка</h3><div class="hunt">${hot || `<p class="muted">Звёзд на рынке сейчас нет.</p>`}</div></section>
+  <section class="card"><h2>Рынок</h2>
     <p class="muted">Свободные агенты и игроки, которые просят трансфер. Уровень виден диапазоном: чем дольше смотрят скауты, тем он точнее. Предложение идёт по запрошенной цене и желаемой зарплате, решает сам игрок.</p>
     ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}
     <div class="tablebox"><table><thead><tr><th>Игрок</th><th>Клуб</th><th class="r">Уровень</th><th class="r">Изучен</th><th class="r" title="Публичный сигнал: Elo не равно уровню">HACEIT</th><th>Потенциал</th><th class="r">Хочет/мес</th><th class="r">Цена</th><th></th></tr></thead>
@@ -713,15 +1108,35 @@ function viewCareer(s) {
 }
 
 document.addEventListener("click", async (ev) => {
+  const fc = ev.target.closest("[data-fac]");
+  if (fc) { selFac = fc.dataset.fac; lastResults.build = ""; return render(); }
+  const nd = ev.target.closest("[data-node]");
+  if (nd) { selNode = nd.dataset.node; lastResults.talent = ""; return render(); }
   const b = ev.target.closest("button");
   if (!b) return;
+  if (b.dataset.cr) {
+    const v = b.dataset.v;
+    if (b.dataset.cr === "reroll") { cr.ov.seed = Math.random().toString(36).slice(2, 8); delete cr.ov.skin; delete cr.ov.hair; delete cr.ov.style; delete cr.ov.beard; delete cr.ov.glasses; delete cr.ov.headset; delete cr.ov.cap; }
+    else if (b.dataset.cr === "skin") cr.ov.skin = +v;
+    else if (b.dataset.cr === "hair") cr.ov.hair = +v;
+    else if (b.dataset.cr === "bg") cr.bg = v;
+    else if (b.dataset.cr === "spec") cr.spec = v;
+    else if (b.dataset.cr === "trait") { const i = cr.traits.indexOf(v); if (i >= 0) cr.traits.splice(i, 1); else if (cr.traits.length < 2) cr.traits.push(v); else toast("Две черты уже выбраны: снимите одну"); }
+    return renderCreator();
+  }
   const d = b.dataset;
   try {
-    if (b.id === "newBtn") return startNew();
+    if (b.id === "newBtn") return openCreator();
+    if (b.id === "crGo") return startCareer();
+    if (b.id === "crBack") { $("creator").hidden = true; $("boot").hidden = false; return; }
+    if (d.build) { try { lastResults.build = call("build", d.build); } catch (e) { lastResults.build = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
+    if (d.talent) { try { lastResults.talent = call("unlock_talent", d.talent); } catch (e) { lastResults.talent = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
     if (b.id === "contBtn") { let t = ""; try { t = localStorage.getItem(SAVE_KEY) || ""; } catch (e) {} return loadFrom(t); }
     if (b.id === "importBtn") return loadFrom($("importText").value);
     if (b.id === "nextBtn") return advance(1);
     if (b.id === "next4Btn") return advance(4);
+    if (b.id === "toEventBtn") return advance(untilEvent(curState));
+    if (d.closereport) { seasonReport = null; return render(); }
     if (d.tab) { tab = d.tab; return render(); }
     if (d.ev !== undefined) { lastResults.inbox = call("answer_event", +d.ev, +d.opt).join("; ") || "Решение принято"; return render(); }
     if (d.offer !== undefined) { lastResults.inbox = call("answer_offer", +d.offer, d.acc === "1"); return render(); }
@@ -763,9 +1178,22 @@ document.addEventListener("click", async (ev) => {
     toast("Ошибка: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]);
   }
 });
+document.addEventListener("input", (ev) => {
+  const id = ev.target.id;
+  if (id === "crName") { cr.name = ev.target.value; crUpdateGo(); }
+  if (id === "crSurname") { cr.surname = ev.target.value; crUpdateGo(); }
+  if (id === "crAge") { cr.age = Math.max(25, Math.min(65, +ev.target.value || 36)); crUpdateGo(); }
+});
 document.addEventListener("change", (ev) => {
+  const t = ev.target;
+  if (t.dataset && t.dataset.crsel) { const k = t.dataset.crsel; if (k === "country") cr.country = t.value; else cr.ov[k] = t.value === "" ? undefined : +t.value; return renderCreator(); }
+  if (t.dataset && t.dataset.crchk) { cr.ov[t.dataset.crchk] = t.checked; return renderCreator(); }
   if (ev.target.id === "regionSel") { tableRegion = ev.target.value; render(); }
   if (ev.target.id === "leagueSel") { leagueSel = +ev.target.value; render(); }
+});
+document.addEventListener("keydown", (ev) => {
+  if ($("game").hidden || ev.target.closest("input, textarea, select") || ev.ctrlKey || ev.metaKey) return;
+  if ((ev.key === "n" || ev.key === "N" || ev.key === " ") && !$("nextBtn").disabled) { ev.preventDefault(); advance(1); }
 });
 boot();
 </script>

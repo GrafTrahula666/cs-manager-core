@@ -1,0 +1,249 @@
+{
+ "note": "Суммы стартовых навыков равны (12): ни одна предыстория не сильнее остальных по очкам. Бонусы и слабости объясняются игроку на экране.",
+ "stats": [
+  "tactics",
+  "people",
+  "analytics",
+  "business",
+  "intrigue"
+ ],
+ "specialization_bonus": 2,
+ "specialization_stat": {
+  "strategist": "tactics",
+  "motivator": "people",
+  "analyst": "analytics",
+  "manager": "business",
+  "intriguer": "intrigue"
+ },
+ "stat_baseline": 2,
+ "stat_step": 0.015,
+ "stat_channels": {
+  "tactics": [
+   "prep.opponent_report",
+   "prep.map_info"
+  ],
+  "people": [
+   "talk.effect",
+   "trust.gain"
+  ],
+  "analytics": [
+   "scout.stat_precision",
+   "analysis.demo_depth"
+  ],
+  "business": [
+   "neg.contract",
+   "hire.pool_quality"
+  ],
+  "intrigue": [
+   "contacts.network",
+   "intel.rumour_accuracy"
+  ]
+ },
+ "traits": [
+  {
+   "id": "patient",
+   "name": "Терпеливый",
+   "plus": "Игроки доверяют быстрее",
+   "minus": "Решения принимаются медленнее: реже мгновенный отклик",
+   "effects": [
+    {
+     "channel": "trust.gain",
+     "value": 0.05
+    },
+    {
+     "channel": "talk.persuade",
+     "value": -0.03
+    }
+   ]
+  },
+  {
+   "id": "workaholic",
+   "name": "Трудоголик",
+   "plus": "Лучше готовится к матчам",
+   "minus": "Хуже слышит усталость игроков",
+   "effects": [
+    {
+     "channel": "prep.opponent_report",
+     "value": 0.05
+    },
+    {
+     "channel": "stress.relief",
+     "value": -0.04
+    }
+   ]
+  },
+  {
+   "id": "charmer",
+   "name": "Обаятельный",
+   "plus": "Журналисты и агенты тянутся к вам",
+   "minus": "Обещает больше, чем успевает",
+   "effects": [
+    {
+     "channel": "press.tone",
+     "value": 0.06
+    },
+    {
+     "channel": "trust.gain",
+     "value": -0.03
+    }
+   ]
+  },
+  {
+   "id": "frugal",
+   "name": "Экономный",
+   "plus": "Содержание и сделки дешевле",
+   "minus": "Игроки считают вас скрягой",
+   "effects": [
+    {
+     "channel": "cost.upkeep_cut",
+     "value": 0.04
+    },
+    {
+     "channel": "morale.recovery",
+     "value": -0.03
+    }
+   ]
+  },
+  {
+   "id": "visionary",
+   "name": "Визионер",
+   "plus": "Видит потенциал молодых",
+   "minus": "Скауты чаще ошибаются в зрелых игроках",
+   "effects": [
+    {
+     "channel": "scout.potential_precision",
+     "value": 0.06
+    },
+    {
+     "channel": "scout.stat_precision",
+     "value": -0.04
+    }
+   ]
+  },
+  {
+   "id": "hothead",
+   "name": "Вспыльчивый",
+   "plus": "Жёсткая дисциплина в команде",
+   "minus": "Конфликты вспыхивают чаще",
+   "effects": [
+    {
+     "channel": "team.discipline",
+     "value": 0.06
+    },
+    {
+     "channel": "conflict.early_warning",
+     "value": -0.05
+    }
+   ]
+  },
+  {
+   "id": "empath",
+   "name": "Эмпат",
+   "plus": "Чувствует настроение людей",
+   "minus": "Тяжело переживает поражения: слабее разговор после провала",
+   "effects": [
+    {
+     "channel": "conflict.early_warning",
+     "value": 0.06
+    },
+    {
+     "channel": "crisis.recovery",
+     "value": -0.04
+    }
+   ]
+  },
+  {
+   "id": "schemer",
+   "name": "Расчётливый",
+   "plus": "Знает, кто что думает",
+   "minus": "Люди чувствуют холод: меньше доверия",
+   "effects": [
+    {
+     "channel": "intel.rumour_accuracy",
+     "value": 0.06
+    },
+    {
+     "channel": "trust.gain",
+     "value": -0.04
+    }
+   ]
+  }
+ ],
+ "backgrounds": [
+  {
+   "id": "ex_player",
+   "name": "Бывший профессиональный игрок",
+   "desc": "Понимает команду и матчи, мало знает о финансах.",
+   "stats": {
+    "tactics": 4,
+    "people": 4,
+    "analytics": 1,
+    "business": 1,
+    "intrigue": 2
+   },
+   "suggests": "strategist",
+   "strength": "Игроки охотнее разговаривают и чаще подсказывают, что у них не так.",
+   "weakness": "Хуже читает бюджеты: расходы в отчёте видны с задержкой."
+  },
+  {
+   "id": "analyst",
+   "name": "Тактический аналитик",
+   "desc": "Готовится к соперникам лучше всех, но неловок с людьми.",
+   "stats": {
+    "tactics": 3,
+    "people": 1,
+    "analytics": 5,
+    "business": 1,
+    "intrigue": 2
+   },
+   "suggests": "analyst",
+   "strength": "Отчёты о соперниках и скаутинг стартуют точнее.",
+   "weakness": "Личные конфликты игроков замечает позже."
+  },
+  {
+   "id": "entrepreneur",
+   "name": "Предприниматель",
+   "desc": "Понимает бизнес, спонсоров и инфраструктуру, но нуждается в сильном тренере.",
+   "stats": {
+    "tactics": 1,
+    "people": 2,
+    "analytics": 2,
+    "business": 5,
+    "intrigue": 2
+   },
+   "suggests": "manager",
+   "strength": "Стартовые условия спонсоров и строительства лучше.",
+   "weakness": "Игроки и тренер меньше доверяют человеку без спортивного прошлого."
+  },
+  {
+   "id": "rookie",
+   "name": "Молодой менеджер",
+   "desc": "Практически без связей, зато карьера строится с нуля и растёт быстрее.",
+   "stats": {
+    "tactics": 2,
+    "people": 3,
+    "analytics": 3,
+    "business": 2,
+    "intrigue": 2
+   },
+   "suggests": "motivator",
+   "strength": "Опыт за достижения идёт на 15% быстрее до 10 уровня.",
+   "weakness": "Агенты и журналисты не отвечают на звонки: меньше предложений и слухов."
+  },
+  {
+   "id": "coach",
+   "name": "Бывший тренер",
+   "desc": "Умеет готовить игроков, но почти без управленческих связей.",
+   "stats": {
+    "tactics": 4,
+    "people": 3,
+    "analytics": 2,
+    "business": 1,
+    "intrigue": 2
+   },
+   "suggests": "strategist",
+   "strength": "Тренировки и развитие молодых идут стабильнее.",
+   "weakness": "Владельцы и спонсоры говорят с ним осторожнее."
+  }
+ ]
+}
