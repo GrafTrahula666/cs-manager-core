@@ -711,3 +711,68 @@ def build(fid: str) -> str:
     g = _g()
     g.ensure_living()
     return g.base.start(g, fid)
+
+
+def _st(m, g) -> dict:
+    from .staff import WIRED_ROLES, roles
+    r = roles()[m.role]
+    return {"id": m.id, "name": m.name, "role": m.role, "role_name": r["name"], "skill": m.skill, "age": m.age, "loyalty": m.loyalty,
+            "expectation": _money(m.expectation), "salary": _money(m.salary), "weeks_left": max(0, m.end_week - g.week) if m.club else None,
+            "workplace": m.workplace, "wired": m.role in WIRED_ROLES, "log": m.log[-4:]}
+
+
+def staff() -> dict:
+    """Staff market and my people. `wired` says whether a role changes anything in the game today."""
+    from .staff import MONTHS, ROLES, roles
+    g = _g()
+    g.ensure_living()
+    w = g.staff
+    club = next((c for c in g.clubs if c.name == w.target), None)
+    rivals = sorted((c for c in g.clubs if c is not g.club), key=lambda c: c.rank)[:20]
+    an = [m for m in w.mine(g) if m.role == "tactical_analyst"]
+    return {"mine": [_st(m, g) for m in w.mine(g)], "candidates": [_st(m, g) for m in w.candidates()],
+            "months": list(MONTHS), "roles": {r: roles()[r]["name"] for r in ROLES}, "target": w.target,
+            "target_knowledge": round(w.knowledge(g, club)) if club else None, "targets": [{"name": c.name, "rank": c.rank} for c in rivals],
+            "analytics_level": g.base.level("analytics_center"), "analyst_power": round(w.analyst_power(g, an[0]), 2) if an else None,
+            "payroll_month": _money(sum(m.salary for m in w.mine(g))), "cash": _money(g.club.cash)}
+
+
+def staff_hire(sid: str, months: int = 12, salary: float | None = None) -> str:
+    g = _g()
+    g.ensure_living()
+    return g.staff.hire(g, sid, salary, int(months))
+
+
+def staff_assign(sid: str) -> str:
+    g = _g()
+    g.ensure_living()
+    return g.staff.assign(g, sid)
+
+
+def staff_release(sid: str) -> str:
+    g = _g()
+    g.ensure_living()
+    return g.staff.release(g, sid)
+
+
+def staff_target(club: str | None) -> str:
+    g = _g()
+    g.ensure_living()
+    return g.staff.set_target(g, club)
+
+
+def dossier(club: str) -> dict:
+    """What the manager knows about a rival's lineup: ranges that shrink as the analyst works."""
+    g = _g()
+    g.ensure_living()
+    c = next((x for x in g.clubs if x.name == club), None)
+    if c is None:
+        raise ValueError("нет такого клуба")
+    rows = []
+    for p in c.lineup():
+        rep = g.desk.scouting.report(p)
+        mid = sum(a + b for a, b in rep.stats.values()) / 2 / len(rep.stats)
+        half = sum(b - a for a, b in rep.stats.values()) / 2 / len(rep.stats) / 2.2
+        rows.append({"name": p.name, "role": p.role, "known": round(rep.knowledge), "ovr_range": [round(max(0.0, mid - half)), round(min(100.0, mid + half))],
+                     "potential": rep.potential})
+    return {"club": c.name, "rank": c.rank, "knowledge": round(g.staff.knowledge(g, c)), "players": rows}
