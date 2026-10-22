@@ -18,11 +18,32 @@ from dataclasses import dataclass, field
 from . import livingdata
 from .economy import WEEKS_PER_MONTH
 
-ROLES = ["tactical_analyst", "psychologist", "scout", "head_coach", "head_hunter"]   # phase 1 of staff_roles.json
+WORLD_SIZE = 420                            # specialists alive in the world at the start (hypothesis)
+EMPLOYED_SHARE = 0.45                       # share working for AI clubs at the start; they are not hirable until the contract ends
+ROLE_WEIGHT = {"head_coach": 3, "assistant_coach": 4, "tactical_analyst": 5, "psychologist": 4, "scout": 5, "head_hunter": 2,
+               "sports_director": 2, "academy_head": 2, "youth_coach": 3, "media_manager": 3, "streaming_specialist": 3,
+               "physio": 3, "finance_director": 2, "commercial_director": 2}
 WIRED_ROLES = {"tactical_analyst"}          # roles whose work changes something in the game today
-CANDIDATES_PER_ROLE = 4
-REFRESH_WEEKS = 8
-CANDIDATE_LIFETIME = 24                     # weeks until another club signs a candidate
+POACH_WEEKS = 4                             # every 4th week AI clubs sign a few free specialists
+POACH_COUNT = 6
+SEASON_INTAKE = 25                          # new young specialists a season; those over RETIRE_AGE retire
+RETIRE_AGE = 62
+COUNTRIES = ["RU", "UA", "KZ", "BY", "PL", "SE", "DK", "FR", "DE", "BR", "US", "CN", "FI", "CZ", "ES"]
+# Personality traits of staff. `analysis` is the only wired effect today (the analyst's dossier speed); the rest are shown but do nothing yet.
+TRAITS = {
+    "methodical": ("Методичный", "аккуратно ведёт досье", "медленно принимает решения", 0.10),
+    "perfectionist": ("Дотошный", "ничего не пропускает", "требует больше времени и денег", 0.15),
+    "innovator": ("Новатор", "предлагает нестандартные ходы", "не любит рутину", 0.05),
+    "old_school": ("Старой школы", "авторитет у ветеранов", "не доверяет новым методам", -0.05),
+    "lazy": ("Лентяй", "не требует многого", "тянет со сроками", -0.10),
+    "mentor": ("Наставник по натуре", "молодёжь тянется к нему", "мало внимания взрослым", 0.0),
+    "loyal": ("Верный", "не уйдёт к конкурентам", "тяжело расстаётся с командой", 0.0),
+    "careerist": ("Карьерист", "тянет результат", "уйдёт за лучшим предложением", 0.0),
+    "charismatic": ("Харизматичный", "заряжает людей", "любит быть на виду", 0.0),
+    "volatile": ("Вспыльчивый", "честно говорит, что думает", "конфликтует с игроками", 0.0),
+    "calm": ("Невозмутимый", "держит спокойствие в кризис", "реагирует с задержкой", 0.0),
+    "thrifty": ("Бережливый", "экономит бюджет", "скупится на нужное", 0.0),
+}
 TIER_PAY = {"super": 1.3, "tier1": 1.0, "tier2": 0.7, "tier3": 0.45}
 MONTHS = (6, 12, 24)
 ACCEPT_RATIO = 0.95                         # offers below this share of the expectation are refused
@@ -45,6 +66,12 @@ class Staffer:
     loyalty: int               # 0-100: hint of how he reacts to a renewal offer
     expectation: float         # monthly salary he asks, already scaled by the club's tier
     listed_week: int = 0
+    country: str = "RU"
+    traits: list[str] = field(default_factory=list)
+    experience: int = 0        # years in the job
+    history: list[str] = field(default_factory=list)   # earlier clubs
+    employer: str | None = None    # an AI club he works for: not hirable until employed_until
+    employed_until: int = 0
     club: str | None = None
     salary: float = 0.0        # monthly, under contract
     start_week: int = 0
@@ -61,24 +88,48 @@ class StaffWorld:
         self.target: str | None = None          # club the analyst is studying
         self.log: list[str] = []
 
-    # ---- market ----
-    def _make(self, role: str, week: int, tier: str) -> Staffer:
+    # ---- the world of people ----
+    def _make(self, role: str, week: int, tier: str, young: bool = False) -> Staffer:
         r = self.rng
         self.counter += 1
-        skill = max(20, min(95, int(r.gauss(55, 16))))
+        age = r.randint(22, 28) if young else max(23, min(62, int(r.gauss(40, 9))))
+        skill = max(20, min(95, int(r.gauss(48 + (0 if young else (age - 30) * 0.5), 15))))
         base = roles()[role]["salary_tier1"]
         ask = round(base * (0.5 + skill / 100) * TIER_PAY.get(tier, 1.0) / 50) * 50
-        return Staffer(f"S{self.counter:04d}", f"{r.choice(FIRST)} {r.choice(LAST)}", role, skill, r.randint(24, 55),
-                       r.randint(20, 90), float(ask), listed_week=week)
+        m = Staffer(f"S{self.counter:04d}", f"{r.choice(FIRST)} {r.choice(LAST)}", role, skill, age, r.randint(20, 90), float(ask), listed_week=week)
+        m.country = r.choice(COUNTRIES)
+        m.traits = r.sample(sorted(TRAITS), 2)
+        m.experience = max(0, age - 22 - r.randint(0, 6)) if not young else r.randint(0, 3)
+        return m
 
     def seed_market(self, game) -> None:
-        for role in ROLES:
-            for _ in range(CANDIDATES_PER_ROLE):
-                p = self._make(role, game.week, game.club.tier)
-                self.members[p.id] = p
+        r = self.rng
+        pool = [role for role, w in ROLE_WEIGHT.items() for _ in range(w)]
+        ai = [c.name for c in game.clubs if c.name != game.club_name]
+        for _ in range(WORLD_SIZE):
+            m = self._make(r.choice(pool), game.week, game.club.tier)
+            for c in r.sample(ai, min(len(ai), r.randint(1 if m.experience >= 3 else 0, 3))):
+                m.history.append(f"{c} ({r.randint(1, max(1, m.experience or 1))} г.)")
+            if ai and r.random() < EMPLOYED_SHARE:
+                m.employer, m.employed_until = r.choice(ai), game.week + r.randint(8, 150)
+            self.members[m.id] = m
+
+    def free(self) -> list[Staffer]:
+        return [m for m in self.members.values() if m.club is None and m.employer is None]
 
     def candidates(self) -> list[Staffer]:
-        return sorted((m for m in self.members.values() if m.club is None), key=lambda m: (ROLES.index(m.role), -m.skill))
+        return sorted(self.free(), key=lambda m: (list(roles()).index(m.role), -m.skill))
+
+    def search(self, role: str | None = None, q: str = "", min_skill: int = 0, min_age: int = 0, max_age: int = 99,
+               trait: str | None = None, country: str | None = None, free_only: bool = True, sort: str = "skill") -> list[Staffer]:
+        q = q.strip().lower()
+        out = [m for m in self.members.values() if m.club is None
+               and (not free_only or m.employer is None) and (not role or m.role == role) and m.skill >= min_skill
+               and min_age <= m.age <= max_age and (not trait or trait in m.traits) and (not country or m.country == country)
+               and (not q or q in m.name.lower())]
+        key = {"skill": lambda m: (-m.skill, m.id), "age": lambda m: (m.age, m.id), "price": lambda m: (m.expectation, m.id),
+               "experience": lambda m: (-m.experience, m.id)}.get(sort, lambda m: (-m.skill, m.id))
+        return sorted(out, key=key)
 
     def mine(self, game) -> list[Staffer]:
         return sorted((m for m in self.members.values() if m.club == game.club_name), key=lambda m: m.id)
@@ -88,6 +139,8 @@ class StaffWorld:
         m = self.members.get(sid)
         if m is None or m.club is not None:
             raise ValueError("этого специалиста нет на рынке")
+        if m.employer is not None:
+            raise ValueError(f"{m.name} работает в клубе {m.employer} до недели {m.employed_until}")
         if months not in MONTHS:
             raise ValueError("договор на 6, 12 или 24 месяца")
         salary = m.expectation if salary is None else float(salary)
@@ -151,22 +204,40 @@ class StaffWorld:
                 out.append(f"клуб: у {m.name} истёк договор, он ушёл на рынок")
             elif m.end_week - game.week == 8:
                 out.append(f"клуб: договор {m.name} истекает через 8 недель: продлите (наймите заново) или он уйдёт")
-        if game.week % REFRESH_WEEKS == 0:
-            for sid, m in list(self.members.items()):
-                if m.club is None and game.week - m.listed_week >= CANDIDATE_LIFETIME:
-                    del self.members[sid]            # signed by another club
-            for _ in range(2):
-                p = self._make(self.rng.choice(ROLES), game.week, game.club.tier)
-                self.members[p.id] = p
+        out += self._world_turn(game)
         out += self._analyst_work(game)
         return out
+
+    def _world_turn(self, game) -> list[str]:
+        """Contracts at AI clubs run out, AI clubs sign free people, every season people age, retire and new ones appear."""
+        r = self.rng
+        for m in self.members.values():
+            if m.employer is not None and game.week >= m.employed_until:
+                m.history.append(f"{m.employer}, до недели {m.employed_until}")
+                m.employer, m.listed_week = None, game.week
+        if game.week and game.week % POACH_WEEKS == 0:
+            ai = [c.name for c in game.clubs if c.name != game.club_name]
+            free = sorted(self.free(), key=lambda m: m.id)
+            for m in r.sample(free, min(len(free), POACH_COUNT)):
+                m.employer, m.employed_until = r.choice(ai), game.week + r.randint(26, 130)
+        if game.week and game.week % 52 == 0:
+            for sid, m in list(self.members.items()):
+                m.age += 1
+                m.experience += 1
+                if m.age > RETIRE_AGE and m.club is None and m.employer is None:
+                    del self.members[sid]
+            pool = [role for role, w in ROLE_WEIGHT.items() for _ in range(w)]
+            for _ in range(SEASON_INTAKE):
+                m = self._make(r.choice(pool), game.week, game.club.tier, young=True)
+                self.members[m.id] = m
+        return []
 
     def analyst_power(self, game, m: Staffer) -> float:
         """Learning speed multiplier for the dossier: his skill and the analytics centre's analysis depth (wired effects)."""
         from .base import fac_data
         lvl = game.base.level("analytics_center")
         depth = sum(e for l in fac_data()["analytics_center"]["levels"][:lvl] for k, e in l["effects"].items() if k == "analysis.demo_depth")
-        return (0.4 + m.skill / 100) * (1 + depth)
+        return (0.4 + m.skill / 100) * (1 + depth) * (1 + sum(TRAITS[t][3] for t in m.traits if t in TRAITS))   # personality: the one wired trait effect
 
     def _analyst_work(self, game) -> list[str]:
         if not self.target:

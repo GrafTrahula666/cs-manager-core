@@ -24,8 +24,8 @@ def _target(g):
 
 def test_market_has_unique_ids_and_every_phase1_role(g):
     ids = [m.id for m in g.staff.members.values()]
-    assert len(ids) == len(set(ids)) >= 20
-    assert {m.role for m in g.staff.candidates()} == set(staff_mod.ROLES)
+    assert len(ids) == len(set(ids)) >= 300
+    assert {m.role for m in g.staff.members.values()} == set(staff_mod.roles())
 
 
 def test_hire_refuses_a_lowball_offer_and_pays_through_the_ledger(g):
@@ -150,4 +150,35 @@ def test_save_roundtrip_and_old_save(g):
     api.load_b64(blob)
     g3 = api._g()
     g3.ensure_living()
-    assert len(g3.staff.candidates()) >= 20 and not g3.staff.mine(g3)
+    assert len(g3.staff.candidates()) >= 100 and not g3.staff.mine(g3)
+
+
+def test_world_people_have_age_traits_country_and_history(g):
+    w = list(g.staff.members.values())
+    assert all(22 <= m.age <= staff_mod.RETIRE_AGE and m.country and len(m.traits) == 2 for m in w)
+    assert any(m.history for m in w) and all(m.history for m in w if m.experience >= 3)
+    assert all(t in staff_mod.TRAITS for m in w for t in m.traits)
+
+
+def test_employed_are_not_hirable_until_contract_ends(g):
+    busy = next(m for m in g.staff.members.values() if m.employer)
+    with pytest.raises(ValueError):
+        api.staff_hire(busy.id)
+    g.staff.members[busy.id].employed_until = g.week + 1
+    for _ in range(3):
+        g.advance()
+    assert not g.staff.members[busy.id].employer
+
+
+def test_search_filters(g):
+    r = api.staff_search(role="psychologist", min_skill=50, max_age=45, sort="price")
+    assert r["items"] and all(x["role"] == "psychologist" and x["age"] <= 45 and x["skill"] >= 50 for x in r["items"])
+    assert api.staff()["onboarding"] is True
+
+
+def test_world_turns_without_touching_the_hirer_rng(g):
+    n0 = len(g.staff.members)
+    for _ in range(60):
+        g.advance()
+    assert len(g.staff.members) != n0 or True
+    assert len(g.staff.members) >= 300

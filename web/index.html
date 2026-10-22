@@ -291,6 +291,9 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
 .fdetail { width: 100%; max-height: 260px; object-fit: contain; }
 .reqrow { display: flex; gap: 8px; font-size: .82rem; }
 .reqrow.ok b { color: var(--good, #6fcf97); } .reqrow.no b { color: var(--bad, #eb5757); } .reqrow.soft b { color: var(--muted); }
+.strow { display: flex; gap: 12px; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 8px 0; border-top: 1px solid var(--line); }
+.strow > div { display: grid; gap: 3px; max-width: 640px; }
+.stf { margin-bottom: 8px; }
 .lvbar { display: flex; gap: 4px; margin: 4px 0; } .lvbar i { flex: 1; height: 6px; border-radius: 3px; background: var(--panel2); } .lvbar i.on { background: var(--accent); }
 .tnode { cursor: pointer; }
 .tnode circle.bg { fill: var(--panel2); stroke: var(--line); stroke-width: 2; }
@@ -648,8 +651,8 @@ async function startCareer() {
   try {
     const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value, profile));
     busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null;
-    tab = "manager"; selNode = null; enterGame(s);
-    toast(`${profile.name}, вы возглавили ${s.club}. Откройте «Менеджер»: первые таланты появятся на втором уровне.`);
+    tab = "staff"; selNode = null; enterGame(s);
+    toast(`${profile.name}, вы возглавили ${s.club}. Соберите штаб во вкладке «Штаб»; таланты менеджера откроются со второго уровня.`);
   } catch (e) { busy(false); $("creator").hidden = false; toast("Не получилось: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]); }
 }
 
@@ -713,30 +716,47 @@ function viewHome(s) {
     <div class="grid2">${detail}<section class="card"><h3>История базы</h3>${H.history.length ? H.history.map((x) => `<div class="line"><span>${esc(x)}</span></div>`).join("") : `<p class="muted">Здесь появится всё, что вы построите.</p>`}</section></div>`;
 }
 
-function stCard(m, mine) {
+let stF = { role: "", q: "", min_skill: 0, min_age: 0, max_age: 99, trait: "", country: "", free_only: true, sort: "skill", page: 0 };
+function stChips(m) { return m.traits.map((t) => `<span title="+ ${esc(t.plus)}; − ${esc(t.minus)}${t.active ? "" : " (пока не влияет на игру)"}" class="pill ${t.active ? "story" : ""}">${esc(t.name)}</span>`).join(" "); }
+function stCard(m) {   // one of my people
   const wire = m.wired ? `<span class="plus">работает в игре</span>` : `<span class="muted">пока ничего не меняет в игре</span>`;
   const bar = `<div class="lvbar" title="Мастерство ${m.skill}"><i class="on" style="flex:${m.skill}"></i><i style="flex:${100 - m.skill}"></i></div>`;
-  return `<div class="ftile" style="cursor:default"><b>${esc(m.name)}</b><span class="muted">${esc(m.role_name)}, ${m.age} лет · мастерство ${m.skill}</span>${bar}${wire}
-    ${mine ? `<span>${money(m.salary)}/мес. · договор ещё ${m.weeks_left} нед.${m.workplace ? " · на рабочем месте" : " · без рабочего места"}</span>
-       <div class="controls">${m.workplace ? "" : `<button class="small primary" data-sassign="${m.id}">На рабочее место</button>`}<button class="small" data-srelease="${m.id}">Уволить</button></div>`
-     : `<span>Просит ${money(m.expectation)}/мес.</span><div class="controls"><select id="mo_${m.id}" class="small">${ST.months.map((x) => `<option value="${x}" ${x === 12 ? "selected" : ""}>${x} мес.</option>`).join("")}</select><button class="small primary" data-shire="${m.id}">Нанять</button></div>`}</div>`;
+  return `<div class="ftile" style="cursor:default"><b>${esc(m.name)}</b><span class="muted">${esc(m.role_name)}, ${m.age} лет, ${esc(m.country)} · мастерство ${m.skill}</span>${bar}<div>${stChips(m)}</div>${wire}
+    <span>${money(m.salary)}/мес. · договор ещё ${m.weeks_left} нед.${m.workplace ? " · на рабочем месте" : " · без рабочего места"}</span>
+    <div class="controls">${m.workplace ? "" : `<button class="small primary" data-sassign="${m.id}">На рабочее место</button>`}<button class="small" data-srelease="${m.id}">Уволить</button></div></div>`;
 }
-let ST = null;
+function stRow(m, ST) {   // one person of the world in the search list
+  const busy = m.employer ? `<span class="muted">работает: ${esc(m.employer)}, ещё ${m.employer_weeks} нед.</span>`
+    : `<span><select id="mo_${m.id}" class="small">${ST.months.map((x) => `<option value="${x}" ${x === 12 ? "selected" : ""}>${x} мес.</option>`).join("")}</select> <button class="small primary" data-shire="${m.id}">Нанять за ${money(m.expectation)}</button></span>`;
+  return `<div class="strow"><div><b>${esc(m.name)}</b> <span class="muted">${esc(m.role_name)} · ${m.age} лет · ${esc(m.country)} · опыт ${m.experience} г. · мастерство ${m.skill}</span><div>${stChips(m)}</div>
+    ${m.history.length ? `<span class="why">Раньше: ${m.history.map(esc).join("; ")}</span>` : ""}</div>${busy}</div>`;
+}
 function viewStaff(s) {
-  ST = call("staff");
+  const ST = call("staff");
   const dos = ST.target ? call("dossier", ST.target) : null;
-  const byRole = Object.keys(ST.roles).map((r) => {
-    const c = ST.candidates.filter((m) => m.role === r);
-    return c.length ? `<h4 style="margin:14px 0 6px">${esc(ST.roles[r])}</h4><div class="ftiles">${c.map((m) => stCard(m, false)).join("")}</div>` : "";
-  }).join("");
+  const R = call("staff_search", stF.role, stF.q, stF.min_skill, stF.min_age, stF.max_age, stF.trait, stF.country, stF.free_only, stF.sort, stF.page);
+  const opt = (arr, cur, all) => `<option value="">${all}</option>` + arr.map(([v, n]) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(n)}</option>`).join("");
+  const filters = `<div class="crrow stf">
+    <label>Должность<select data-stf="role">${opt(Object.entries(ST.roles), stF.role, "любая")}</select></label>
+    <label>Имя<input data-stf="q" value="${esc(stF.q)}" placeholder="поиск" style="width:110px"></label>
+    <label>Возраст от<input data-stf="min_age" type="number" value="${stF.min_age || ""}" style="width:64px"></label>
+    <label>до<input data-stf="max_age" type="number" value="${stF.max_age === 99 ? "" : stF.max_age}" style="width:64px"></label>
+    <label>Мастерство от<input data-stf="min_skill" type="number" value="${stF.min_skill || ""}" style="width:64px"></label>
+    <label>Черта<select data-stf="trait">${opt(ST.traits.map((t) => [t.id, t.name]), stF.trait, "любая")}</select></label>
+    <label>Страна<select data-stf="country">${opt(ST.countries.map((c) => [c, c]), stF.country, "любая")}</select></label>
+    <label>Порядок<select data-stf="sort">${[["skill", "по мастерству"], ["price", "по цене"], ["age", "по возрасту"], ["experience", "по опыту"]].map(([v, n]) => `<option value="${v}" ${stF.sort === v ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+    <label><span><input type="checkbox" data-stf="free_only" ${stF.free_only ? "checked" : ""}> только свободные</span></label></div>`;
+  const list = R.items.length ? R.items.map((m) => stRow(m, ST)).join("") : `<p class="muted">Никого не нашлось: ослабьте фильтры.</p>`;
+  const pager = `<div class="controls"><button class="small" data-stpage="-1" ${R.page <= 0 ? "disabled" : ""}>Назад</button><span class="muted">Стр. ${R.page + 1} из ${R.pages} · найдено ${R.total}</span><button class="small" data-stpage="1" ${R.page + 1 >= R.pages ? "disabled" : ""}>Дальше</button></div>`;
   const tgt = `<div class="controls"><select id="stTarget">${ST.targets.map((c) => `<option value="${esc(c.name)}" ${c.name === ST.target ? "selected" : ""}>#${c.rank} ${esc(c.name)}</option>`).join("")}</select><button class="small primary" data-stset="1">Изучать этого соперника</button>${ST.target ? `<button class="small" data-stclear="1">Снять цель</button>` : ""}</div>`;
   const dtab = dos ? `<div class="muted">Изучено ${dos.knowledge}% · клуб #${dos.rank}</div>` + dos.players.map((p) => `<div class="line"><span>${esc(p.name)} <span class="muted">${esc(p.role)}</span></span><span class="num">${p.ovr_range[0]}–${p.ovr_range[1]}</span><span class="muted">знаем ${p.known}%</span></div>`).join("") : `<p class="muted">Выберите соперника. Аналитик каждую неделю изучает его состав, диапазоны оценок сужаются.</p>`;
   const noAn = !ST.mine.some((m) => m.role === "tactical_analyst" && m.workplace);
-  return `<section class="card"><h3>Штаб <span class="muted">зарплаты ${money(ST.payroll_month)}/мес. · аналитический центр: уровень ${ST.analytics_level}</span></h3>
-      ${ST.mine.length ? `<div class="ftiles">${ST.mine.map((m) => stCard(m, true)).join("")}</div>` : `<p class="muted">Пока никого. Наймите аналитика (нужно здание «Аналитический центр» во вкладке «Мой дом»).</p>`}
+  const intro = ST.onboarding ? `<section class="card" style="border-color:var(--accent)"><h3>Первая неделя: соберите штаб</h3><p>В мире ${ST.world} специалистов, свободных ${ST.free}. Ищите по должности, возрасту и чертам. Договор нельзя разорвать бесплатно, а зарплата идёт каждую неделю: касса ${money(ST.cash)}. Начните с аналитика и психолога, остальных можно нанять позже.</p></section>` : "";
+  return intro + `<section class="card"><h3>Мой штаб <span class="muted">зарплаты ${money(ST.payroll_month)}/мес. · аналитический центр: уровень ${ST.analytics_level}</span></h3>
+      ${ST.mine.length ? `<div class="ftiles">${ST.mine.map(stCard).join("")}</div>` : `<p class="muted">Пока никого.</p>`}
       ${lastResults.staff ? `<div class="result">${esc(lastResults.staff)}</div>` : ""}</section>
-    <div class="grid2"><section class="card"><h3>Досье на соперника</h3>${noAn ? `<p class="why">Аналитик не работает: ${ST.analytics_level ? "назначьте аналитика на рабочее место" : "постройте аналитический центр и наймите аналитика"}. Без него досье не собирается.</p>` : `<p class="plus">Скорость анализа ×${ST.analyst_power}</p>`}${tgt}${dtab}</section>
-    <section class="card"><h3>Рынок специалистов</h3><p class="muted">Все договорные деньги идут через финансы. Договор нельзя разорвать бесплатно: увольнение стоит половину оставшейся зарплаты. Работают в игре пока только аналитики.</p>${byRole}</section></div>`;
+    <section class="card"><h3>Люди мира <span class="muted">${ST.world} специалистов</span></h3><p class="muted">У каждого возраст, страна, две черты и история работы. Работающие в других клубах недоступны до конца договора. Серые черты пока не влияют на игру, работает только скорость аналитика.</p>${filters}${list}${pager}</section>
+    <section class="card"><h3>Досье на соперника</h3>${noAn ? `<p class="why">Аналитик не работает: ${ST.analytics_level ? "назначьте аналитика на рабочее место" : "постройте аналитический центр и наймите аналитика"}. Без него досье не собирается.</p>` : `<p class="plus">Скорость анализа ×${ST.analyst_power}</p>`}${tgt}${dtab}</section>`;
 }
 function viewManager(s) {
   const L = call("living");
@@ -1137,6 +1157,13 @@ function viewCareer(s) {
   </div>`;
 }
 
+document.addEventListener("change", (ev) => {
+  const f = ev.target.closest("[data-stf]");
+  if (!f) return;
+  const k = f.dataset.stf;
+  stF[k] = f.type === "checkbox" ? f.checked : ["min_skill", "min_age"].includes(k) ? +f.value || 0 : k === "max_age" ? +f.value || 99 : f.value;
+  stF.page = 0; render();
+});
 document.addEventListener("click", async (ev) => {
   const fc = ev.target.closest("[data-fac]");
   if (fc) { selFac = fc.dataset.fac; lastResults.build = ""; return render(); }
@@ -1159,6 +1186,7 @@ document.addEventListener("click", async (ev) => {
     if (b.id === "newBtn") return openCreator();
     if (b.id === "crGo") return startCareer();
     if (b.id === "crBack") { $("creator").hidden = true; $("boot").hidden = false; return; }
+    if (d.stpage) { stF.page += +d.stpage; return render(); }
     if (d.shire) { try { lastResults.staff = call("staff_hire", d.shire, +$("mo_" + d.shire).value); } catch (e) { lastResults.staff = String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]; } return render(); }
     if (d.sassign || d.srelease || d.stset || d.stclear) {
       try { lastResults.staff = d.sassign ? call("staff_assign", d.sassign) : d.srelease ? call("staff_release", d.srelease) : d.stset ? call("staff_target", $("stTarget").value) : call("staff_target", null); }

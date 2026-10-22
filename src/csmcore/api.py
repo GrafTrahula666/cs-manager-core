@@ -714,27 +714,43 @@ def build(fid: str) -> str:
 
 
 def _st(m, g) -> dict:
-    from .staff import WIRED_ROLES, roles
+    from .staff import TRAITS, WIRED_ROLES, roles
     r = roles()[m.role]
     return {"id": m.id, "name": m.name, "role": m.role, "role_name": r["name"], "skill": m.skill, "age": m.age, "loyalty": m.loyalty,
+            "country": m.country, "experience": m.experience, "history": m.history[-3:],
+            "traits": [{"id": t, "name": TRAITS[t][0], "plus": TRAITS[t][1], "minus": TRAITS[t][2], "active": TRAITS[t][3] != 0 and m.role in WIRED_ROLES}
+                       for t in m.traits],
             "expectation": _money(m.expectation), "salary": _money(m.salary), "weeks_left": max(0, m.end_week - g.week) if m.club else None,
+            "employer": m.employer, "employer_weeks": max(0, m.employed_until - g.week) if m.employer else None,
             "workplace": m.workplace, "wired": m.role in WIRED_ROLES, "log": m.log[-4:]}
 
 
 def staff() -> dict:
-    """Staff market and my people. `wired` says whether a role changes anything in the game today."""
-    from .staff import MONTHS, ROLES, roles
+    """My staff, the dossier target and the facts the staff screen needs. The people of the world come from staff_search."""
+    from .staff import COUNTRIES, MONTHS, TRAITS, roles
     g = _g()
     g.ensure_living()
     w = g.staff
     club = next((c for c in g.clubs if c.name == w.target), None)
     rivals = sorted((c for c in g.clubs if c is not g.club), key=lambda c: c.rank)[:20]
     an = [m for m in w.mine(g) if m.role == "tactical_analyst"]
-    return {"mine": [_st(m, g) for m in w.mine(g)], "candidates": [_st(m, g) for m in w.candidates()],
-            "months": list(MONTHS), "roles": {r: roles()[r]["name"] for r in ROLES}, "target": w.target,
+    return {"mine": [_st(m, g) for m in w.mine(g)], "onboarding": g.week == 0 and not w.mine(g),
+            "world": len(w.members), "free": len(w.free()),
+            "months": list(MONTHS), "roles": {r: v["name"] for r, v in roles().items()}, "countries": COUNTRIES,
+            "traits": [{"id": k, "name": v[0]} for k, v in TRAITS.items()], "target": w.target,
             "target_knowledge": round(w.knowledge(g, club)) if club else None, "targets": [{"name": c.name, "rank": c.rank} for c in rivals],
             "analytics_level": g.base.level("analytics_center"), "analyst_power": round(w.analyst_power(g, an[0]), 2) if an else None,
             "payroll_month": _money(sum(m.salary for m in w.mine(g))), "cash": _money(g.club.cash)}
+
+
+def staff_search(role: str | None = None, q: str = "", min_skill: int = 0, min_age: int = 0, max_age: int = 99, trait: str | None = None,
+                 country: str | None = None, free_only: bool = True, sort: str = "skill", page: int = 0, per: int = 15) -> dict:
+    """Search the world's specialists. People who work for AI clubs show up only when free_only is off, and cannot be hired."""
+    g = _g()
+    g.ensure_living()
+    found = g.staff.search(role or None, q or "", int(min_skill), int(min_age), int(max_age), trait or None, country or None, bool(free_only), sort)
+    page = max(0, min(int(page), max(0, (len(found) - 1) // per)))
+    return {"total": len(found), "page": page, "pages": max(1, -(-len(found) // per)), "items": [_st(m, g) for m in found[page * per:(page + 1) * per]]}
 
 
 def staff_hire(sid: str, months: int = 12, salary: float | None = None) -> str:
