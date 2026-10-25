@@ -49,7 +49,22 @@ def standings(clubs: list[Club], division: int) -> list[Club]:
     return sorted((c for c in clubs if c.division == division), key=lambda c: (-c.season_points, c.rank))
 
 
-def season_end(clubs: list[Club]) -> list[str]:
+def regional_candidates(clubs: list[Club], per_region: int = 2) -> list[Club]:
+    """Two highest season scorers from each region of division 3.
+
+    Candidates compete internationally for the four promotion slots. Small generated worlds
+    may have fewer than two clubs in a particular region, so vacant berths stay vacant.
+    """
+    regions = sorted({c.region for c in clubs})
+    result: list[Club] = []
+    for region in regions:
+        pool = sorted((c for c in clubs if c.division == 3 and c.region == region),
+                      key=lambda c: (-c.season_points, c.rank))
+        result.extend(pool[:per_region])
+    return sorted(result, key=lambda c: (-c.season_points, c.rank))
+
+
+def season_end(clubs: list[Club], promoted_from_qualifier: list[str] | None = None) -> list[str]:
     """Promotion and relegation by the season tables, then a fresh table for everyone."""
     tables = {k: standings(clubs, k) for k in (1, 2, 3, 4)}
     moves: list[tuple[Club, int]] = []
@@ -59,6 +74,11 @@ def season_end(clubs: list[Club]) -> list[str]:
         if n <= 0:
             continue
         down, up = tables[k][-n:], tables[k + 1][:n]
+        if k == 2 and promoted_from_qualifier is not None:
+            names = set(promoted_from_qualifier)
+            winners = [c for c in tables[3] if c.name in names]
+            # If an unusually small seed has fewer qualifiers, retain open promotion slots.
+            up = winners[:n] + [c for c in tables[3] if c.name not in names][:max(0, n-len(winners))]
         moves += [(c, k + 1) for c in down] + [(c, k) for c in up]
         lines.append(f"{name(k)}: вылетели {', '.join(c.name for c in down)}; "
                      f"поднялись: {', '.join(c.name for c in up)}")
