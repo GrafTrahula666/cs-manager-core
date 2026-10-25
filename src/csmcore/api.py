@@ -78,6 +78,8 @@ def _zone(g: Game) -> str:
     k = g.club.division
     rows = circuit.standings(g.clubs, k)
     i = rows.index(g.club) + 1
+    if getattr(g, "founder_mode", False) and k == 3:
+        return "qual" if g.club in circuit.regional_candidates(g.clubs) else ""
     up = circuit.SWAPS.get(k - 1, 0) if k > 1 else 0
     down = circuit.SWAPS.get(k, 0) if k < 4 else 0
     return "up" if i <= up else "down" if down and i > len(rows) - down else ""
@@ -597,7 +599,10 @@ def leagues(division: int | None = None) -> dict:
     down = circuit.SWAPS.get(k, 0) if k < 4 else 0
     out = []
     for i, c in enumerate(rows, 1):
-        zone = "up" if i <= up else "down" if down and i > len(rows) - down else ""
+        if getattr(g, "founder_mode", False) and k == 3:
+            zone = "qual" if c in circuit.regional_candidates(g.clubs) else ""
+        else:
+            zone = "up" if i <= up else "down" if down and i > len(rows) - down else ""
         out.append({"place": i, "club": c.name, "region": c.region, "points": round(c.season_points),
                     "rank": c.rank, "me": c.name == g.club_name, "zone": zone})
     return {"division": k, "name": circuit.name(k), "names": circuit.NAMES, "rows": out,
