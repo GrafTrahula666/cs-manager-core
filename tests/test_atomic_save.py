@@ -1,5 +1,7 @@
 """Protect on-disk saves without changing the serialized game format."""
 
+import gzip
+
 import pytest
 
 from csmcore import save
@@ -41,3 +43,11 @@ def test_atomic_save_can_replace_and_reload(tmp_path):
 def test_truncated_header_raises_clear_error():
     with pytest.raises(ValueError, match="номер версии"):
         save.loads(save.MAGIC)
+
+
+def test_corrupted_gzip_checksum_does_not_load():
+    game = Game.new(seed=23, n_clubs=24)
+    corrupted = bytearray(save.dumps(game))
+    corrupted[-8] ^= 0x01  # first byte of gzip CRC32 footer
+    with pytest.raises(gzip.BadGzipFile):
+        save.loads(bytes(corrupted))
