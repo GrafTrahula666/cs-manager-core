@@ -1,0 +1,33 @@
+name: Founder regression checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-and-browser-syntax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install package and tests
+        run: python -m pip install -e '.[dev]'
+      - name: All non-slow unit and integration tests
+        run: python -m pytest -q -m 'not slow'
+      - name: Compile Python
+        run: python -m compileall -q src/csmcore
+      - name: Check browser JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          page = Path('web/index.html').read_text(encoding='utf-8')
+          script = page.split('<script>', 1)[1].split('</script>', 1)[0]
+          Path('/tmp/cs-manager-inline.js').write_text(script, encoding='utf-8')
+          PY
+          node --check /tmp/cs-manager-inline.js
