@@ -885,7 +885,7 @@ function viewOffice(s) {
   const next = s.next_events.map((e) => `<div class="line"><span class="num muted">н${e.week}</span><span>${esc(e.name)}</span>${e.invited ? `<span class="pill club">участвуем</span>` : `<span class="pill">не приглашены</span>`}</div>`).join("");
   const tones = Object.entries(META.tones).map(([k, v]) => `<button class="small" data-talk="${k}">${v}</button>`).join("");
   const rep = seasonReport ? `<div class="report"><b>Итоги сезона</b>${seasonReport.map((l) => `<div>${esc(l)}</div>`).join("")}<div><button class="small" data-closereport="1">Понятно</button></div></div>` : "";
-  const warn = s.zone === "down" ? `<div class="alert">Вы в зоне вылета лиги (${s.division_place}-е место). Очки идут со всех турниров: ищите, где можно набрать.</div>`
+  const warn = s.zone === "qual" ? `<div class="alert up">Вы в топ-2 своего региона в третьем дивизионе. Удержите место, чтобы сыграть в международном BO3-отборе за путёвку во второй дивизион.</div>` : s.zone === "down" ? `<div class="alert">Вы в зоне вылета лиги (${s.division_place}-е место). Очки идут со всех турниров: ищите, где можно набрать.</div>`
     : s.zone === "up" ? `<div class="alert up">Вы в зоне повышения (${s.division_place}-е место). Удержите её до конца сезона.</div>` : "";
   const objs = s.objective_status.map((o) => `<div class="obj"><span class="dot ${o.score >= 0.3 ? "ok" : o.score < 0 ? "no" : ""}"></span><span>${esc(o.text)} <span class="muted">${o.score >= 0.3 ? "идёт хорошо" : o.score < 0 ? "под угрозой" : "на грани"}</span></span></div>`).join("");
   const mt = matches.slice(0, 6).map((m) => `<div class="mrow ${m.win ? "w" : "l"}"><span class="num muted">С${m.season} н${m.week}</span><span>${CL(m.opp, 18)} <span class="muted">${esc(m.ev)}</span></span><span class="sc">${m.mine}:${m.theirs}</span></div>`).join("");
@@ -1026,9 +1026,9 @@ let leagueSel = 0;
 function viewLeagues(s) {
   const L = call("leagues", leagueSel || null);
   const opts = Object.entries(L.names).map(([k, n]) => `<option value="${k}" ${+k === L.division ? "selected" : ""}>${n}</option>`).join("");
-  const zone = { up: `<span class="pill club">вверх</span>`, down: `<span class="pill world">вниз</span>` };
+  const zone = { up: `<span class="pill club">вверх</span>`, down: `<span class="pill world">вниз</span>`, qual: `<span class="pill club">отбор</span>` };
   return `<section class="card"><div class="controls"><h2>Лиги</h2><select id="leagueSel" aria-label="Лига">${opts}</select></div>
-    <p class="muted">Лига на весь сезон решает, куда клуб получает инвайт. Тир 1 играет Masters, Major и World Final по прямому инвайту, Тир 2 Pro Series, квалификацию HACEIT на Major (два места) и лиги HACEIT, Тир 3 и остальные лиги и открытые кубки HACEIT. Очки сезона дают все турниры. В конце сезона худшие вылетают, лучшие лиги ниже поднимаются.</p>
+    <p class="muted">Лига на весь сезон решает, куда клуб получает инвайт. Тир 1 играет Masters, Major и World Final по прямому инвайту, Тир 2 Pro Series, квалификацию HACEIT на Major (два места) и лиги HACEIT, Тир 3 и остальные лиги и открытые кубки HACEIT. Очки сезона дают все турниры. В конце сезона худшие вылетают, лучшие лиги ниже поднимаются. В режиме основателя из третьего дивизиона по две лучшие команды каждого региона играют международный BO3-отбор за 4 места во втором дивизионе.</p>
     <p class="muted">Инвайты этой лиги: ${esc(L.invites.join(", ")) || "—"}</p>
     <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Регион</th><th class="r">Очки сезона</th><th class="r">Рейтинг</th><th></th></tr></thead>
     <tbody>${L.rows.map((c) => `<tr class="${c.me ? "me" : ""}"><td class="r">${c.place}</td><td>${CL(c.club, 22)}</td><td>${c.region}</td><td class="r">${c.points}</td><td class="r">#${c.rank}</td><td>${zone[c.zone] || ""}</td></tr>`).join("")}</tbody></table></div></section>`;
