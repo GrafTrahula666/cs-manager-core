@@ -731,7 +731,7 @@ function viewManager(s) {
   const trees = order.map((b) => `<section class="card tree"><h3>${ART.base ? `<i class="emb" style="--emb:url(art/base/icons_branches.webp);background-position:${["strategist", "motivator", "analyst", "manager", "intriguer"].indexOf(b) * 25}% 0"></i>` : ""}${esc(L.branches[b].name)} ${b === L.specialization ? `<span class="pill story">ваша ветка</span>` : ""} <span class="muted">${L.nodes.filter((n) => n.branch === b && n.state === "unlocked").length}/12</span></h3><span class="muted">${esc(L.branches[b].desc)}</span>${treeSvg(L, b)}</section>`).join("");
   const ch = L.channels.map((c) => `<div class="chrow"><span>${esc(c.label)}</span><b class="${c.value >= 0 ? "plus" : "minus"}">${c.value >= 0 ? "+" : ""}${(c.value * 100).toFixed(1)}%</b><span class="why">${c.why.map(esc).join(" · ")}${c.status === "planned" ? " · подключится к игре в следующих этапах" : ""}</span></div>`).join("");
   const jr = L.journal.map((j) => `<div class="line"><span class="num muted">С${j.season}</span><span>${esc(j.why)}</span><span class="num plus">+${j.xp}</span></div>`).join("");
-  return `<section class="card"><div class="mhead">${face({ name: L.name, age: L.age, face: L.face }, s.club, 96)}
+  return `<section class="card"><div class="mhead">${crest(s.club, 96)}
       <div class="nm"><b style="font:700 1.3rem var(--display)">${esc(L.name)}</b><span class="muted">${esc(L.background)}, ${L.age} лет, ${esc(L.country)} · ${esc(L.branches[L.specialization].name)}</span>
       <div class="traits">${L.traits.map((t) => `<span title="+ ${esc(t.plus)}; − ${esc(t.minus)}">${esc(t.name)}</span>`).join("")}</div></div>
       <div class="lvlring" style="--p:${pct}" title="Опыт ${L.xp} из ${L.xp_next}"><b>${L.level}</b></div>
@@ -740,13 +740,13 @@ function viewManager(s) {
     <div class="sbars">${Object.keys(L.stats).map((k) => `<div class="sbar"><span>${L.stat_ru[k]}</span><i><u style="width:${L.stats[k] * 14}%"></u></i><span>${L.stats[k]}</span></div>`).join("")}</div></section>
   <div class="grid2"><div style="display:grid;gap:16px;align-content:start">${detail}
       <section class="card"><h3>Что это даёт сейчас</h3>${ch || `<p class="muted">Пока только базовые навыки.</p>`}</section>
-      <section class="card"><h3>За что вы получали опыт</h3>${jr || `<p class="muted">Опыт дают цели владельца, титулы, выход за ожидания, решённые конфликты. За пропуск недели опыта нет.</p>`}</section></div>
+      <section class="card"><h3>За что вы получали опыт</h3>${jr || `<p class="muted">Опыт дают цели совета, титулы, выход за ожидания, решённые конфликты. За пропуск недели опыта нет.</p>`}</section></div>
     <div style="display:grid;gap:16px;align-content:start">${trees}</div></div>`;
 }
 function showLevelUp(level, points) {
   const d = document.createElement("div"); d.className = "lvlup"; d.setAttribute("role", "dialog"); d.setAttribute("aria-label", "Новый уровень");
   d.innerHTML = `<div class="rays"></div><div class="box"><span class="muted" style="font:600 .7rem var(--mono);letter-spacing:.14em">НОВЫЙ УРОВЕНЬ</span><div class="big">${level}</div>
-    <b>${points ? `Свободных очков талантов: ${points}` : "Продолжайте"}</b><span class="muted">Выберите, каким менеджером вы станете.</span>
+    <b>${points ? `Свободных очков талантов: ${points}` : "Продолжайте"}</b><span class="muted">Выберите, каким руководителем клуба вы станете.</span>
     <div class="controls"><button class="primary" id="lvlGo">К талантам</button><button id="lvlClose">Позже</button></div></div>`;
   document.body.appendChild(d);
   d.addEventListener("click", (e) => { const id = e.target.id; if (id === "lvlGo") { tab = "manager"; d.remove(); render(); } else if (id === "lvlClose" || e.target === d) d.remove(); });
@@ -772,6 +772,11 @@ function autosave() {
 }
 
 async function advance(n) {
+  if (curState && curState.starter_open) {
+    tab = "market"; render();
+    toast("Прежде чем начать сезон, подпишите двух игроков из стартового набора.");
+    return;
+  }
   if (!n || n < 1) n = 1;
   const btns = ["nextBtn", "next4Btn", "toEventBtn"];
   btns.forEach((i) => ($(i).disabled = true));
@@ -780,7 +785,7 @@ async function advance(n) {
   const club = curState && curState.club;
   res.forEach((w) => w.lines.forEach((l) => { const m = parseMatch(l, club, w); if (m) matches.unshift(m); }));
   matches = matches.slice(0, 30);
-  const end = res.flatMap((w) => w.lines).filter((l) => /^Сезон \d+ завершён/.test(l) || / (поднимается|вылетает) в /.test(l) || l.startsWith("Цели владельца"));
+  const end = res.flatMap((w) => w.lines).filter((l) => /^Сезон \d+ завершён/.test(l) || / (поднимается|вылетает) в /.test(l) || l.startsWith("Цели владельца") || l.startsWith("Цели совета"));
   if (end.length) seasonReport = end;
   log = res.reverse().concat(log).slice(0, 40);
   const s = call("state");
@@ -792,7 +797,7 @@ async function advance(n) {
   else if (s.situations) tab = "backstage";
   render(s);
   if (s.level > lvlBefore) showLevelUp(s.level, s.talent_points);
-  if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
+  if (s.sacked && !s.founder) toast("Вас уволили из старого сохранения: переход в другой клуб доступен только в прежнем режиме.");
 }
 
 function parseMatch(line, club, w) {
@@ -814,8 +819,8 @@ const hintHtml = (h) => {
   return bits.length ? bits.join(" ") : "без последствий";
 };
 
-const TABS = [["office", "Сводка"], ["manager", "Менеджер"], ["home", "Мой дом"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
-  ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
+const TABS = [["office", "Сводка"], ["manager", "Основатель"], ["home", "Мой дом"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+  ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Клуб"]];
 
 function render(s) {
   s = s || call("state");
@@ -836,6 +841,7 @@ function render(s) {
   const ne = s.next_events.find((x) => x.invited) || s.next_events[0];
   $("toEventBtn").textContent = ne ? `До турнира · ${Math.max(1, ne.week - s.week)} нед.` : "До турнира";
   $("toEventBtn").title = ne ? `Играть до «${ne.name}» (неделя ${ne.week}); остановится, если нужно ваше решение` : "";
+  ["nextBtn", "next4Btn", "toEventBtn"].forEach((id) => { $(id).disabled = !!s.starter_open; });
   const due = s.pending_events + s.offers, sits = s.situations || 0;
   $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "manager" && s.talent_points ? `<span class="badge">${s.talent_points}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
   const views = { office: viewOffice, manager: viewManager, home: viewHome, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
@@ -888,8 +894,8 @@ function viewOffice(s) {
     <section class="card"><h3>Что впереди</h3><div style="display:grid;gap:6px">${hz}</div></section>
     <section class="card"><h3>Требует решения</h3>${events || offers ? events + offers : `<p class="muted">Ничего не ждёт. Нерешённое через 2 недели решит ассистент.</p>`}
       ${lastResults.inbox ? `<div class="result">${esc(lastResults.inbox)}</div>` : ""}</section>
-    <section class="card"><h3>Цели владельца</h3>${objs || s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
-      <div class="muted">Доверие владельца ${s.owner_confidence}/100${s.owner_confidence < 35 ? ` <span class="urgent">· ниже 12 уволят</span>` : ""}</div>
+    <section class="card"><h3>${s.founder ? "Цели совета директоров" : "Цели владельца"}</h3>${objs || s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
+      <div class="muted">Доверие ${s.founder ? "совета" : "владельца"} ${s.owner_confidence}/100${s.owner_confidence < 35 ? ` <span class="urgent">· ${s.founder ? "совет требует результатов" : "ниже 12 уволят"}</span>` : ""}</div>
       <h3>Матчи ${formStrip()}</h3>${mt || `<p class="muted">Матчей пока не было. Ближайший турнир в списке ниже.</p>`}
       <h3>Ближайшие турниры</h3>${next || `<p class="muted">До конца сезона турниров нет</p>`}
       <div class="muted">Патч: ${esc(s.patch)}</div></section>
@@ -955,6 +961,17 @@ function viewSquad() {
 }
 
 function viewMarket() {
+  const starter = curState && curState.starter_open ? call("founder_candidates") : [];
+  const starterHtml = curState && curState.starter_open
+    ? `<section class="card"><h2>Наберите первую пятёрку · ${curState.roster_count}/5</h2>
+        <p class="muted">У вас три игрока с действующими контрактами. Выберите двух из предварительно согласованного списка. Трансферная плата: $0, но зарплата пойдёт из кассы клуба.</p>
+        <div class="hunt">${starter.map((p) => `<div class="hcard">
+          <span class="big">${face({name:p.name,age:p.age},null,84)}</span>
+          <div class="info"><b>${esc(p.name)}</b><span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span>
+          <span>Уровень ${p.overall} · ${money(p.salary)}/мес.</span>
+          <button class="small" data-founder-sign="${esc(p.name)}">Подписать на сезон</button></div></div>`).join("")}</div>
+        ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}</section>`
+    : "";
   const m = call("market", 40);
   const rows = m.map((p) => `<tr>
       <td><div class="pl">${ava(p, p.club)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>${p.hot ? ` <span class="pill story">охота</span>` : ""}</span>
@@ -969,7 +986,7 @@ function viewMarket() {
         <span>Уровень <span class="range">${p.ovr_range[0]}–${p.ovr_range[1]}</span> · потенциал ${esc(p.potential)}</span>
         <span class="${p.rivals >= 5 ? "urgent" : "muted"}">${p.head_start ? `У вас фора ${p.head_start} нед.: потом вступят ${p.rivals} клубов` : p.rivals ? `Могут взять ещё ${p.rivals} клубов. Окно через ${p.window} нед.` : "Конкурентов пока не видно"}</span>
         <span><button class="small" data-scout="${esc(p.name)}">скаут</button> <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"} ${p.fee ? money(p.fee) : money(p.salary_wish) + "/мес"}</button></span></div></div>`).join("");
-  return `<section class="card"><h3>Охота: лучшие цели рынка</h3><div class="hunt">${hot || `<p class="muted">Звёзд на рынке сейчас нет.</p>`}</div></section>
+  return starterHtml + `<section class="card"><h3>Охота: лучшие цели рынка</h3><div class="hunt">${hot || `<p class="muted">Звёзд на рынке сейчас нет.</p>`}</div></section>
   <section class="card"><h2>Рынок</h2>
     <p class="muted">Свободные агенты и игроки, которые просят трансфер. Уровень виден диапазоном: чем дольше смотрят скауты, тем он точнее. Предложение идёт по запрошенной цене и желаемой зарплате, решает сам игрок.</p>
     ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}
@@ -1098,13 +1115,14 @@ function viewTraits() {
 }
 
 function viewCareer(s) {
-  const jobs = s.sacked ? call("jobs") : [];
   let saved = "";
   try { saved = localStorage.getItem(SAVE_KEY) ? "Автосохранение каждые 4 недели в этом браузере включено." : ""; } catch (e) {}
   return `<div class="grid2">
-    <section class="card"><h3>Менеджер</h3><div><b>${esc(s.manager.name)}</b>, репутация ${s.manager.reputation}, титулов ${s.manager.titles}</div>
-      ${s.sacked ? `<div class="flag">Вас уволили. Клубы, готовые вас взять:</div>` + jobs.map((j) => `<div class="line"><span>${CL(j.club, 20)} (${TIER[j.tier]}, #${j.rank}, ${j.region})</span><button class="small" data-job="${esc(j.club)}">Принять</button></div>`).join("") : `<div class="muted">Владелец оценивает вас раз в месяц. Доверие ниже 12 означает увольнение.</div>`}
-    </section>
+    <section class="card"><h3>Ваш клуб</h3><div class="mhead">${crest(s.club, 88)}
+      <div><b>${esc(s.club)}</b><p class="muted">Основатель: ${esc(s.manager.name)} · регион ${esc(s.region)} · ${esc(s.division)}</p></div></div>
+      <p class="muted">Совет директоров: доверие ${s.owner_confidence}/100. Доверие влияет на согласование крупных строек и финансовую поддержку. Основатель не может быть уволен: при низком доверии наступает кризис управления.</p>
+      ${s.board_crisis ? `<div class="alert">Кризис управления: совет не одобряет крупные проекты. Верните доверие результатами и финансовой дисциплиной.</div>` : ""}
+      <p class="muted">Логотип автоматически создаётся на основе названия клуба. Ваш персонаж сохраняет уровень, таланты и историю.</p></section>
     <section class="card"><h3>Сохранение</h3><div class="muted">${saved}</div>
       <div class="controls"><button class="small" id="saveBtn">Сохранить сейчас</button><button class="small" id="exportBtn">Скопировать сохранение текстом</button><button class="small" id="quitBtn">Выйти в меню</button></div>
       ${lastResults.career ? `<div class="result">${esc(lastResults.career)}</div>` : ""}
@@ -1164,6 +1182,12 @@ document.addEventListener("click", async (ev) => {
       lastResults.squad = call("release", d.release); return render();
     }
     if (d.scout) { const r = call("scout", d.scout); lastResults.market = `${r.name}: изучен на ${r.known}%, потенциал ${r.potential}${r.traits.length ? ", черты: " + r.traits.join(", ") : ""}`; return render(); }
+    if (d.founderSign) {
+      lastResults.market = call("founder_sign", d.founderSign);
+      const updated = call("state");
+      if (!updated.starter_open) { tab = "office"; toast("Стартовая пятёрка собрана! Теперь можно начинать первый сезон."); }
+      return render(updated);
+    }
     if (d.sign) {
       lastResults.market = d.club === "1" ? call("bid", d.sign, +d.fee, +d.sal) : call("sign", d.sign, +d.sal);
       return render();
