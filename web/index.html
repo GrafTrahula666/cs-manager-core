@@ -336,7 +336,7 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <p><b>Режиссёр судьбы</b> решает, как часто с клубом случаются плохие и хорошие истории. <i>Кассандра</i> нагнетает драму, когда всё слишком спокойно. <i>Фиби</i> после трудного периода даёт передышку. <i>Рэнди</i> бросает кости: то тишина, то три скандала подряд.</p>
         </div>
         <div class="row">
-          <button class="primary" id="newBtn">Новая карьера</button>
+          <button class="primary" id="newBtn">Основать клуб</button>
           <button id="contBtn" hidden>Продолжить сохранение</button>
         </div>
         <details class="imp"><summary>Загрузить сохранение из текста</summary>
@@ -359,9 +359,9 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <div class="kpi"><small>Сезон · неделя</small><span id="kWeek">—</span></div>
           <div class="kpi"><small>Место</small><span id="kRank">—</span></div>
           <div class="kpi"><small>Касса</small><span id="kCash">—</span></div>
-          <div class="kpi"><small>Владелец</small><span id="kOwner">—</span></div>
+          <div class="kpi"><small>Совет</small><span id="kOwner">—</span></div>
           <div class="kpi hide-sm"><small>Репутация</small><span id="kRep">—</span></div>
-          <div class="kpi" title="Уровень менеджера и опыт"><small>Менеджер</small><span id="kLvl">—</span></div>
+          <div class="kpi" title="Уровень основателя и опыт"><small>Основатель</small><span id="kLvl">—</span></div>
         </div>
         <div class="go">
           <button class="primary" id="nextBtn" title="Клавиша N или пробел">Следующая неделя</button>
@@ -601,7 +601,7 @@ const BEARDS = ["нет", "щетина", "борода", "эспаньолка"
 function crFace() { return face({ name: (cr.name + " " + cr.surname).trim() || "менеджер", age: cr.age, face: cr.ov }, "Вы", 180); }
 function openCreator() {
   MO = MO || call("manager_options");
-  if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
+  if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", club: "", region: "CIS", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
   $("boot").hidden = true; $("creator").hidden = false; renderCreator();
 }
 function crStats() {
@@ -609,7 +609,7 @@ function crStats() {
   s[MO.specialization_stat[cr.spec]] += MO.specialization_bonus;
   return [b.stats, s];
 }
-function crValid() { return (cr.name + cr.surname).trim().length >= 2 && cr.traits.length === 2; }
+function crValid() { return (cr.name + cr.surname).trim().length >= 2 && cr.traits.length === 2 && cr.club.trim().length >= 3 && cr.club.trim().length <= 40; }
 function renderCreator() {
   const [base, fin] = crStats();
   const sbars = (a, b) => `<div class="sbars">${MO.stats.map((k) => `<div class="sbar"><span>${MO.stat_ru[k]}</span><i><u style="width:${a[k] * 16}%"></u>${b && b[k] > a[k] ? `<u class="up" style="width:${b[k] * 16}%;opacity:.45"></u>` : ""}</i><span>${b ? b[k] : a[k]}</span></div>`).join("")}</div>`;
@@ -618,7 +618,7 @@ function renderCreator() {
   const opt = (arr, cur) => arr.map((n, i) => `<option value="${i}" ${cur === i ? "selected" : ""}>${n}</option>`).join("");
   $("creator").classList.toggle("art", !!ART.base);
   if (ART.base) { $("creator").style.setProperty("--crart", 'url("art/base/creator_bg.webp")'); $("creator").style.setProperty("--crframe", 'url("art/base/frame.webp")'); }
-  $("creator").innerHTML = `<div class="creator"><h1>Кто вы?</h1><p class="muted">Создайте менеджера. От предыстории и черт зависит, что получается у вас с первого дня, а специализация задаёт ветку талантов. Лучшего варианта нет: у всех равная сумма навыков.</p>
+  $("creator").innerHTML = `<div class="creator"><h1>Основатель клуба</h1><p class="muted">Создайте своего персонажа и организацию в третьем дивизионе. От предыстории и черт зависит, что получается у вас с первого дня, а специализация задаёт ветку талантов. Лучшего варианта нет: у всех равная сумма навыков.</p>
   <div class="crgrid">
    <section class="card"><h3>Внешность</h3><div class="crface">${ART.base ? `<div class="crframe"><span id="crPrev">${crFace()}</span></div>` : `<span id="crPrev">${crFace()}</span>`}
      <button class="small" data-cr="reroll">Другое лицо</button>
@@ -633,23 +633,28 @@ function renderCreator() {
       <label>Фамилия<input id="crSurname" value="${esc(cr.surname)}" maxlength="20" placeholder="Громов"></label>
       <label>Возраст<input id="crAge" type="number" min="25" max="65" value="${cr.age}" style="width:80px"></label>
       <label>Страна<select data-crsel="country">${MO.countries.map((c) => `<option ${c === cr.country ? "selected" : ""}>${c}</option>`).join("")}</select></label></div></section>
+    <section class="card"><h3>Ваш киберспортивный клуб</h3><div class="crrow">
+      <span id="crClubLogo">${crest(cr.club.trim() || "Новый клуб", 72)}</span>
+      <label>Название<input id="crClub" value="${esc(cr.club)}" maxlength="40" placeholder="Например, Northern Wolves"></label>
+      <label>Регион<select id="crRegion">${[["EU","Европа"],["CIS","СНГ"],["NA","Северная Америка"],["SA","Южная Америка"],["Asia","Азия"],["OCE","Океания"]].map(([v,n])=>`<option value="${v}" ${cr.region===v?"selected":""}>${n}</option>`).join("")}</select></label></div>
+      <p class="muted">Старт: третий дивизион, $120 000 на клуб, 3 игрока на контракте. Ещё двух подписываете сами перед первой неделей. Эмблема создаётся из названия клуба.</p></section>
     <section class="card"><h3>Предыстория</h3>${ART.base ? `<img class="story" src="art/base/story_${cr.bg}.webp" alt="" loading="lazy">` : ""}<div class="choices">${MO.backgrounds.map((b) => `<button class="choice" data-cr="bg" data-v="${b.id}" aria-pressed="${cr.bg === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span>${sbars(b.stats)}<span class="plus">+ ${esc(b.strength)}</span><span class="minus">− ${esc(b.weakness)}</span></button>`).join("")}</div></section>
     <section class="card"><h3>Специализация</h3><div class="choices">${MO.branches.map((b) => `<button class="choice" data-cr="spec" data-v="${b.id}" aria-pressed="${cr.spec === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span><span class="why">+${MO.specialization_bonus} к навыку «${MO.stat_ru[b.stat]}»</span></button>`).join("")}</div></section>
     <section class="card"><h3>Характер: выберите две черты <span class="muted">(${cr.traits.length}/2)</span></h3><div class="choices">${MO.traits.map((t) => `<button class="choice" data-cr="trait" data-v="${t.id}" aria-pressed="${cr.traits.includes(t.id)}"><b>${esc(t.name)}</b><span class="plus">+ ${esc(t.plus)}</span><span class="minus">− ${esc(t.minus)}</span></button>`).join("")}</div></section>
     <section class="card"><h3>Ваши навыки на старте</h3>${sbars(base, fin)}<p class="muted">Светлая полоса: бонус специализации. Навыки усиливают соответствующие стороны игры, а таланты откроются по мере уровней.</p>
-      <div class="controls"><button class="primary" id="crGo" ${crValid() ? "" : "disabled"}>Начать карьеру</button><button id="crBack">Назад</button>
-      <span class="muted">${crValid() ? "" : "Нужны имя и две черты характера"}</span></div></section>
+      <div class="controls"><button class="primary" id="crGo" ${crValid() ? "" : "disabled"}>Основать клуб</button><button id="crBack">Назад</button>
+      <span class="muted">${crValid() ? "" : "Нужны имя, название клуба и две черты характера"}</span></div></section>
    </div></div></div>`;
 }
-function crUpdateGo() { const b = $("crGo"); if (b) b.disabled = !crValid(); const p = $("crPrev"); if (p) p.innerHTML = crFace(); }
+function crUpdateGo() { const b = $("crGo"); if (b) b.disabled = !crValid(); const p = $("crPrev"); if (p) p.innerHTML = crFace(); const l = $("crClubLogo"); if (l) l.innerHTML = crest(cr.club.trim() || "Новый клуб", 72); }
 async function startCareer() {
-  const profile = { name: (cr.name + " " + cr.surname).trim(), age: cr.age, country: cr.country, background: cr.bg, specialization: cr.spec, traits: cr.traits, face: cr.ov };
+  const profile = { mode: "founder", club_name: cr.club.trim(), club_region: cr.region, name: (cr.name + " " + cr.surname).trim(), age: cr.age, country: cr.country, background: cr.bg, specialization: cr.spec, traits: cr.traits, face: cr.ov };
   $("creator").hidden = true; busy(true, "Создаю мир…");
   try {
     const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value, profile));
     busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null;
-    tab = "manager"; selNode = null; enterGame(s);
-    toast(`${profile.name}, вы возглавили ${s.club}. Откройте «Менеджер»: первые таланты появятся на втором уровне.`);
+    tab = "market"; selNode = null; enterGame(s);
+    toast(`${profile.name}, клуб «${s.club}» основан. Подпишите двух игроков из стартового набора.`);
   } catch (e) { busy(false); $("creator").hidden = false; toast("Не получилось: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]); }
 }
 
@@ -1183,11 +1188,13 @@ document.addEventListener("input", (ev) => {
   if (id === "crName") { cr.name = ev.target.value; crUpdateGo(); }
   if (id === "crSurname") { cr.surname = ev.target.value; crUpdateGo(); }
   if (id === "crAge") { cr.age = Math.max(25, Math.min(65, +ev.target.value || 36)); crUpdateGo(); }
+  if (id === "crClub") { cr.club = ev.target.value; crUpdateGo(); }
 });
 document.addEventListener("change", (ev) => {
   const t = ev.target;
   if (t.dataset && t.dataset.crsel) { const k = t.dataset.crsel; if (k === "country") cr.country = t.value; else cr.ov[k] = t.value === "" ? undefined : +t.value; return renderCreator(); }
   if (t.dataset && t.dataset.crchk) { cr.ov[t.dataset.crchk] = t.checked; return renderCreator(); }
+  if (ev.target.id === "crRegion") { cr.region = ev.target.value; return; }
   if (ev.target.id === "regionSel") { tableRegion = ev.target.value; render(); }
   if (ev.target.id === "leagueSel") { leagueSel = +ev.target.value; render(); }
 });
