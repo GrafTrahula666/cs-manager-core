@@ -31,9 +31,11 @@ class WeekNews:
 
 class Game:
     def __init__(self, seed: int, clubs: list[Club], graph, calendar, systems: Systems, club_name: str,
-                 manager_name: str = "Вы") -> None:
+                 manager_name: str = "Вы", founder_mode: bool = False) -> None:
         self.seed, self.clubs, self.graph, self.calendar, self.sysm = seed, clubs, graph, calendar, systems
         self.club_name = club_name
+        self.founder_mode = founder_mode
+        self.starter_candidates: list[str] = []
         self.season = 1
         self.rng = random.Random(seed + 5)
         systems.manager_club = club_name
@@ -56,9 +58,15 @@ class Game:
     def new(cls, seed: int = 1, n_clubs: int = 120, club: str | None = None, director: str = "cassandra",
             manager_name: str = "Вы", profile: dict | None = None) -> "Game":
         clubs, graph, cal, sysm, home = worldgen.generate(seed, n_clubs, director)
+        founder_mode = bool(profile and profile.get("mode") == "founder")
+        starter_names: list[str] = []
+        if founder_mode:
+            from .founder import bootstrap
+            home, starter_names = bootstrap(clubs, sysm, profile["club_name"], profile["club_region"])
         if profile:
             manager_name = " ".join(profile["name"].split())
-        g = cls(seed, clubs, graph, cal, sysm, club or home, manager_name)
+        g = cls(seed, clubs, graph, cal, sysm, club or home, manager_name, founder_mode=founder_mode)
+        g.starter_candidates = starter_names
         from . import progression
         p = profile or {"name": manager_name, "age": 35, "country": "", "background": "rookie",
                         "specialization": "motivator", "traits": ["patient", "empath"], "face": {}}
@@ -111,6 +119,8 @@ class Game:
 
     def advance(self) -> WeekNews:
         """Play one week. Returns the news that concern the manager plus world headlines."""
+        if getattr(self, "founder_mode", False) and self.week == 0 and len(self.club.roster) < 5:
+            raise ValueError("сначала подпишите двух игроков: стартовый состав должен иметь пять человек")
         self._assistant_decides()
         plans = {self.club_name: self.desk.plan}
         season_week(self.run, self.clubs, self.graph, self.calendar, self.sysm, plans)
@@ -220,9 +230,10 @@ class Game:
         r = lv.grant(reason, key, self.season, mult)
         if not r["xp"]:
             return []
-        out = [f"менеджер: +{r['xp']} опыта: {r['why']}"]
+        title = "основатель" if getattr(self, "founder_mode", False) else "менеджер"
+        out = [f"{title}: +{r['xp']} опыта: {r['why']}"]
         if r["levels"]:
-            out.append(f"менеджер: новый уровень {lv.level}! Свободных очков талантов: {lv.available_points}")
+            out.append(f"{title}: новый уровень {lv.level}! Свободных очков талантов: {lv.available_points}")
         return out
 
     def _tier_of(self, tournament: str) -> str:
@@ -283,6 +294,36 @@ class Game:
                 if self.week - o.week >= PATIENCE_WEEKS:
                     mk.answer(o, False, self.week, self.rng)
 
+    def _regional_playoffs(self) -> tuple[list[str], list[str]]:
+        """Regional top-two teams contest four Tier-2 promotion slots (founder worlds only).
+
+        High seeds receive byes if the bracket is not a power of two. Matches reuse the
+        exact existing BO3 engine; none are fixed or awarded directly by ranking.
+        """
+        from .season import play_series
+        pool = circuit.regional_candidates(self.clubs)
+        lines = [f"Квалификация: от каждого региона проходят две лучшие команды третьего дивизиона ({len(pool)} участников)."]
+        series_index = 0
+        while len(pool) > 4:
+            target = 8 if len(pool) > 8 else 4
+            n_byes = 2 * target - len(pool)
+            byes, playing = pool[:n_byes], pool[n_byes:]
+            winners = list(byes)
+            for i in range(len(playing) // 2):
+                a, b = playing[i], playing[-(i + 1)]
+                series_index += 1
+                winner, loser, result = play_series(
+                    a, b, self.graph, seed=self._season_seed() * 1000 + series_index,
+                    ctx={"playoffs": True}, maps=3, sysm=self.sysm,
+                    stage="qualifier", week=self.week,
+                )
+                winners.append(winner)
+                lines.append(f"Квалификация: {result}; {winner.name} проходит дальше")
+            pool = sorted(winners, key=lambda c: (-c.season_points, c.rank))
+        winners = [c.name for c in pool]
+        lines.append("Квалификация: путёвки во второй дивизион — " + ", ".join(winners))
+        return winners, lines
+
     def _new_season(self) -> list[str]:
         """Season rollover: ranking points decay, expired sponsors are replaced, owners set new
         targets, old ledger lines are trimmed."""
@@ -290,7 +331,11 @@ class Game:
         living_lines = self._living_season_end()
         lines = [f"Сезон {self.season} завершён. {self.club_name}: место {self.club.rank}, "
                  f"{circuit.name(was)}, {circuit.standings(self.clubs, was).index(self.club) + 1}-е в таблице лиги"]
-        moves = circuit.season_end(self.clubs)
+        qualifiers = None
+        if getattr(self, "founder_mode", False):
+            qualifiers, bracket = self._regional_playoffs()
+            lines.extend(bracket)
+        moves = circuit.season_end(self.clubs, qualifiers)
         if self.sysm.chronicle:
             for m in moves:
                 self.sysm.chronicle.add(self.season, self.run.start_week + self.run.wk, "board", m)
@@ -318,7 +363,7 @@ class Game:
         owner = self.desk.owner
         lines += living_lines
         if owner and owner.objectives:
-            lines.append("Цели владельца: " + "; ".join(o.text for o in owner.objectives))
+            lines.append(("Цели совета директоров: " if getattr(self, "founder_mode", False) else "Цели владельца: ") + "; ".join(o.text for o in owner.objectives))
         return lines
 
     def _world_changes(self, week: int, rng: random.Random) -> list[str]:
@@ -349,6 +394,8 @@ class Game:
     @property
     def sacked(self) -> bool:
         """The owner fired you: the club now has another manager."""
+        if getattr(self, "founder_mode", False):
+            return False
         m = self.sysm.careers.managers.get(self.club_name) if self.sysm.careers else None
         return m is not None and m.name != self.manager_name
 
@@ -361,6 +408,8 @@ class Game:
 
     def job_offers(self) -> list[Club]:
         """After a sacking: clubs whose prestige fits your reputation (their AI coach makes way)."""
+        if getattr(self, "founder_mode", False):
+            return []
         from .manager import TIER_PRESTIGE
         m = self.me()
         rep = m.reputation if m else 20.0
@@ -368,6 +417,8 @@ class Game:
         return sorted(fits, key=lambda c: c.rank)[:5]
 
     def take_job(self, club_name: str) -> str:
+        if getattr(self, "founder_mode", False):
+            raise ValueError("основатель управляет собственным клубом и не меняет работодателя")
         careers, m = self.sysm.careers, self.me()
         club = next(c for c in self.clubs if c.name == club_name)
         old = careers.managers.pop(club_name, None)

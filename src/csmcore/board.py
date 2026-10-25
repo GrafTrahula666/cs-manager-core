@@ -31,6 +31,7 @@ class Owner:
     fired: bool = False
     warned: int = 0           # 0 calm, 1 worried, 2 ultimatum: warnings fire on change only
     subsidy_year: float = 0.0  # owner money that covers the club's losses, paid monthly
+    founder_mode: bool = False  # only the human founder is irremovable; AI clubs retain firings
 
     def set_objectives(self, club: Club) -> list[Objective]:
         """Expectations come from where the club stands now (like FM's reputation-based
@@ -67,18 +68,27 @@ class Owner:
         speed = 6 * (1.5 - self.patience / 100)
         self.confidence = max(0.0, min(100.0, self.confidence + score * speed))
         notes = []
-        if self.confidence < 12:
+        if self.confidence < 12 and not self.founder_mode:
             self.fired = True
             notes.append(f"week {week}: владелец {club.name} увольняет менеджера (доверие {self.confidence:.0f})")
         else:
-            # Warnings only when the mood changes, not every month it stays the same.
-            level = 2 if self.confidence < 25 else 1 if self.confidence < 35 else 0
+            # The founder keeps the club. Confidence still controls construction approval and budget.
+            level = (3 if self.confidence < 12 else 2 if self.confidence < 25 else
+                     1 if self.confidence < 35 else 0)
+            if not self.founder_mode:
+                level = min(level, 2)
             last = getattr(self, "warned", 0)
             if level > last:
-                notes.append(f"week {week}: " + ("ультиматум от владельца" if level == 2 else "владелец обеспокоен")
-                             + f": доверие {self.confidence:.0f}")
+                if self.founder_mode:
+                    reason = ("совет директоров: кризис управления, большие проекты заблокированы"
+                              if level == 3 else "ультиматум совета директоров"
+                              if level == 2 else "совет директоров обеспокоен")
+                else:
+                    reason = "ультиматум от владельца" if level == 2 else "владелец обеспокоен"
+                notes.append(f"week {week}: {reason}: доверие {self.confidence:.0f}")
             elif level < last and level == 0:
-                notes.append(f"week {week}: владелец снова доволен: доверие {self.confidence:.0f}")
+                body = "совет директоров снова доволен" if self.founder_mode else "владелец снова доволен"
+                notes.append(f"week {week}: {body}: доверие {self.confidence:.0f}")
             self.warned = level
         self.log += notes
         return notes

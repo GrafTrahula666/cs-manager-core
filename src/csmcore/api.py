@@ -57,6 +57,10 @@ def state() -> dict:
         "offers": len(g.sysm.market.offers) if g.sysm.market else 0,
         "manager": {"name": g.manager_name, "reputation": round(m.reputation) if m else None,
                     "titles": m.titles if m else 0},
+        "founder": getattr(g, "founder_mode", False),
+        "roster_count": len(c.roster),
+        "starter_open": getattr(g, "founder_mode", False) and g.week == 0 and len(c.roster) < 5,
+        "board_crisis": bool(getattr(g, "founder_mode", False) and owner and owner.confidence < 12),
         "level": g.ensure_living().level, "xp": g.living.xp, "xp_next": xp_to_next(g.living.level) if g.living.level < g.living.max_level else 0,
         "talent_points": g.living.available_points,
         "sacked": g.sacked, "patch": g.sysm.meta.patch["name"] if g.sysm.meta else "",
@@ -74,6 +78,8 @@ def _zone(g: Game) -> str:
     k = g.club.division
     rows = circuit.standings(g.clubs, k)
     i = rows.index(g.club) + 1
+    if getattr(g, "founder_mode", False) and k == 3:
+        return "qual" if g.club in circuit.regional_candidates(g.clubs) else ""
     up = circuit.SWAPS.get(k - 1, 0) if k > 1 else 0
     down = circuit.SWAPS.get(k, 0) if k < 4 else 0
     return "up" if i <= up else "down" if down and i > len(rows) - down else ""
@@ -593,7 +599,10 @@ def leagues(division: int | None = None) -> dict:
     down = circuit.SWAPS.get(k, 0) if k < 4 else 0
     out = []
     for i, c in enumerate(rows, 1):
-        zone = "up" if i <= up else "down" if down and i > len(rows) - down else ""
+        if getattr(g, "founder_mode", False) and k == 3:
+            zone = "qual" if c in circuit.regional_candidates(g.clubs) else ""
+        else:
+            zone = "up" if i <= up else "down" if down and i > len(rows) - down else ""
         out.append({"place": i, "club": c.name, "region": c.region, "points": round(c.season_points),
                     "rank": c.rank, "me": c.name == g.club_name, "zone": zone})
     return {"division": k, "name": circuit.name(k), "names": circuit.NAMES, "rows": out,
@@ -633,6 +642,18 @@ def haceit(n: int = 25) -> dict:
 
 # ---------- LIVING CLUB: manager creation and talents ----------
 COUNTRIES = ["RU", "UA", "KZ", "BY", "PL", "SE", "DK", "FR", "DE", "BR", "US", "CN"]
+
+
+def founder_candidates() -> list[dict]:
+    """Pre-agreed free agents for the human founder's first two contracts."""
+    from .founder import candidates
+    return candidates(_g())
+
+
+def founder_sign(name: str) -> str:
+    """Select one onboarding player; no fee is charged, his salary remains real."""
+    from .founder import sign
+    return sign(_g(), name)
 
 
 def manager_options() -> dict:

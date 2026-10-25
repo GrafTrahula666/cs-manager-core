@@ -336,7 +336,7 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <p><b>Режиссёр судьбы</b> решает, как часто с клубом случаются плохие и хорошие истории. <i>Кассандра</i> нагнетает драму, когда всё слишком спокойно. <i>Фиби</i> после трудного периода даёт передышку. <i>Рэнди</i> бросает кости: то тишина, то три скандала подряд.</p>
         </div>
         <div class="row">
-          <button class="primary" id="newBtn">Новая карьера</button>
+          <button class="primary" id="newBtn">Основать клуб</button>
           <button id="contBtn" hidden>Продолжить сохранение</button>
         </div>
         <details class="imp"><summary>Загрузить сохранение из текста</summary>
@@ -359,9 +359,9 @@ textarea { width: 100%; min-height: 70px; font: .75rem var(--mono); background: 
           <div class="kpi"><small>Сезон · неделя</small><span id="kWeek">—</span></div>
           <div class="kpi"><small>Место</small><span id="kRank">—</span></div>
           <div class="kpi"><small>Касса</small><span id="kCash">—</span></div>
-          <div class="kpi"><small>Владелец</small><span id="kOwner">—</span></div>
+          <div class="kpi"><small>Совет</small><span id="kOwner">—</span></div>
           <div class="kpi hide-sm"><small>Репутация</small><span id="kRep">—</span></div>
-          <div class="kpi" title="Уровень менеджера и опыт"><small>Менеджер</small><span id="kLvl">—</span></div>
+          <div class="kpi" title="Уровень основателя и опыт"><small>Основатель</small><span id="kLvl">—</span></div>
         </div>
         <div class="go">
           <button class="primary" id="nextBtn" title="Клавиша N или пробел">Следующая неделя</button>
@@ -598,10 +598,10 @@ async function boot() {
 let MO = null, cr = null, selNode = null;
 const HAIR_STYLES = ["лысина", "ёжик", "короткая", "с пробором", "шипы", "длинные", "кудри", "ирокез", "пучок", "афро", "растрёпанная"];
 const BEARDS = ["нет", "щетина", "борода", "эспаньолка", "усы"];
-function crFace() { return face({ name: (cr.name + " " + cr.surname).trim() || "менеджер", age: cr.age, face: cr.ov }, "Вы", 180); }
+function crFace() { return face({ name: (cr.name + " " + cr.surname).trim() || "основатель", age: cr.age, face: cr.ov }, "Вы", 180); }
 function openCreator() {
   MO = MO || call("manager_options");
-  if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
+  if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", club: "", region: "CIS", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
   $("boot").hidden = true; $("creator").hidden = false; renderCreator();
 }
 function crStats() {
@@ -609,7 +609,7 @@ function crStats() {
   s[MO.specialization_stat[cr.spec]] += MO.specialization_bonus;
   return [b.stats, s];
 }
-function crValid() { return (cr.name + cr.surname).trim().length >= 2 && cr.traits.length === 2; }
+function crValid() { return (cr.name + cr.surname).trim().length >= 2 && cr.traits.length === 2 && cr.club.trim().length >= 3 && cr.club.trim().length <= 40; }
 function renderCreator() {
   const [base, fin] = crStats();
   const sbars = (a, b) => `<div class="sbars">${MO.stats.map((k) => `<div class="sbar"><span>${MO.stat_ru[k]}</span><i><u style="width:${a[k] * 16}%"></u>${b && b[k] > a[k] ? `<u class="up" style="width:${b[k] * 16}%;opacity:.45"></u>` : ""}</i><span>${b ? b[k] : a[k]}</span></div>`).join("")}</div>`;
@@ -618,7 +618,7 @@ function renderCreator() {
   const opt = (arr, cur) => arr.map((n, i) => `<option value="${i}" ${cur === i ? "selected" : ""}>${n}</option>`).join("");
   $("creator").classList.toggle("art", !!ART.base);
   if (ART.base) { $("creator").style.setProperty("--crart", 'url("art/base/creator_bg.webp")'); $("creator").style.setProperty("--crframe", 'url("art/base/frame.webp")'); }
-  $("creator").innerHTML = `<div class="creator"><h1>Кто вы?</h1><p class="muted">Создайте менеджера. От предыстории и черт зависит, что получается у вас с первого дня, а специализация задаёт ветку талантов. Лучшего варианта нет: у всех равная сумма навыков.</p>
+  $("creator").innerHTML = `<div class="creator"><h1>Основатель клуба</h1><p class="muted">Создайте своего персонажа и организацию в третьем дивизионе. От предыстории и черт зависит, что получается у вас с первого дня, а специализация задаёт ветку талантов. Лучшего варианта нет: у всех равная сумма навыков.</p>
   <div class="crgrid">
    <section class="card"><h3>Внешность</h3><div class="crface">${ART.base ? `<div class="crframe"><span id="crPrev">${crFace()}</span></div>` : `<span id="crPrev">${crFace()}</span>`}
      <button class="small" data-cr="reroll">Другое лицо</button>
@@ -633,23 +633,28 @@ function renderCreator() {
       <label>Фамилия<input id="crSurname" value="${esc(cr.surname)}" maxlength="20" placeholder="Громов"></label>
       <label>Возраст<input id="crAge" type="number" min="25" max="65" value="${cr.age}" style="width:80px"></label>
       <label>Страна<select data-crsel="country">${MO.countries.map((c) => `<option ${c === cr.country ? "selected" : ""}>${c}</option>`).join("")}</select></label></div></section>
+    <section class="card"><h3>Ваш киберспортивный клуб</h3><div class="crrow">
+      <span id="crClubLogo">${crest(cr.club.trim() || "Новый клуб", 72)}</span>
+      <label>Название<input id="crClub" value="${esc(cr.club)}" maxlength="40" placeholder="Например, Northern Wolves"></label>
+      <label>Регион<select id="crRegion">${[["EU","Европа"],["CIS","СНГ"],["NA","Северная Америка"],["SA","Южная Америка"],["Asia","Азия"],["OCE","Океания"]].map(([v,n])=>`<option value="${v}" ${cr.region===v?"selected":""}>${n}</option>`).join("")}</select></label></div>
+      <p class="muted">Старт: третий дивизион, $120 000 на клуб, 3 игрока на контракте. Ещё двух подписываете сами перед первой неделей. Эмблема создаётся из названия клуба.</p></section>
     <section class="card"><h3>Предыстория</h3>${ART.base ? `<img class="story" src="art/base/story_${cr.bg}.webp" alt="" loading="lazy">` : ""}<div class="choices">${MO.backgrounds.map((b) => `<button class="choice" data-cr="bg" data-v="${b.id}" aria-pressed="${cr.bg === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span>${sbars(b.stats)}<span class="plus">+ ${esc(b.strength)}</span><span class="minus">− ${esc(b.weakness)}</span></button>`).join("")}</div></section>
     <section class="card"><h3>Специализация</h3><div class="choices">${MO.branches.map((b) => `<button class="choice" data-cr="spec" data-v="${b.id}" aria-pressed="${cr.spec === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span><span class="why">+${MO.specialization_bonus} к навыку «${MO.stat_ru[b.stat]}»</span></button>`).join("")}</div></section>
     <section class="card"><h3>Характер: выберите две черты <span class="muted">(${cr.traits.length}/2)</span></h3><div class="choices">${MO.traits.map((t) => `<button class="choice" data-cr="trait" data-v="${t.id}" aria-pressed="${cr.traits.includes(t.id)}"><b>${esc(t.name)}</b><span class="plus">+ ${esc(t.plus)}</span><span class="minus">− ${esc(t.minus)}</span></button>`).join("")}</div></section>
     <section class="card"><h3>Ваши навыки на старте</h3>${sbars(base, fin)}<p class="muted">Светлая полоса: бонус специализации. Навыки усиливают соответствующие стороны игры, а таланты откроются по мере уровней.</p>
-      <div class="controls"><button class="primary" id="crGo" ${crValid() ? "" : "disabled"}>Начать карьеру</button><button id="crBack">Назад</button>
-      <span class="muted">${crValid() ? "" : "Нужны имя и две черты характера"}</span></div></section>
+      <div class="controls"><button class="primary" id="crGo" ${crValid() ? "" : "disabled"}>Основать клуб</button><button id="crBack">Назад</button>
+      <span class="muted">${crValid() ? "" : "Нужны имя, название клуба и две черты характера"}</span></div></section>
    </div></div></div>`;
 }
-function crUpdateGo() { const b = $("crGo"); if (b) b.disabled = !crValid(); const p = $("crPrev"); if (p) p.innerHTML = crFace(); }
+function crUpdateGo() { const b = $("crGo"); if (b) b.disabled = !crValid(); const p = $("crPrev"); if (p) p.innerHTML = crFace(); const l = $("crClubLogo"); if (l) l.innerHTML = crest(cr.club.trim() || "Новый клуб", 72); }
 async function startCareer() {
-  const profile = { name: (cr.name + " " + cr.surname).trim(), age: cr.age, country: cr.country, background: cr.bg, specialization: cr.spec, traits: cr.traits, face: cr.ov };
+  const profile = { mode: "founder", club_name: cr.club.trim(), club_region: cr.region, name: (cr.name + " " + cr.surname).trim(), age: cr.age, country: cr.country, background: cr.bg, specialization: cr.spec, traits: cr.traits, face: cr.ov };
   $("creator").hidden = true; busy(true, "Создаю мир…");
   try {
     const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value, profile));
     busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null;
-    tab = "manager"; selNode = null; enterGame(s);
-    toast(`${profile.name}, вы возглавили ${s.club}. Откройте «Менеджер»: первые таланты появятся на втором уровне.`);
+    tab = "market"; selNode = null; enterGame(s);
+    toast(`${profile.name}, клуб «${s.club}» основан. Подпишите двух игроков из стартового набора.`);
   } catch (e) { busy(false); $("creator").hidden = false; toast("Не получилось: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]); }
 }
 
@@ -726,7 +731,7 @@ function viewManager(s) {
   const trees = order.map((b) => `<section class="card tree"><h3>${ART.base ? `<i class="emb" style="--emb:url(art/base/icons_branches.webp);background-position:${["strategist", "motivator", "analyst", "manager", "intriguer"].indexOf(b) * 25}% 0"></i>` : ""}${esc(L.branches[b].name)} ${b === L.specialization ? `<span class="pill story">ваша ветка</span>` : ""} <span class="muted">${L.nodes.filter((n) => n.branch === b && n.state === "unlocked").length}/12</span></h3><span class="muted">${esc(L.branches[b].desc)}</span>${treeSvg(L, b)}</section>`).join("");
   const ch = L.channels.map((c) => `<div class="chrow"><span>${esc(c.label)}</span><b class="${c.value >= 0 ? "plus" : "minus"}">${c.value >= 0 ? "+" : ""}${(c.value * 100).toFixed(1)}%</b><span class="why">${c.why.map(esc).join(" · ")}${c.status === "planned" ? " · подключится к игре в следующих этапах" : ""}</span></div>`).join("");
   const jr = L.journal.map((j) => `<div class="line"><span class="num muted">С${j.season}</span><span>${esc(j.why)}</span><span class="num plus">+${j.xp}</span></div>`).join("");
-  return `<section class="card"><div class="mhead">${face({ name: L.name, age: L.age, face: L.face }, s.club, 96)}
+  return `<section class="card"><div class="mhead">${crest(s.club, 96)}
       <div class="nm"><b style="font:700 1.3rem var(--display)">${esc(L.name)}</b><span class="muted">${esc(L.background)}, ${L.age} лет, ${esc(L.country)} · ${esc(L.branches[L.specialization].name)}</span>
       <div class="traits">${L.traits.map((t) => `<span title="+ ${esc(t.plus)}; − ${esc(t.minus)}">${esc(t.name)}</span>`).join("")}</div></div>
       <div class="lvlring" style="--p:${pct}" title="Опыт ${L.xp} из ${L.xp_next}"><b>${L.level}</b></div>
@@ -735,38 +740,37 @@ function viewManager(s) {
     <div class="sbars">${Object.keys(L.stats).map((k) => `<div class="sbar"><span>${L.stat_ru[k]}</span><i><u style="width:${L.stats[k] * 14}%"></u></i><span>${L.stats[k]}</span></div>`).join("")}</div></section>
   <div class="grid2"><div style="display:grid;gap:16px;align-content:start">${detail}
       <section class="card"><h3>Что это даёт сейчас</h3>${ch || `<p class="muted">Пока только базовые навыки.</p>`}</section>
-      <section class="card"><h3>За что вы получали опыт</h3>${jr || `<p class="muted">Опыт дают цели владельца, титулы, выход за ожидания, решённые конфликты. За пропуск недели опыта нет.</p>`}</section></div>
+      <section class="card"><h3>За что вы получали опыт</h3>${jr || `<p class="muted">Опыт дают цели совета, титулы, выход за ожидания, решённые конфликты. За пропуск недели опыта нет.</p>`}</section></div>
     <div style="display:grid;gap:16px;align-content:start">${trees}</div></div>`;
 }
 function showLevelUp(level, points) {
   const d = document.createElement("div"); d.className = "lvlup"; d.setAttribute("role", "dialog"); d.setAttribute("aria-label", "Новый уровень");
   d.innerHTML = `<div class="rays"></div><div class="box"><span class="muted" style="font:600 .7rem var(--mono);letter-spacing:.14em">НОВЫЙ УРОВЕНЬ</span><div class="big">${level}</div>
-    <b>${points ? `Свободных очков талантов: ${points}` : "Продолжайте"}</b><span class="muted">Выберите, каким менеджером вы станете.</span>
+    <b>${points ? `Свободных очков талантов: ${points}` : "Продолжайте"}</b><span class="muted">Выберите, каким руководителем клуба вы станете.</span>
     <div class="controls"><button class="primary" id="lvlGo">К талантам</button><button id="lvlClose">Позже</button></div></div>`;
   document.body.appendChild(d);
   d.addEventListener("click", (e) => { const id = e.target.id; if (id === "lvlGo") { tab = "manager"; d.remove(); render(); } else if (id === "lvlClose" || e.target === d) d.remove(); });
   $("lvlGo").focus();
 }
 
-async function startNew() {
-  busy(true, "Создаю мир…");
-  const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value));
-  busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null; enterGame(s);
-  toast(`Вы возглавили ${s.club}. Цели владельца: ${s.objectives.join("; ")}`);
-}
 async function loadFrom(text) {
   busy(true, "Загружаю…");
   try { const s = await later(() => call("load_b64", text.replace(/^CSM1:/, "").trim())); log = []; matches = []; seasonReport = null; enterGame(s); }
   catch (e) { toast("Не получилось загрузить: " + (e.message || e).toString().slice(-160)); }
   busy(false);
 }
-function enterGame(s) { $("boot").hidden = true; $("game").hidden = false; render(s); }
+function enterGame(s) { $("boot").hidden = true; $("game").hidden = false; if (s.starter_open) tab = "market"; render(s); }
 
 function autosave() {
   try { localStorage.setItem(SAVE_KEY, call("save_b64")); return true; } catch (e) { return false; }
 }
 
 async function advance(n) {
+  if (curState && curState.starter_open) {
+    tab = "market"; render();
+    toast("Прежде чем начать сезон, подпишите двух игроков из стартового набора.");
+    return;
+  }
   if (!n || n < 1) n = 1;
   const btns = ["nextBtn", "next4Btn", "toEventBtn"];
   btns.forEach((i) => ($(i).disabled = true));
@@ -775,7 +779,7 @@ async function advance(n) {
   const club = curState && curState.club;
   res.forEach((w) => w.lines.forEach((l) => { const m = parseMatch(l, club, w); if (m) matches.unshift(m); }));
   matches = matches.slice(0, 30);
-  const end = res.flatMap((w) => w.lines).filter((l) => /^Сезон \d+ завершён/.test(l) || / (поднимается|вылетает) в /.test(l) || l.startsWith("Цели владельца"));
+  const end = res.flatMap((w) => w.lines).filter((l) => /^Сезон \d+ завершён/.test(l) || / (поднимается|вылетает) в /.test(l) || l.startsWith("Цели владельца") || l.startsWith("Цели совета"));
   if (end.length) seasonReport = end;
   log = res.reverse().concat(log).slice(0, 40);
   const s = call("state");
@@ -787,7 +791,7 @@ async function advance(n) {
   else if (s.situations) tab = "backstage";
   render(s);
   if (s.level > lvlBefore) showLevelUp(s.level, s.talent_points);
-  if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
+  if (s.sacked && !s.founder) toast("Вас уволили из старого сохранения: переход в другой клуб доступен только в прежнем режиме.");
 }
 
 function parseMatch(line, club, w) {
@@ -809,8 +813,8 @@ const hintHtml = (h) => {
   return bits.length ? bits.join(" ") : "без последствий";
 };
 
-const TABS = [["office", "Сводка"], ["manager", "Менеджер"], ["home", "Мой дом"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
-  ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Карьера"]];
+const TABS = [["office", "Сводка"], ["manager", "Основатель"], ["home", "Мой дом"], ["backstage", "Закулисье"], ["squad", "Состав"], ["market", "Рынок"], ["money", "Финансы"],
+  ["leagues", "Лиги"], ["table", "Рейтинг"], ["media", "HLTW · HACEIT"], ["history", "Летопись"], ["traits", "Черты"], ["career", "Клуб"]];
 
 function render(s) {
   s = s || call("state");
@@ -831,6 +835,7 @@ function render(s) {
   const ne = s.next_events.find((x) => x.invited) || s.next_events[0];
   $("toEventBtn").textContent = ne ? `До турнира · ${Math.max(1, ne.week - s.week)} нед.` : "До турнира";
   $("toEventBtn").title = ne ? `Играть до «${ne.name}» (неделя ${ne.week}); остановится, если нужно ваше решение` : "";
+  ["nextBtn", "next4Btn", "toEventBtn"].forEach((id) => { $(id).disabled = !!s.starter_open; });
   const due = s.pending_events + s.offers, sits = s.situations || 0;
   $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "manager" && s.talent_points ? `<span class="badge">${s.talent_points}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
   const views = { office: viewOffice, manager: viewManager, home: viewHome, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
@@ -874,7 +879,7 @@ function viewOffice(s) {
   const next = s.next_events.map((e) => `<div class="line"><span class="num muted">н${e.week}</span><span>${esc(e.name)}</span>${e.invited ? `<span class="pill club">участвуем</span>` : `<span class="pill">не приглашены</span>`}</div>`).join("");
   const tones = Object.entries(META.tones).map(([k, v]) => `<button class="small" data-talk="${k}">${v}</button>`).join("");
   const rep = seasonReport ? `<div class="report"><b>Итоги сезона</b>${seasonReport.map((l) => `<div>${esc(l)}</div>`).join("")}<div><button class="small" data-closereport="1">Понятно</button></div></div>` : "";
-  const warn = s.zone === "down" ? `<div class="alert">Вы в зоне вылета лиги (${s.division_place}-е место). Очки идут со всех турниров: ищите, где можно набрать.</div>`
+  const warn = s.zone === "qual" ? `<div class="alert up">Вы в топ-2 своего региона в третьем дивизионе. Удержите место, чтобы сыграть в международном BO3-отборе за путёвку во второй дивизион.</div>` : s.zone === "down" ? `<div class="alert">Вы в зоне вылета лиги (${s.division_place}-е место). Очки идут со всех турниров: ищите, где можно набрать.</div>`
     : s.zone === "up" ? `<div class="alert up">Вы в зоне повышения (${s.division_place}-е место). Удержите её до конца сезона.</div>` : "";
   const objs = s.objective_status.map((o) => `<div class="obj"><span class="dot ${o.score >= 0.3 ? "ok" : o.score < 0 ? "no" : ""}"></span><span>${esc(o.text)} <span class="muted">${o.score >= 0.3 ? "идёт хорошо" : o.score < 0 ? "под угрозой" : "на грани"}</span></span></div>`).join("");
   const mt = matches.slice(0, 6).map((m) => `<div class="mrow ${m.win ? "w" : "l"}"><span class="num muted">С${m.season} н${m.week}</span><span>${CL(m.opp, 18)} <span class="muted">${esc(m.ev)}</span></span><span class="sc">${m.mine}:${m.theirs}</span></div>`).join("");
@@ -883,8 +888,8 @@ function viewOffice(s) {
     <section class="card"><h3>Что впереди</h3><div style="display:grid;gap:6px">${hz}</div></section>
     <section class="card"><h3>Требует решения</h3>${events || offers ? events + offers : `<p class="muted">Ничего не ждёт. Нерешённое через 2 недели решит ассистент.</p>`}
       ${lastResults.inbox ? `<div class="result">${esc(lastResults.inbox)}</div>` : ""}</section>
-    <section class="card"><h3>Цели владельца</h3>${objs || s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
-      <div class="muted">Доверие владельца ${s.owner_confidence}/100${s.owner_confidence < 35 ? ` <span class="urgent">· ниже 12 уволят</span>` : ""}</div>
+    <section class="card"><h3>${s.founder ? "Цели совета директоров" : "Цели владельца"}</h3>${objs || s.objectives.map((o) => `<div>${esc(o)}</div>`).join("")}
+      <div class="muted">Доверие ${s.founder ? "совета" : "владельца"} ${s.owner_confidence}/100${s.owner_confidence < 35 ? ` <span class="urgent">· ${s.founder ? "совет требует результатов" : "ниже 12 уволят"}</span>` : ""}</div>
       <h3>Матчи ${formStrip()}</h3>${mt || `<p class="muted">Матчей пока не было. Ближайший турнир в списке ниже.</p>`}
       <h3>Ближайшие турниры</h3>${next || `<p class="muted">До конца сезона турниров нет</p>`}
       <div class="muted">Патч: ${esc(s.patch)}</div></section>
@@ -950,6 +955,17 @@ function viewSquad() {
 }
 
 function viewMarket() {
+  const starter = curState && curState.starter_open ? call("founder_candidates") : [];
+  const starterHtml = curState && curState.starter_open
+    ? `<section class="card"><h2>Наберите первую пятёрку · ${curState.roster_count}/5</h2>
+        <p class="muted">У вас три игрока с действующими контрактами. Выберите двух из предварительно согласованного списка. Трансферная плата: $0, но зарплата пойдёт из кассы клуба.</p>
+        <div class="hunt">${starter.map((p) => `<div class="hcard">
+          <span class="big">${face({name:p.name,age:p.age},null,84)}</span>
+          <div class="info"><b>${esc(p.name)}</b><span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span>
+          <span>Уровень ${p.overall} · ${money(p.salary)}/мес.</span>
+          <button class="small" data-founder-sign="${esc(p.name)}">Подписать на сезон</button></div></div>`).join("")}</div>
+        ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}</section>`
+    : "";
   const m = call("market", 40);
   const rows = m.map((p) => `<tr>
       <td><div class="pl">${ava(p, p.club)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>${p.hot ? ` <span class="pill story">охота</span>` : ""}</span>
@@ -964,7 +980,7 @@ function viewMarket() {
         <span>Уровень <span class="range">${p.ovr_range[0]}–${p.ovr_range[1]}</span> · потенциал ${esc(p.potential)}</span>
         <span class="${p.rivals >= 5 ? "urgent" : "muted"}">${p.head_start ? `У вас фора ${p.head_start} нед.: потом вступят ${p.rivals} клубов` : p.rivals ? `Могут взять ещё ${p.rivals} клубов. Окно через ${p.window} нед.` : "Конкурентов пока не видно"}</span>
         <span><button class="small" data-scout="${esc(p.name)}">скаут</button> <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"} ${p.fee ? money(p.fee) : money(p.salary_wish) + "/мес"}</button></span></div></div>`).join("");
-  return `<section class="card"><h3>Охота: лучшие цели рынка</h3><div class="hunt">${hot || `<p class="muted">Звёзд на рынке сейчас нет.</p>`}</div></section>
+  return starterHtml + `<section class="card"><h3>Охота: лучшие цели рынка</h3><div class="hunt">${hot || `<p class="muted">Звёзд на рынке сейчас нет.</p>`}</div></section>
   <section class="card"><h2>Рынок</h2>
     <p class="muted">Свободные агенты и игроки, которые просят трансфер. Уровень виден диапазоном: чем дольше смотрят скауты, тем он точнее. Предложение идёт по запрошенной цене и желаемой зарплате, решает сам игрок.</p>
     ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}
@@ -1004,9 +1020,9 @@ let leagueSel = 0;
 function viewLeagues(s) {
   const L = call("leagues", leagueSel || null);
   const opts = Object.entries(L.names).map(([k, n]) => `<option value="${k}" ${+k === L.division ? "selected" : ""}>${n}</option>`).join("");
-  const zone = { up: `<span class="pill club">вверх</span>`, down: `<span class="pill world">вниз</span>` };
+  const zone = { up: `<span class="pill club">вверх</span>`, down: `<span class="pill world">вниз</span>`, qual: `<span class="pill club">отбор</span>` };
   return `<section class="card"><div class="controls"><h2>Лиги</h2><select id="leagueSel" aria-label="Лига">${opts}</select></div>
-    <p class="muted">Лига на весь сезон решает, куда клуб получает инвайт. Тир 1 играет Masters, Major и World Final по прямому инвайту, Тир 2 Pro Series, квалификацию HACEIT на Major (два места) и лиги HACEIT, Тир 3 и остальные лиги и открытые кубки HACEIT. Очки сезона дают все турниры. В конце сезона худшие вылетают, лучшие лиги ниже поднимаются.</p>
+    <p class="muted">Лига на весь сезон решает, куда клуб получает инвайт. Тир 1 играет Masters, Major и World Final по прямому инвайту, Тир 2 Pro Series, квалификацию HACEIT на Major (два места) и лиги HACEIT, Тир 3 и остальные лиги и открытые кубки HACEIT. Очки сезона дают все турниры. В конце сезона худшие вылетают, лучшие лиги ниже поднимаются. В режиме основателя из третьего дивизиона по две лучшие команды каждого региона играют международный BO3-отбор за 4 места во втором дивизионе.</p>
     <p class="muted">Инвайты этой лиги: ${esc(L.invites.join(", ")) || "—"}</p>
     <div class="tablebox"><table><thead><tr><th class="r">#</th><th>Клуб</th><th>Регион</th><th class="r">Очки сезона</th><th class="r">Рейтинг</th><th></th></tr></thead>
     <tbody>${L.rows.map((c) => `<tr class="${c.me ? "me" : ""}"><td class="r">${c.place}</td><td>${CL(c.club, 22)}</td><td>${c.region}</td><td class="r">${c.points}</td><td class="r">#${c.rank}</td><td>${zone[c.zone] || ""}</td></tr>`).join("")}</tbody></table></div></section>`;
@@ -1093,13 +1109,14 @@ function viewTraits() {
 }
 
 function viewCareer(s) {
-  const jobs = s.sacked ? call("jobs") : [];
   let saved = "";
   try { saved = localStorage.getItem(SAVE_KEY) ? "Автосохранение каждые 4 недели в этом браузере включено." : ""; } catch (e) {}
   return `<div class="grid2">
-    <section class="card"><h3>Менеджер</h3><div><b>${esc(s.manager.name)}</b>, репутация ${s.manager.reputation}, титулов ${s.manager.titles}</div>
-      ${s.sacked ? `<div class="flag">Вас уволили. Клубы, готовые вас взять:</div>` + jobs.map((j) => `<div class="line"><span>${CL(j.club, 20)} (${TIER[j.tier]}, #${j.rank}, ${j.region})</span><button class="small" data-job="${esc(j.club)}">Принять</button></div>`).join("") : `<div class="muted">Владелец оценивает вас раз в месяц. Доверие ниже 12 означает увольнение.</div>`}
-    </section>
+    <section class="card"><h3>Ваш клуб</h3><div class="mhead">${crest(s.club, 88)}
+      <div><b>${esc(s.club)}</b><p class="muted">Основатель: ${esc(s.manager.name)} · регион ${esc(s.region)} · ${esc(s.division)}</p></div></div>
+      <p class="muted">Совет директоров: доверие ${s.owner_confidence}/100. Доверие влияет на согласование крупных строек и финансовую поддержку. Основатель не может быть уволен: при низком доверии наступает кризис управления.</p>
+      ${s.board_crisis ? `<div class="alert">Кризис управления: совет не одобряет крупные проекты. Верните доверие результатами и финансовой дисциплиной.</div>` : ""}
+      <p class="muted">Логотип автоматически создаётся на основе названия клуба. Ваш персонаж сохраняет уровень, таланты и историю.</p></section>
     <section class="card"><h3>Сохранение</h3><div class="muted">${saved}</div>
       <div class="controls"><button class="small" id="saveBtn">Сохранить сейчас</button><button class="small" id="exportBtn">Скопировать сохранение текстом</button><button class="small" id="quitBtn">Выйти в меню</button></div>
       ${lastResults.career ? `<div class="result">${esc(lastResults.career)}</div>` : ""}
@@ -1159,6 +1176,12 @@ document.addEventListener("click", async (ev) => {
       lastResults.squad = call("release", d.release); return render();
     }
     if (d.scout) { const r = call("scout", d.scout); lastResults.market = `${r.name}: изучен на ${r.known}%, потенциал ${r.potential}${r.traits.length ? ", черты: " + r.traits.join(", ") : ""}`; return render(); }
+    if (d.founderSign) {
+      lastResults.market = call("founder_sign", d.founderSign);
+      const updated = call("state");
+      if (!updated.starter_open) { tab = "office"; toast("Стартовая пятёрка собрана! Теперь можно начинать первый сезон."); }
+      return render(updated);
+    }
     if (d.sign) {
       lastResults.market = d.club === "1" ? call("bid", d.sign, +d.fee, +d.sal) : call("sign", d.sign, +d.sal);
       return render();
@@ -1183,11 +1206,13 @@ document.addEventListener("input", (ev) => {
   if (id === "crName") { cr.name = ev.target.value; crUpdateGo(); }
   if (id === "crSurname") { cr.surname = ev.target.value; crUpdateGo(); }
   if (id === "crAge") { cr.age = Math.max(25, Math.min(65, +ev.target.value || 36)); crUpdateGo(); }
+  if (id === "crClub") { cr.club = ev.target.value; crUpdateGo(); }
 });
 document.addEventListener("change", (ev) => {
   const t = ev.target;
   if (t.dataset && t.dataset.crsel) { const k = t.dataset.crsel; if (k === "country") cr.country = t.value; else cr.ov[k] = t.value === "" ? undefined : +t.value; return renderCreator(); }
   if (t.dataset && t.dataset.crchk) { cr.ov[t.dataset.crchk] = t.checked; return renderCreator(); }
+  if (ev.target.id === "crRegion") { cr.region = ev.target.value; return; }
   if (ev.target.id === "regionSel") { tableRegion = ev.target.value; render(); }
   if (ev.target.id === "leagueSel") { leagueSel = +ev.target.value; render(); }
 });
