@@ -31,9 +31,11 @@ class WeekNews:
 
 class Game:
     def __init__(self, seed: int, clubs: list[Club], graph, calendar, systems: Systems, club_name: str,
-                 manager_name: str = "Вы") -> None:
+                 manager_name: str = "Вы", founder_mode: bool = False) -> None:
         self.seed, self.clubs, self.graph, self.calendar, self.sysm = seed, clubs, graph, calendar, systems
         self.club_name = club_name
+        self.founder_mode = founder_mode
+        self.starter_candidates: list[str] = []
         self.season = 1
         self.rng = random.Random(seed + 5)
         systems.manager_club = club_name
@@ -56,9 +58,15 @@ class Game:
     def new(cls, seed: int = 1, n_clubs: int = 120, club: str | None = None, director: str = "cassandra",
             manager_name: str = "Вы", profile: dict | None = None) -> "Game":
         clubs, graph, cal, sysm, home = worldgen.generate(seed, n_clubs, director)
+        founder_mode = bool(profile and profile.get("mode") == "founder")
+        starter_names: list[str] = []
+        if founder_mode:
+            from .founder import bootstrap
+            home, starter_names = bootstrap(clubs, sysm, profile["club_name"], profile["club_region"])
         if profile:
             manager_name = " ".join(profile["name"].split())
-        g = cls(seed, clubs, graph, cal, sysm, club or home, manager_name)
+        g = cls(seed, clubs, graph, cal, sysm, club or home, manager_name, founder_mode=founder_mode)
+        g.starter_candidates = starter_names
         from . import progression
         p = profile or {"name": manager_name, "age": 35, "country": "", "background": "rookie",
                         "specialization": "motivator", "traits": ["patient", "empath"], "face": {}}
@@ -111,6 +119,8 @@ class Game:
 
     def advance(self) -> WeekNews:
         """Play one week. Returns the news that concern the manager plus world headlines."""
+        if getattr(self, "founder_mode", False) and self.week == 0 and len(self.club.roster) < 5:
+            raise ValueError("сначала подпишите двух игроков: стартовый состав должен иметь пять человек")
         self._assistant_decides()
         plans = {self.club_name: self.desk.plan}
         season_week(self.run, self.clubs, self.graph, self.calendar, self.sysm, plans)
@@ -220,9 +230,10 @@ class Game:
         r = lv.grant(reason, key, self.season, mult)
         if not r["xp"]:
             return []
-        out = [f"менеджер: +{r['xp']} опыта: {r['why']}"]
+        title = "основатель" if getattr(self, "founder_mode", False) else "менеджер"
+        out = [f"{title}: +{r['xp']} опыта: {r['why']}"]
         if r["levels"]:
-            out.append(f"менеджер: новый уровень {lv.level}! Свободных очков талантов: {lv.available_points}")
+            out.append(f"{title}: новый уровень {lv.level}! Свободных очков талантов: {lv.available_points}")
         return out
 
     def _tier_of(self, tournament: str) -> str:
@@ -318,7 +329,7 @@ class Game:
         owner = self.desk.owner
         lines += living_lines
         if owner and owner.objectives:
-            lines.append("Цели владельца: " + "; ".join(o.text for o in owner.objectives))
+            lines.append(("Цели совета директоров: " if getattr(self, "founder_mode", False) else "Цели владельца: ") + "; ".join(o.text for o in owner.objectives))
         return lines
 
     def _world_changes(self, week: int, rng: random.Random) -> list[str]:
@@ -349,6 +360,8 @@ class Game:
     @property
     def sacked(self) -> bool:
         """The owner fired you: the club now has another manager."""
+        if getattr(self, "founder_mode", False):
+            return False
         m = self.sysm.careers.managers.get(self.club_name) if self.sysm.careers else None
         return m is not None and m.name != self.manager_name
 
@@ -361,6 +374,8 @@ class Game:
 
     def job_offers(self) -> list[Club]:
         """After a sacking: clubs whose prestige fits your reputation (their AI coach makes way)."""
+        if getattr(self, "founder_mode", False):
+            return []
         from .manager import TIER_PRESTIGE
         m = self.me()
         rep = m.reputation if m else 20.0
@@ -368,6 +383,8 @@ class Game:
         return sorted(fits, key=lambda c: c.rank)[:5]
 
     def take_job(self, club_name: str) -> str:
+        if getattr(self, "founder_mode", False):
+            raise ValueError("основатель управляет собственным клубом и не меняет работодателя")
         careers, m = self.sysm.careers, self.me()
         club = next(c for c in self.clubs if c.name == club_name)
         old = careers.managers.pop(club_name, None)
