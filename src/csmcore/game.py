@@ -294,6 +294,36 @@ class Game:
                 if self.week - o.week >= PATIENCE_WEEKS:
                     mk.answer(o, False, self.week, self.rng)
 
+    def _regional_playoffs(self) -> tuple[list[str], list[str]]:
+        """Regional top-two teams contest four Tier-2 promotion slots (founder worlds only).
+
+        High seeds receive byes if the bracket is not a power of two. Matches reuse the
+        exact existing BO3 engine; none are fixed or awarded directly by ranking.
+        """
+        from .season import play_series
+        pool = circuit.regional_candidates(self.clubs)
+        lines = [f"Квалификация: от каждого региона проходят две лучшие команды третьего дивизиона ({len(pool)} участников)."]
+        series_index = 0
+        while len(pool) > 4:
+            target = 8 if len(pool) > 8 else 4
+            n_byes = 2 * target - len(pool)
+            byes, playing = pool[:n_byes], pool[n_byes:]
+            winners = list(byes)
+            for i in range(len(playing) // 2):
+                a, b = playing[i], playing[-(i + 1)]
+                series_index += 1
+                winner, loser, result = play_series(
+                    a, b, self.graph, seed=self._season_seed() * 1000 + series_index,
+                    ctx={"playoffs": True}, maps=3, sysm=self.sysm,
+                    stage="qualifier", week=self.week,
+                )
+                winners.append(winner)
+                lines.append(f"Квалификация: {result}; {winner.name} проходит дальше")
+            pool = sorted(winners, key=lambda c: (-c.season_points, c.rank))
+        winners = [c.name for c in pool]
+        lines.append("Квалификация: путёвки во второй дивизион — " + ", ".join(winners))
+        return winners, lines
+
     def _new_season(self) -> list[str]:
         """Season rollover: ranking points decay, expired sponsors are replaced, owners set new
         targets, old ledger lines are trimmed."""
@@ -301,7 +331,11 @@ class Game:
         living_lines = self._living_season_end()
         lines = [f"Сезон {self.season} завершён. {self.club_name}: место {self.club.rank}, "
                  f"{circuit.name(was)}, {circuit.standings(self.clubs, was).index(self.club) + 1}-е в таблице лиги"]
-        moves = circuit.season_end(self.clubs)
+        qualifiers = None
+        if getattr(self, "founder_mode", False):
+            qualifiers, bracket = self._regional_playoffs()
+            lines.extend(bracket)
+        moves = circuit.season_end(self.clubs, qualifiers)
         if self.sysm.chronicle:
             for m in moves:
                 self.sysm.chronicle.add(self.season, self.run.start_week + self.run.wk, "board", m)
