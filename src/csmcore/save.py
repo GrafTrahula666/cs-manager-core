@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import gzip
 import io
+import os
 import pickle
+import tempfile
 
 MAGIC = b"CSMSAVE"
 VERSION = 4
@@ -28,6 +30,8 @@ def dumps(game) -> bytes:
 def loads(data: bytes):
     if not data.startswith(MAGIC):
         raise ValueError("это не сохранение CS MENEDGER")
+    if len(data) == len(MAGIC):
+        raise ValueError("сохранение повреждено: отсутствует номер версии")
     version = data[len(MAGIC)]
     if version not in SUPPORTED:
         raise ValueError(f"сохранение версии {version}, игра понимает {', '.join(map(str, SUPPORTED))}")
@@ -92,9 +96,25 @@ def _to_leagues(game) -> None:
 
 
 def save(game, path: str) -> int:
+    """Atomically replace an on-disk save; a failed write leaves the old save intact.
+
+    The save format and serialized bytes are unchanged. The temporary file is created
+    beside the destination so os.replace() is an atomic rename on the same filesystem.
+    """
     data = dumps(game)
-    with open(path, "wb") as f:
-        f.write(data)
+    target = os.path.abspath(os.fspath(path))
+    fd, temporary = tempfile.mkstemp(
+        prefix=f".{os.path.basename(target)}.", suffix=".tmp", dir=os.path.dirname(target)
+    )
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temporary, target)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
     return len(data)
 
 
