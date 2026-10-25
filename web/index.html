@@ -598,7 +598,7 @@ async function boot() {
 let MO = null, cr = null, selNode = null;
 const HAIR_STYLES = ["лысина", "ёжик", "короткая", "с пробором", "шипы", "длинные", "кудри", "ирокез", "пучок", "афро", "растрёпанная"];
 const BEARDS = ["нет", "щетина", "борода", "эспаньолка", "усы"];
-function crFace() { return face({ name: (cr.name + " " + cr.surname).trim() || "менеджер", age: cr.age, face: cr.ov }, "Вы", 180); }
+function crFace() { return face({ name: (cr.name + " " + cr.surname).trim() || "основатель", age: cr.age, face: cr.ov }, "Вы", 180); }
 function openCreator() {
   MO = MO || call("manager_options");
   if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", club: "", region: "CIS", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
@@ -753,19 +753,13 @@ function showLevelUp(level, points) {
   $("lvlGo").focus();
 }
 
-async function startNew() {
-  busy(true, "Создаю мир…");
-  const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value));
-  busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null; enterGame(s);
-  toast(`Вы возглавили ${s.club}. Цели владельца: ${s.objectives.join("; ")}`);
-}
 async function loadFrom(text) {
   busy(true, "Загружаю…");
   try { const s = await later(() => call("load_b64", text.replace(/^CSM1:/, "").trim())); log = []; matches = []; seasonReport = null; enterGame(s); }
   catch (e) { toast("Не получилось загрузить: " + (e.message || e).toString().slice(-160)); }
   busy(false);
 }
-function enterGame(s) { $("boot").hidden = true; $("game").hidden = false; render(s); }
+function enterGame(s) { $("boot").hidden = true; $("game").hidden = false; if (s.starter_open) tab = "market"; render(s); }
 
 function autosave() {
   try { localStorage.setItem(SAVE_KEY, call("save_b64")); return true; } catch (e) { return false; }
