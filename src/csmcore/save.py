@@ -37,6 +37,9 @@ def loads(data: bytes):
         raise ValueError(f"сохранение версии {version}, игра понимает {', '.join(map(str, SUPPORTED))}")
     with gzip.GzipFile(fileobj=io.BytesIO(data[len(MAGIC) + 1:])) as f:
         game = pickle.load(f)
+        # Consume the gzip footer: pickle.load alone can return before CRC is checked.
+        if f.read(1):
+            raise ValueError("сохранение содержит лишние данные")
     return migrate(game, version)
 
 
