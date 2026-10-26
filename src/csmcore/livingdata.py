@@ -29,11 +29,23 @@ def channel_total(unlocked: set[str], channel: str, extra: float = 0.0) -> float
     return max(-cap, min(raw, cap))
 
 
+# A channel or effect is shown to the player as an active bonus only once it is wired into a system.
+STATUSES = ("planned", "wired", "tested", "calibrated")
+STATUS_RU = {"planned": "не действует", "wired": "действует", "tested": "действует", "calibrated": "действует"}
+
+
+def is_active(status: str) -> bool:
+    return status in ("wired", "tested", "calibrated")
+
+
 def validate() -> list[str]:
     """Return a list of problems; empty means the data is consistent."""
     errs: list[str] = []
     t = load("talents")
     nodes = {n["id"]: n for n in t["nodes"]}
+    for name, c in t["channels"].items():
+        if c["status"] not in STATUSES:
+            errs.append(f"talents: channel {name} has unknown status {c['status']}")
     if len(nodes) != len(t["nodes"]):
         errs.append("talents: duplicate ids")
     for b in t["branches"]:
