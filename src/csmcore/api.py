@@ -213,10 +213,19 @@ def _snapshot(g: Game) -> dict:
             "cash": c.cash}
 
 
+def _choice_index(index: int, count: int, kind: str) -> int:
+    """Validate an index from the UI before it can trigger a world-changing action."""
+    if type(index) is not int or not 0 <= index < count:
+        raise ValueError(f"нет такого {kind}")
+    return index
+
+
 def answer_event(i: int, option: int) -> list[str]:
     g = _g()
-    f = g.sysm.stories.pending[i]
-    label = f.options[option] if option < len(f.options) else ""
+    pending = g.sysm.stories.pending if g.sysm.stories else []
+    f = pending[_choice_index(i, len(pending), "события")]
+    option = _choice_index(option, len(f.options), "варианта")
+    label = f.options[option]
     out = g.desk.answer_event(f, option)
     if not hasattr(g, "echoes"):
         g.echoes = []
@@ -282,7 +291,8 @@ def horizon() -> list[dict]:
 
 def answer_offer(i: int, accept: bool) -> str:
     g = _g()
-    return g.desk.answer_offer(i, accept, g.week)
+    offers = g.sysm.market.offers if g.sysm.market else []
+    return g.desk.answer_offer(_choice_index(i, len(offers), "предложения"), accept, g.week)
 
 
 def market(limit: int = 40) -> list[dict]:
