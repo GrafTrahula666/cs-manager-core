@@ -120,7 +120,18 @@ class Game:
             news.lines += self.base.week(self)
         self.desk.plan = type(self.desk.plan)()   # plans last one week
         if self.run.wk >= economy.WEEKS_PER_YEAR:
+            # season_finish writes to the OLD run's log; new_season replaces that run.
+            # Capture only its new notifications before the old journal disappears.
+            before_management = len(self.run.log.management)
+            own_players = {p.name for p in self.club.roster}
             season_finish(self.run, self.clubs, self.sysm)
+            for line in self.run.log.management[before_management:]:
+                if line.startswith(("HLTW:", "HLTW ", "Без клуба из киберспорта ушли ")):
+                    news.lines.append(f"мир: {line}")
+                elif self.club_name in line or (
+                    " завершил карьеру" in line and line.partition(" (")[0] in own_players
+                ):
+                    news.lines.append(f"клуб: {line}")
             news.lines += self._new_season()
         self._trim()
         self._seen = self._counts()
