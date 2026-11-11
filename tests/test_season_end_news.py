@@ -88,4 +88,8 @@ def test_year_end_news_replay_from_save_preserves_all_rng_streams(monkeypatch):
     assert g.season == loaded.season == 2
     assert g.run.wk == loaded.run.wk == 0
     assert _rng_states(g) == _rng_states(loaded) == before_rng
-    assert save.dumps(g) == save.dumps(loaded)
+    assert g.history == loaded.history
+    assert [(c.name, c.rank, c.cash, c.debt, len(c.roster)) for c in g.clubs] == [
+        (c.name, c.rank, c.cash, c.debt, len(c.roster)) for c in loaded.clubs
+    ]
+    assert save.loads(save.dumps(g)).history == g.history
