@@ -352,8 +352,12 @@ class StoryEngine:
 
     def resolve(self, f: Fired, choice: int | None, graph: RelationGraph, rng: random.Random) -> Fired:
         ev = self.events[f.event_id]
+        options = ev.get("options", [])
+        # Validate before applying unconditional effects or consuming randomness.
+        if choice is not None and options and (type(choice) is not int or not 0 <= choice < len(options)):
+            raise ValueError("нет такого варианта события")
         f.outcome += apply_effects(ev.get("effects", []), f, graph, rng, self.queue, self.secrets)
-        if choice is not None and ev.get("options"):
+        if choice is not None and options:
             f.choice = choice
             f.outcome += apply_effects(ev["options"][choice].get("effects", []), f, graph, rng, self.queue, self.secrets)
         if f in self.pending:
