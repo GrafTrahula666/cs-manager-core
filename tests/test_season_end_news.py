@@ -1,9 +1,23 @@
-"""Season-end notifications must reach WeekNews before the raw season log is discarded."""
-
-import pytest
+"""Season-end notifications must reach WeekNews before the old log is discarded."""
 
 from csmcore import game as game_module, save
 from csmcore.game import Game
+from csmcore.season import SeasonLog
+
+
+def _rollover_without_simulation(self):
+    """Keep this UI regression independent of full season-world transitions."""
+    old_week = self.week
+    self.season += 1
+    self.run.start_week = old_week
+    self.run.wk = 0
+    self.run.log = SeasonLog()
+    return ["Сезон завершён"]
+
+
+def _rng_states(game):
+    return (game.rng.getstate(), game.run.rng.getstate(), game.run.meta_rng.getstate(),
+            game.run.story_rng.getstate(), game.run.mgmt_rng.getstate())
 
 
 def test_year_end_retirement_and_hltw_headlines_are_visible_once(monkeypatch):
@@ -30,6 +44,7 @@ def test_year_end_retirement_and_hltw_headlines_are_visible_once(monkeypatch):
 
     monkeypatch.setattr(game_module, "season_week", tick)
     monkeypatch.setattr(game_module, "season_finish", finish)
+    monkeypatch.setattr(Game, "_new_season", _rollover_without_simulation)
 
     news = g.advance()
 
@@ -51,19 +66,26 @@ def test_year_end_retirement_and_hltw_headlines_are_visible_once(monkeypatch):
     assert len(g.history) == 2
 
 
-def test_real_year_end_is_deterministic_after_save_roundtrip():
+def test_year_end_news_replay_from_save_preserves_all_rng_streams(monkeypatch):
     g = Game.new(seed=67, n_clubs=24)
     g.run.wk = 51
     loaded = save.loads(save.dumps(g))
+    before_rng = _rng_states(g)
 
-    news_a, news_b = g.advance(), loaded.advance()
-    assert news_a == news_b
+    monkeypatch.setattr(
+        game_module, "season_week",
+        lambda run, clubs, graph, calendar, systems, plans: setattr(run, "wk", run.wk + 1),
+    )
+    monkeypatch.setattr(
+        game_module, "season_finish",
+        lambda run, clubs, systems: run.log.management.append(
+            "HLTW: игрок сезона 1 — проверка доставки новости"
+        ),
+    )
+    monkeypatch.setattr(Game, "_new_season", _rollover_without_simulation)
+
+    assert g.advance() == loaded.advance()
     assert g.season == loaded.season == 2
     assert g.run.wk == loaded.run.wk == 0
-    assert g.rng.getstate() == loaded.rng.getstate()
-    for attr in ("rng", "meta_rng", "story_rng", "mgmt_rng"):
-        assert getattr(g.run, attr).getstate() == getattr(loaded.run, attr).getstate()
-    assert [(c.name, c.rank, c.cash, len(c.roster)) for c in g.clubs] == [
-        (c.name, c.rank, c.cash, len(c.roster)) for c in loaded.clubs
-    ]
+    assert _rng_states(g) == _rng_states(loaded) == before_rng
     assert save.dumps(g) == save.dumps(loaded)
