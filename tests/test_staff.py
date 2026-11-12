@@ -151,3 +151,31 @@ def test_save_roundtrip_and_old_save(g):
     g3 = api._g()
     g3.ensure_living()
     assert len(g3.staff.candidates()) >= 20 and not g3.staff.mine(g3)
+
+
+@pytest.mark.parametrize("salary", [float("nan"), float("inf"), float("-inf"), -10, 0, True])
+def test_invalid_salary_cannot_mutate_contract_or_ledger(g, salary):
+    from csmcore import save
+    p = _analyst(g)
+    before = save.dumps(g)
+    with pytest.raises(ValueError):
+        api.staff_hire(p.id, salary=salary)
+    assert save.dumps(g) == before
+    assert p.club is None
+
+
+def test_staff_dossier_and_contract_survive_game_save(g):
+    from csmcore import save
+    a = _analyst(g)
+    api.staff_hire(a.id)
+    g.base.levels["analytics_center"] = 1
+    api.staff_assign(a.id)
+    target = _target(g)
+    api.staff_target(target)
+    for _ in range(2):
+        g.advance()
+    k = api.dossier(target)["knowledge"]
+    restored = save.loads(save.dumps(g))
+    assert restored.staff.target == target
+    assert restored.staff.members[a.id].club == g.club_name
+    assert restored.staff.knowledge(restored, next(c for c in restored.clubs if c.name == target)) == pytest.approx(k, abs=0.6)
