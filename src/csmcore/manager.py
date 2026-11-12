@@ -10,6 +10,7 @@ existing systems and returns a readable outcome line.
 """
 from __future__ import annotations
 
+import math
 import random
 from dataclasses import dataclass, field
 
@@ -129,8 +130,24 @@ class ManagerDesk:
 
     # --- week ---
     def set_week(self, **kw) -> WeekPlan:
-        self.plan = WeekPlan(**kw)
-        return self.plan
+        """Validate the manager's week plan before replacing the current one.
+
+        Bounds match the existing UI controls; invalid numeric inputs must never
+        reach world.update_state() or be persisted in a career save.
+        """
+        proposed = WeekPlan(**kw)
+        hours = proposed.practice_hours
+        if type(hours) not in (int, float) or not math.isfinite(hours) or not 0 <= hours <= 50:
+            raise ValueError("тренировок должно быть от 0 до 50 часов")
+        for name, label in (("rest_days", "выходных"), ("commercial_days", "спонсорских дней")):
+            days = getattr(proposed, name)
+            if (type(days) not in (int, float) or not math.isfinite(days)
+                    or not 0 <= days <= 3 or days != int(days)):
+                raise ValueError(f"{label} должно быть целое число от 0 до 3")
+        if type(proposed.bootcamp) is not bool or type(proposed.travel) is not bool:
+            raise ValueError("буткемп и поездка должны быть да/нет")
+        self.plan = proposed
+        return proposed
 
     def scout(self, p: Player, weeks: float = 1.0):
         self.scouting.observe(p, weeks)
