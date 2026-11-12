@@ -29,11 +29,21 @@ def channel_total(unlocked: set[str], channel: str, extra: float = 0.0) -> float
     return max(-cap, min(raw, cap))
 
 
+STATUSES = ("planned", "wired", "tested", "calibrated")
+
+
+def is_active(status: str) -> bool:
+    return status in ("wired", "tested", "calibrated")
+
+
 def validate() -> list[str]:
     """Return a list of problems; empty means the data is consistent."""
     errs: list[str] = []
     t = load("talents")
     nodes = {n["id"]: n for n in t["nodes"]}
+    for name, channel in t["channels"].items():
+        if channel.get("status") not in STATUSES:
+            errs.append(f"talents: unknown status for {name}: {channel.get('status')}")
     if len(nodes) != len(t["nodes"]):
         errs.append("talents: duplicate ids")
     for b in t["branches"]:

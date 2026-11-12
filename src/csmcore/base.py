@@ -21,6 +21,14 @@ EFFECT_RU = {
 }
 
 
+# Facility effects stay inactive until connected to actual simulation.
+EFFECT_STATUS: dict[str, str] = {}
+
+
+def effect_status(key: str) -> str:
+    return EFFECT_STATUS.get(key, "planned")
+
+
 def fac_data() -> dict:
     return {f["id"]: f for f in livingdata.load("facilities")["facilities"]}
 
@@ -73,7 +81,8 @@ class Base:
         ok = all(r["ok"] for r in rows)
         return {"can": ok, "why": "" if ok else next(r["text"] for r in rows if not r["ok"]),
                 "next": {"level": cur + 1, "cost": lv["cost"], "weeks": lv["build_weeks"], "upkeep_month": lv["upkeep_month"],
-                         "effects": [{"key": k, "label": EFFECT_RU.get(k, k), "value": v} for k, v in lv["effects"].items()],
+                         "effects": [{"key": k, "label": EFFECT_RU.get(k, k), "value": v,
+                                     "active": livingdata.is_active(effect_status(k))} for k, v in lv["effects"].items()],
                          "events": lv["events"], "req": rows}}
 
     def big_titles(self, game) -> int:
