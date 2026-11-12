@@ -119,6 +119,7 @@ class Game:
         if getattr(self, "base", None) is not None:
             news.lines += self.base.week(self)
         if getattr(self, "staff", None) is not None:
+            self.staff.ensure_compat()  # direct save.loads(...).advance() must also accept old careers
             news.lines += self.staff.week(self)
         self.desk.plan = type(self.desk.plan)()   # plans last one week
         if self.run.wk >= economy.WEEKS_PER_YEAR:
