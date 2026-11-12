@@ -51,9 +51,13 @@ def test_talent_nodes_and_unlocked_channels_report_inactive(game):
 
 def test_existing_and_next_facility_effects_report_real_status(game, monkeypatch):
     home = api.home()
-    assert all(not e["active"] for f in home["facilities"] if f["next"] for e in f["next"]["effects"])
+    assert all(not e["active"] for f in home["facilities"] if f["next"] for e in f["next"]["effects"]
+               if e["key"] not in ("analysis.demo_depth", "analysis.slots"))
     current = next(f for f in home["facilities"] if f["id"] == "training_zone")
     assert current["now"] and all(not e["active"] for e in current["now"])
+    analyst = next(f for f in home["facilities"] if f["id"] == "analytics_center")
+    assert analyst["next"] is not None
+    assert all(e["active"] for e in analyst["next"]["effects"] if e["key"] in ("analysis.demo_depth", "analysis.slots"))
     monkeypatch.setitem(base.EFFECT_STATUS, "training.quality", "wired")
     current = next(f for f in api.home()["facilities"] if f["id"] == "training_zone")
     assert any(e["active"] for e in current["now"])

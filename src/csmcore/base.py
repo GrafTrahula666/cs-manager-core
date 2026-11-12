@@ -22,7 +22,11 @@ EFFECT_RU = {
 
 
 # Facility effects stay inactive until connected to actual simulation.
-EFFECT_STATUS: dict[str, str] = {}
+EFFECT_STATUS: dict[str, str] = {
+    # Connected to tactical-analyst dossier progress and analyst workplace capacity.
+    "analysis.demo_depth": "wired",
+    "analysis.slots": "wired",
+}
 
 
 def effect_status(key: str) -> str:
