@@ -49,9 +49,22 @@ class Base:
     def total_levels(self) -> int:
         return sum(self.levels.values())
 
+    def upkeep_of(self, fid: str, level: int) -> float:
+        """Only extra upkeep above the included starting-room budget is billable.
+
+        The pre-existing training room and lounge are covered by the club's
+        baseline staff budget; upgrading them costs only the difference.
+        """
+        facility = fac_data()[fid]
+        if level <= 0:
+            return 0.0
+        included = (facility["levels"][facility["start_level"] - 1]["upkeep_month"]
+                    if facility["start_level"] else 0.0)
+        return max(0.0, facility["levels"][level - 1]["upkeep_month"] - included)
+
     def upkeep_month(self) -> float:
-        d = fac_data()
-        return sum(d[fid]["levels"][lv - 1]["upkeep_month"] for fid, lv in self.levels.items() if lv and fid in d)
+        data = fac_data()
+        return sum(self.upkeep_of(fid, level) for fid, level in self.levels.items() if fid in data)
 
     # ---- requirements ----
     def check(self, game, fid: str) -> dict:
@@ -84,7 +97,8 @@ class Base:
         add(f"параллельных строек не больше {MAX_PARALLEL}", len(self.projects) < MAX_PARALLEL)
         ok = all(r["ok"] for r in rows)
         return {"can": ok, "why": "" if ok else next(r["text"] for r in rows if not r["ok"]),
-                "next": {"level": cur + 1, "cost": lv["cost"], "weeks": lv["build_weeks"], "upkeep_month": lv["upkeep_month"],
+                "next": {"level": cur + 1, "cost": lv["cost"], "weeks": lv["build_weeks"],
+                         "upkeep_month": self.upkeep_of(fid, cur + 1) - self.upkeep_of(fid, cur),
                          "effects": [{"key": k, "label": EFFECT_RU.get(k, k), "value": v,
                                      "active": livingdata.is_active(effect_status(k))} for k, v in lv["effects"].items()],
                          "events": lv["events"], "req": rows}}
@@ -116,8 +130,9 @@ class Base:
         out = []
         d = fac_data()
         for fid, lv in self.levels.items():
-            if lv:
-                game.club.book(game.week, "facilities", -d[fid]["levels"][lv - 1]["upkeep_month"] / WEEKS_PER_MONTH, f"{d[fid]['name']} ур. {lv}")
+            upkeep = self.upkeep_of(fid, lv)
+            if upkeep:
+                game.club.book(game.week, "facilities", -upkeep / WEEKS_PER_MONTH, f"{d[fid]['name']} ур. {lv}")
         for fid, p in list(self.projects.items()):
             if game.week >= p["done"]:
                 self.levels[fid] = p["to"]
