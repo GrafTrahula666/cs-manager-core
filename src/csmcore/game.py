@@ -222,6 +222,9 @@ class Game:
             from .staff import StaffWorld
             self.staff = StaffWorld(self.seed)
             self.staff.seed_market(self)
+        else:
+            # Existing staff worlds in older saves lack v2 career fields.
+            self.staff.ensure_compat()
         if not hasattr(self, "_titles_seen"):
             ch = self.sysm.chronicle
             self._titles_seen = len(ch.titles.get(self.club_name, [])) if ch else 0
