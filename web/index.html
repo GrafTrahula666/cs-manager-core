@@ -604,7 +604,7 @@ const BEARDS = ["нет", "щетина", "борода", "эспаньолка"
 function crFace() { return face({ name: (cr.name + " " + cr.surname).trim() || "менеджер", age: cr.age, face: cr.ov }, "Вы", 180); }
 function openCreator() {
   MO = MO || call("manager_options");
-  if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
+  if (!cr) cr = { name: "", surname: "", age: 36, country: "RU", mode: "manager", club: "", region: "CIS", bg: "ex_player", spec: "strategist", traits: [], ov: { seed: "a1" } };
   $("boot").hidden = true; $("creator").hidden = false; renderCreator();
 }
 function crStats() {
@@ -612,7 +612,7 @@ function crStats() {
   s[MO.specialization_stat[cr.spec]] += MO.specialization_bonus;
   return [b.stats, s];
 }
-function crValid() { return (cr.name + cr.surname).trim().length >= 2 && cr.traits.length === 2; }
+function crValid() { return (cr.name + cr.surname).trim().length >= 2 && cr.traits.length === 2 && (cr.mode !== "founder" || (cr.club.trim().length >= 3 && cr.club.trim().length <= 40)); }
 function renderCreator() {
   const [base, fin] = crStats();
   const sbars = (a, b) => `<div class="sbars">${MO.stats.map((k) => `<div class="sbar"><span>${MO.stat_ru[k]}</span><i><u style="width:${a[k] * 16}%"></u>${b && b[k] > a[k] ? `<u class="up" style="width:${b[k] * 16}%;opacity:.45"></u>` : ""}</i><span>${b ? b[k] : a[k]}</span></div>`).join("")}</div>`;
@@ -636,6 +636,12 @@ function renderCreator() {
       <label>Фамилия<input id="crSurname" value="${esc(cr.surname)}" maxlength="20" placeholder="Громов"></label>
       <label>Возраст<input id="crAge" type="number" min="25" max="65" value="${cr.age}" style="width:80px"></label>
       <label>Страна<select data-crsel="country">${MO.countries.map((c) => `<option ${c === cr.country ? "selected" : ""}>${c}</option>`).join("")}</select></label></div></section>
+    <section class="card"><h3>Режим карьеры</h3><label>Выберите путь<select id="crMode"><option value="manager" ${cr.mode === "manager" ? "selected" : ""}>Менеджер существующего клуба</option><option value="founder" ${cr.mode === "founder" ? "selected" : ""}>Основатель собственного клуба</option></select></label></section>
+    ${cr.mode === "founder" ? `<section class="card"><h3>Ваш киберспортивный клуб</h3><div class="crrow">
+      <span id="crClubLogo">${crest(cr.club.trim() || "Новый клуб", 72)}</span>
+      <label>Название<input id="crClub" value="${esc(cr.club)}" maxlength="40" placeholder="Например, Northern Wolves"></label>
+      <label>Регион<select id="crRegion">${[["EU","Европа"],["CIS","СНГ"],["NA","Северная Америка"],["SA","Южная Америка"],["Asia","Азия"],["OCE","Океания"]].map(([v,n])=>`<option value="${v}" ${cr.region===v?"selected":""}>${n}</option>`).join("")}</select></label></div>
+      <p class="muted">Старт: третий дивизион, $120 000 на клуб, 3 игрока на контракте. Ещё двух подписываете сами перед первой неделей. Эмблема создаётся из названия клуба.</p></section>` : ""}
     <section class="card"><h3>Предыстория</h3>${ART.base ? `<img class="story" src="art/base/story_${cr.bg}.webp" alt="" loading="lazy">` : ""}<div class="choices">${MO.backgrounds.map((b) => `<button class="choice" data-cr="bg" data-v="${b.id}" aria-pressed="${cr.bg === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span>${sbars(b.stats)}<span class="plus">+ ${esc(b.strength)}</span><span class="minus">− ${esc(b.weakness)}</span></button>`).join("")}</div></section>
     <section class="card"><h3>Специализация</h3><div class="choices">${MO.branches.map((b) => `<button class="choice" data-cr="spec" data-v="${b.id}" aria-pressed="${cr.spec === b.id}"><b>${esc(b.name)}</b><span class="muted">${esc(b.desc)}</span><span class="why">+${MO.specialization_bonus} к навыку «${MO.stat_ru[b.stat]}»</span></button>`).join("")}</div></section>
     <section class="card"><h3>Характер: выберите две черты <span class="muted">(${cr.traits.length}/2)</span></h3><div class="choices">${MO.traits.map((t) => `<button class="choice" data-cr="trait" data-v="${t.id}" aria-pressed="${cr.traits.includes(t.id)}"><b>${esc(t.name)}</b><span class="plus">+ ${esc(t.plus)}</span><span class="minus">− ${esc(t.minus)}</span></button>`).join("")}</div></section>
@@ -644,15 +650,15 @@ function renderCreator() {
       <span class="muted">${crValid() ? "" : "Нужны имя и две черты характера"}</span></div></section>
    </div></div></div>`;
 }
-function crUpdateGo() { const b = $("crGo"); if (b) b.disabled = !crValid(); const p = $("crPrev"); if (p) p.innerHTML = crFace(); }
+function crUpdateGo() { const b = $("crGo"); if (b) b.disabled = !crValid(); const p = $("crPrev"); if (p) p.innerHTML = crFace(); const logo = $("crClubLogo"); if (logo) logo.innerHTML = crest(cr.club.trim() || "Новый клуб", 72); }
 async function startCareer() {
-  const profile = { name: (cr.name + " " + cr.surname).trim(), age: cr.age, country: cr.country, background: cr.bg, specialization: cr.spec, traits: cr.traits, face: cr.ov };
+  const profile = { mode: cr.mode, name: (cr.name + " " + cr.surname).trim(), age: cr.age, country: cr.country, background: cr.bg, specialization: cr.spec, traits: cr.traits, face: cr.ov, ...(cr.mode === "founder" ? { club_name: cr.club.trim(), club_region: cr.region } : {}) };
   $("creator").hidden = true; busy(true, "Создаю мир…");
   try {
     const s = await later(() => call("new_game", +$("seed").value || 1, +$("nclubs").value, $("director").value, profile));
     busy(false); log = s.opening_news && s.opening_news.length ? [{ season: 1, week: 0, lines: s.opening_news }] : []; matches = []; seasonReport = null;
-    tab = "staff"; selNode = null; enterGame(s);
-    toast(`${profile.name}, вы возглавили ${s.club}. Соберите штаб во вкладке «Штаб»; таланты менеджера откроются со второго уровня.`);
+    tab = s.starter_open ? "market" : "staff"; selNode = null; enterGame(s);
+    toast(s.starter_open ? `${profile.name}, клуб «${s.club}» основан. Подпишите двух игроков перед первым матчем.` : `${profile.name}, вы возглавили ${s.club}. Соберите штаб во вкладке «Штаб».`);
   } catch (e) { busy(false); $("creator").hidden = false; toast("Не получилось: " + String(e.message || e).split("\n").filter(Boolean).slice(-1)[0]); }
 }
 
@@ -807,13 +813,14 @@ async function loadFrom(text) {
   catch (e) { toast("Не получилось загрузить: " + (e.message || e).toString().slice(-160)); }
   busy(false);
 }
-function enterGame(s) { $("boot").hidden = true; $("game").hidden = false; render(s); }
+function enterGame(s) { $("boot").hidden = true; $("game").hidden = false; if (s.starter_open) tab = "market"; render(s); }
 
 function autosave() {
   try { localStorage.setItem(SAVE_KEY, call("save_b64")); return true; } catch (e) { return false; }
 }
 
 async function advance(n) {
+  if (curState && curState.starter_open) { tab = "market"; render(); toast("Сначала подпишите двух игроков в стартовую пятёрку."); return; }
   if (!n || n < 1) n = 1;
   const btns = ["nextBtn", "next4Btn", "toEventBtn"];
   btns.forEach((i) => ($(i).disabled = true));
@@ -834,7 +841,7 @@ async function advance(n) {
   else if (s.situations) tab = "backstage";
   render(s);
   if (s.level > lvlBefore) showLevelUp(s.level, s.talent_points);
-  if (s.sacked) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
+  if (s.sacked && !s.founder) toast("Владелец вас уволил. Во вкладке «Карьера» есть предложения от других клубов.");
 }
 
 function parseMatch(line, club, w) {
@@ -878,6 +885,7 @@ function render(s) {
   const ne = s.next_events.find((x) => x.invited) || s.next_events[0];
   $("toEventBtn").textContent = ne ? `До турнира · ${Math.max(1, ne.week - s.week)} нед.` : "До турнира";
   $("toEventBtn").title = ne ? `Играть до «${ne.name}» (неделя ${ne.week}); остановится, если нужно ваше решение` : "";
+  ["nextBtn", "next4Btn", "toEventBtn"].forEach((id) => { $(id).disabled = !!s.starter_open; });
   const due = s.pending_events + s.offers, sits = s.situations || 0;
   $("tabs").innerHTML = TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" data-tab="${k}">${t}${k === "office" && due ? `<span class="badge">${due}</span>` : ""}${k === "manager" && s.talent_points ? `<span class="badge">${s.talent_points}</span>` : ""}${k === "backstage" && sits ? `<span class="badge">${sits}</span>` : ""}</button>`).join("");
   const views = { office: viewOffice, manager: viewManager, home: viewHome, staff: viewStaff, backstage: viewBackstage, squad: viewSquad, market: viewMarket, money: viewMoney, leagues: viewLeagues, media: viewMedia, table: viewTable, history: viewHistory, traits: viewTraits, career: viewCareer };
@@ -997,6 +1005,17 @@ function viewSquad() {
 }
 
 function viewMarket() {
+  const starter = curState && curState.starter_open ? call("founder_candidates") : [];
+  const starterHtml = curState && curState.starter_open
+    ? `<section class="card"><h2>Наберите первую пятёрку · ${curState.roster_count}/5</h2>
+        <p class="muted">У вас три игрока с действующими контрактами. Выберите двух из предварительно согласованного списка. Трансферная плата: $0, но зарплата пойдёт из кассы клуба.</p>
+        <div class="hunt">${starter.map((p) => `<div class="hcard">
+          <span class="big">${face({name:p.name,age:p.age},null,84)}</span>
+          <div class="info"><b>${esc(p.name)}</b><span class="muted">${ROLE[p.role] || p.role}, ${p.age}, ${p.country}</span>
+          <span>Уровень ${p.overall} · ${money(p.salary)}/мес.</span>
+          <button class="small" data-founder-sign="${esc(p.name)}">Подписать на сезон</button></div></div>`).join("")}</div>
+        ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}</section>`
+    : "";
   const m = call("market", 40);
   const rows = m.map((p) => `<tr>
       <td><div class="pl">${ava(p, p.club)}<div class="who"><span><b>${esc(p.name)}</b> <span class="muted">${ROLE[p.role] || p.role}, ${p.age}</span>${p.hot ? ` <span class="pill story">охота</span>` : ""}</span>
@@ -1011,7 +1030,7 @@ function viewMarket() {
         <span>Уровень <span class="range">${p.ovr_range[0]}–${p.ovr_range[1]}</span> · потенциал ${esc(p.potential)}</span>
         <span class="${p.rivals >= 5 ? "urgent" : "muted"}">${p.head_start ? `У вас фора ${p.head_start} нед.: потом вступят ${p.rivals} клубов` : p.rivals ? `Могут взять ещё ${p.rivals} клубов. Окно через ${p.window} нед.` : "Конкурентов пока не видно"}</span>
         <span><button class="small" data-scout="${esc(p.name)}">скаут</button> <button class="small" data-sign="${esc(p.name)}" data-fee="${p.fee}" data-sal="${p.salary_wish}" data-club="${p.club ? 1 : 0}">${p.club ? "купить" : "подписать"} ${p.fee ? money(p.fee) : money(p.salary_wish) + "/мес"}</button></span></div></div>`).join("");
-  return `<section class="card"><h3>Охота: лучшие цели рынка</h3><div class="hunt">${hot || `<p class="muted">Звёзд на рынке сейчас нет.</p>`}</div></section>
+  return starterHtml + `<section class="card"><h3>Охота: лучшие цели рынка</h3><div class="hunt">${hot || `<p class="muted">Звёзд на рынке сейчас нет.</p>`}</div></section>
   <section class="card"><h2>Рынок</h2>
     <p class="muted">Свободные агенты и игроки, которые просят трансфер. Уровень виден диапазоном: чем дольше смотрят скауты, тем он точнее. Предложение идёт по запрошенной цене и желаемой зарплате, решает сам игрок.</p>
     ${lastResults.market ? `<div class="result">${esc(lastResults.market)}</div>` : ""}
@@ -1140,12 +1159,12 @@ function viewTraits() {
 }
 
 function viewCareer(s) {
-  const jobs = s.sacked ? call("jobs") : [];
+  const jobs = s.sacked && !s.founder ? call("jobs") : [];
   let saved = "";
   try { saved = localStorage.getItem(SAVE_KEY) ? "Автосохранение каждые 4 недели в этом браузере включено." : ""; } catch (e) {}
   return `<div class="grid2">
-    <section class="card"><h3>Менеджер</h3><div><b>${esc(s.manager.name)}</b>, репутация ${s.manager.reputation}, титулов ${s.manager.titles}</div>
-      ${s.sacked ? `<div class="flag">Вас уволили. Клубы, готовые вас взять:</div>` + jobs.map((j) => `<div class="line"><span>${CL(j.club, 20)} (${TIER[j.tier]}, #${j.rank}, ${j.region})</span><button class="small" data-job="${esc(j.club)}">Принять</button></div>`).join("") : `<div class="muted">Владелец оценивает вас раз в месяц. Доверие ниже 12 означает увольнение.</div>`}
+    <section class="card"><h3>${s.founder ? "Основатель" : "Менеджер"}</h3><div><b>${esc(s.manager.name)}</b>, репутация ${s.manager.reputation}, титулов ${s.manager.titles}</div>
+      ${s.founder ? `<div class="muted">Ваш клуб: ${esc(s.club)} · регион ${esc(s.region)}. Совет директоров контролирует одобрение строек, но не может уволить основателя. ${s.board_crisis ? "Кризис управления: восстановите доверие." : ""}</div>` : s.sacked ? `<div class="flag">Вас уволили. Клубы, готовые вас взять:</div>` + jobs.map((j) => `<div class="line"><span>${CL(j.club, 20)} (${TIER[j.tier]}, #${j.rank}, ${j.region})</span><button class="small" data-job="${esc(j.club)}">Принять</button></div>`).join("") : `<div class="muted">Владелец оценивает вас раз в месяц. Доверие ниже 12 означает увольнение.</div>`}
     </section>
     <section class="card"><h3>Сохранение</h3><div class="muted">${saved}</div>
       <div class="controls"><button class="small" id="saveBtn">Сохранить сейчас</button><button class="small" id="exportBtn">Скопировать сохранение текстом</button><button class="small" id="quitBtn">Выйти в меню</button></div>
@@ -1219,6 +1238,12 @@ document.addEventListener("click", async (ev) => {
       lastResults.squad = call("release", d.release); return render();
     }
     if (d.scout) { const r = call("scout", d.scout); lastResults.market = `${r.name}: изучен на ${r.known}%, потенциал ${r.potential}${r.traits.length ? ", черты: " + r.traits.join(", ") : ""}`; return render(); }
+    if (d.founderSign) {
+      lastResults.market = call("founder_sign", d.founderSign);
+      const updated = call("state");
+      if (!updated.starter_open) { tab = "office"; toast("Стартовая пятёрка собрана! Теперь можно начинать первый сезон."); }
+      return render(updated);
+    }
     if (d.sign) {
       lastResults.market = d.club === "1" ? call("bid", d.sign, +d.fee, +d.sal) : call("sign", d.sign, +d.sal);
       return render();
@@ -1243,11 +1268,14 @@ document.addEventListener("input", (ev) => {
   if (id === "crName") { cr.name = ev.target.value; crUpdateGo(); }
   if (id === "crSurname") { cr.surname = ev.target.value; crUpdateGo(); }
   if (id === "crAge") { cr.age = Math.max(25, Math.min(65, +ev.target.value || 36)); crUpdateGo(); }
+  if (id === "crClub") { cr.club = ev.target.value; crUpdateGo(); }
 });
 document.addEventListener("change", (ev) => {
   const t = ev.target;
   if (t.dataset && t.dataset.crsel) { const k = t.dataset.crsel; if (k === "country") cr.country = t.value; else cr.ov[k] = t.value === "" ? undefined : +t.value; return renderCreator(); }
   if (t.dataset && t.dataset.crchk) { cr.ov[t.dataset.crchk] = t.checked; return renderCreator(); }
+  if (ev.target.id === "crMode") { cr.mode = ev.target.value; return renderCreator(); }
+  if (ev.target.id === "crRegion") { cr.region = ev.target.value; return; }
   if (ev.target.id === "regionSel") { tableRegion = ev.target.value; render(); }
   if (ev.target.id === "leagueSel") { leagueSel = +ev.target.value; render(); }
 });
