@@ -703,7 +703,7 @@ function viewHome(s) {
   const detail = `<section class="card detail">${ART.base ? `<img class="fdetail" src="${facImg(f)}" alt="">` : ""}<b>${esc(f.name)}</b><span class="muted">${esc(f.level_name)}${f.project ? `, идёт стройка уровня ${f.project.to}: ещё ${f.project.weeks_left} нед.` : ""}</span>${bar}
     ${nowFx || `<span class="muted">Пока ничего не даёт.</span>`}
     ${n ? `<hr><b>Уровень ${n.level}: ${esc(H.level_names[n.level])}</b>
-      <span>Цена ${money(n.cost)} · стройка ${n.weeks} нед. · содержание ${money(n.upkeep_month)}/мес.</span>
+      <span>Цена ${money(n.cost)} · стройка ${n.weeks} нед. · доп. содержание +${money(n.upkeep_month)}/мес.</span>
       ${ART.base ? `<img class="fdetail" style="max-height:150px;opacity:.9" src="art/base/fac_${f.id}_lvl${n.level}.webp" alt="Как будет выглядеть уровень ${n.level}">` : ""}
       ${n.effects.map((e) => fx({ label: e.label, value: e.value, active: e.active })).join("")}
       ${n.req.map((r) => `<div class="reqrow ${r.soft ? "soft" : r.ok ? "ok" : "no"}"><b>${r.soft ? "…" : r.ok ? "✓" : "✗"}</b><span>${esc(r.text)}</span></div>`).join("")}
