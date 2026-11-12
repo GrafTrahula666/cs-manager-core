@@ -12,6 +12,7 @@ generator: it never draws from the world's, so match results do not depend on it
 """
 from __future__ import annotations
 
+import math
 import random
 from dataclasses import dataclass, field
 
@@ -90,7 +91,11 @@ class StaffWorld:
             raise ValueError("этого специалиста нет на рынке")
         if months not in MONTHS:
             raise ValueError("договор на 6, 12 или 24 месяца")
+        if salary is not None and (isinstance(salary, bool) or not isinstance(salary, (int, float))):
+            raise ValueError("зарплата должна быть конечным числом")
         salary = m.expectation if salary is None else float(salary)
+        if not math.isfinite(salary) or salary <= 0:
+            raise ValueError("зарплата должна быть положительным конечным числом")
         if salary < m.expectation * ACCEPT_RATIO:
             raise ValueError(f"{m.name} отказался: просит около {int(m.expectation)} в месяц")
         m.club, m.salary, m.start_week = game.club_name, salary, game.week
