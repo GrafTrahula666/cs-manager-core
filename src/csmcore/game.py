@@ -119,6 +119,7 @@ class Game:
         if getattr(self, "base", None) is not None:
             news.lines += self.base.week(self)
         if getattr(self, "staff", None) is not None:
+            self.staff.ensure_compat()  # direct save.loads(...).advance() must also accept old careers
             news.lines += self.staff.week(self)
         self.desk.plan = type(self.desk.plan)()   # plans last one week
         if self.run.wk >= economy.WEEKS_PER_YEAR:
@@ -222,6 +223,9 @@ class Game:
             from .staff import StaffWorld
             self.staff = StaffWorld(self.seed)
             self.staff.seed_market(self)
+        else:
+            # Existing staff worlds in older saves lack v2 career fields.
+            self.staff.ensure_compat()
         if not hasattr(self, "_titles_seen"):
             ch = self.sysm.chronicle
             self._titles_seen = len(ch.titles.get(self.club_name, [])) if ch else 0
